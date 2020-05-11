@@ -1,0 +1,146 @@
+{
+  "name": "vscode-piral",
+  "publisher": "smapiot",
+  "displayName": "Piral",
+  "description": "Makes it easy to create, manage, and debug microfrontends using Pirals.",
+  "license": "MIT",
+  "icon": "resources/piral.png",
+  "version": "0.0.1",
+  "homepage": "https://github.com/smapiot/vscode-piral/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smapiot/vscode-piral"
+  },
+  "bugs": {
+    "url": "https://github.com/smapiot/vscode-piral/issues",
+    "email": "info@piral.io"
+  },
+  "galleryBanner": {
+    "color": "#56aa1c",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.45.0"
+  },
+  "keywords": [
+    "piral",
+    "debug",
+    "microfrontends",
+    "micro-frontend",
+    "webapp",
+    "webdev"
+  ],
+  "categories": [
+    "Debuggers",
+    "Snippets",
+    "Linters"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "activationEvents": [
+    "onCommand:vscode-piral.cli.piral.debug",
+    "onCommand:vscode-piral.cli.pilet.debug",
+    "onCommand:vscode-piral.cli.piral.build",
+    "onCommand:vscode-piral.cli.pilet.build",
+    "onCommand:vscode-piral.cli.piral.declaration",
+    "onCommand:vscode-piral.cli.pilet.publish"
+  ],
+  "main": "./index",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-piral.cli.piral.debug",
+        "title": "Debug Piral Instance",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.pilet.debug",
+        "title": "Debug Pilet",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.piral.build",
+        "title": "Build Piral Instance",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.pilet.build",
+        "title": "Build Pilet",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.piral.declaration",
+        "title": "Generate Piral Instance Declaration",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.pilet.publish",
+        "title": "Publish Pilet",
+        "category": "Piral"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "piral-commands",
+          "title": "Piral",
+          "icon": "resources/piral.png"
+        }
+      ]
+    },
+    "views": {
+      "piral-commands": [
+        {
+          "id": "piral-available-commands",
+          "name": "Available Commands"
+        },
+        {
+          "id": "piral-workspace-info",
+          "name": "Workspace Info"
+        }
+      ]
+    },
+    "taskDefinitions": [
+      {
+        "type": "piral-build",
+        "properties": {}
+      },
+      {
+        "type": "piral-debug",
+        "properties": {}
+      },
+      {
+        "type": "pilet-build",
+        "properties": {}
+      },
+      {
+        "type": "pilet-debug",
+        "properties": {}
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "build": "tsc -p ./",
+    "build:bundle": "webpack --progress",
+    "watch": "tsc -watch -p ./",
+    "watch:bundle": "webpack --watch --progress",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^8.10.25",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "terser-webpack-plugin": "^3.0.1",
+    "ts-loader": "^7.0.4",
+    "typescript": "^3.8.3",
+    "vscode": "^1.1.21",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

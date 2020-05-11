@@ -1,0 +1,55 @@
+{
+	"version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Extension (Bundled)",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}"
+      ],
+      "env": {
+        "PIRAL_IGNORE_BUNDLE": "0"
+      },
+      "outFiles": [
+        "${workspaceFolder}/out/**/*.js"
+      ],
+      "stopOnEntry": false,
+      "sourceMaps": true,
+      "preLaunchTask": "npm: build:bundle"
+    },
+    {
+      "name": "Extension (Unbundled)",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}"
+      ],
+      "env": {
+        "PIRAL_IGNORE_BUNDLE": "1"
+      },
+      "outFiles": [
+        "${workspaceFolder}/out/**/*.js"
+      ],
+      "stopOnEntry": false,
+      "sourceMaps": true,
+      "preLaunchTask": "npm: build"
+    },
+    {
+      "name": "Extension Tests",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionTestsPath=${workspaceFolder}/out/test"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/out/test/**/*.js"
+      ],
+      "preLaunchTask": "npm: watch"
+    }
+  ]
+}

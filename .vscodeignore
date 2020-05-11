@@ -1,0 +1,12 @@
+.vscode/**
+.vscode-test/**
+out/test/**
+out/**/*.map
+out/**
+src/**
+.gitignore
+.editorconfig
+prettier.config.js
+tsconfig.json
+resources/readme/**
+webpack.config.js
