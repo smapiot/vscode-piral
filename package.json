@@ -122,25 +122,26 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run build:bundle",
     "build": "tsc -p ./",
     "build:bundle": "webpack --progress",
     "watch": "tsc -watch -p ./",
     "watch:bundle": "webpack --watch --progress",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    "test": "npm run build:bundle && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
-    "@types/node": "^8.10.25",
+    "@types/node": "^8.10.61",
+    "@types/webpack-env": "^1.15.2",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
-    "terser-webpack-plugin": "^3.0.1",
-    "ts-loader": "^7.0.4",
-    "typescript": "^3.8.3",
+    "terser-webpack-plugin": "^3.0.6",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.6",
     "vscode": "^1.1.21",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   }
 }
