@@ -123,6 +123,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run build:bundle",
+    "ci:publish": "vsce publish -p $VSCODE_TOKEN",
     "build": "tsc -p ./",
     "build:bundle": "webpack --progress",
     "watch": "tsc -watch -p ./",
