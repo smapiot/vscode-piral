@@ -15,9 +15,9 @@ function runCommand(cmd: string) {
   const workspace = vscode.workspace.workspaceFolders?.[0];
 
   if (!workspace) {
-    vscode.window.showErrorMessage('Require a workspace.');
+    vscode.window.showErrorMessage('Require a workspace to run the command.');
   } else {
-    const project = resolve(workspace.uri.path, 'package.json');
+    const project = resolve(workspace.uri.fsPath, 'package.json');
 
     try {
       const { scripts = {} } = __non_webpack_require__(project) || {};
@@ -31,7 +31,7 @@ function runCommand(cmd: string) {
         vscode.window.showQuickPick(candidates).then(execCommand);
       }
     } catch (err) {
-      vscode.window.showErrorMessage(`Could not load the "package.json". Make sure the workspace is valid.`);
+      vscode.window.showErrorMessage(`Could not load the "package.json". Make sure the workspace is valid "${project}".`);
     }
   }
 }
