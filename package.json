@@ -40,12 +40,7 @@
     "workspace"
   ],
   "activationEvents": [
-    "onCommand:vscode-piral.cli.piral.debug",
-    "onCommand:vscode-piral.cli.pilet.debug",
-    "onCommand:vscode-piral.cli.piral.build",
-    "onCommand:vscode-piral.cli.pilet.build",
-    "onCommand:vscode-piral.cli.piral.declaration",
-    "onCommand:vscode-piral.cli.pilet.publish"
+    "*"
   ],
   "main": "./index",
   "contributes": {
@@ -55,6 +50,16 @@
         "extensions": [
           ".codegen"
         ]
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "piral-available-commands",
+        "contents": "No command available.\nPlease open a workspace folder of a piral or pilet project.\n[Open Folder](command:vscode.openFolder)"
+      },
+      {
+        "view": "piral-workspace-info",
+        "contents": "No information available.\nPlease open a workspace folder of a piral or pilet project.\n[Open Folder](command:vscode.openFolder)"
       }
     ],
     "commands": [
@@ -87,8 +92,53 @@
         "command": "vscode-piral.cli.pilet.publish",
         "title": "Publish Pilet",
         "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.available-commands.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "vscode-piral.cli.workspace-info.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "vscode-piral.available-commands.generic",
+        "title": "Run",
+        "icon": {
+          "light": "resources/light/run.svg",
+          "dark": "resources/dark/run.svg"
+        }
       }
     ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-piral.cli.available-commands.refreshEntry",
+          "when": "view == piral-available-commands",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-piral.cli.workspace-info.refreshEntry",
+          "when": "view == piral-workspace-info",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vscode-piral.available-commands.generic",
+          "when": "view == piral-available-commands",
+          "group": "inline"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {

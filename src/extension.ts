@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 import { resolve } from 'path';
+import { CommandsDataProvider, CommandTreeItem } from './commandsProvider';
+import { WorkspaceInfoDataProvider } from './workspaceInfoProvider';
+
 
 function execCommand(cmd: string | undefined) {
   if (cmd) {
@@ -12,7 +15,7 @@ function execCommand(cmd: string | undefined) {
 }
 
 function runCommand(cmd: string) {
-  const workspace = vscode.workspace.workspaceFolders?.[0];
+  const workspace = getWorkspaceRoot();
 
   if (!workspace) {
     vscode.window.showErrorMessage('Require a workspace to run the command.');
@@ -37,6 +40,18 @@ function runCommand(cmd: string) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  let workspaceFolder = getWorkspaceRoot();
+
+  // Available Commands View
+  const nodeCommandsProvider = new CommandsDataProvider();
+  vscode.window.registerTreeDataProvider('piral-available-commands', nodeCommandsProvider);
+  nodeCommandsProvider.refresh(workspaceFolder);
+
+  // Workspace Info View
+  const nodeWorkspaceInfoProvider = new WorkspaceInfoDataProvider();
+  vscode.window.registerTreeDataProvider('piral-workspace-info', nodeWorkspaceInfoProvider);
+  nodeWorkspaceInfoProvider.refresh(workspaceFolder);
+  
   context.subscriptions.push(
     vscode.commands.registerCommand('vscode-piral.cli.pilet.debug', () => {
       runCommand('pilet debug');
@@ -56,7 +71,24 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('vscode-piral.cli.piral.declaration', () => {
       runCommand('piral declaration');
     }),
+    vscode.commands.registerCommand('vscode-piral.cli.available-commands.refreshEntry', () => {
+      nodeCommandsProvider.refresh(getWorkspaceRoot());
+    }),
+    vscode.commands.registerCommand('vscode-piral.cli.workspace-info.refreshEntry', () => {
+      nodeWorkspaceInfoProvider.refresh(getWorkspaceRoot());
+    }),
+    vscode.commands.registerCommand('vscode-piral.available-commands.generic', (node: CommandTreeItem) => {
+      if(node.commandName != undefined && vscode.commands.getCommands().then(commands => commands.includes(node.commandName!))) {
+        vscode.commands.executeCommand(node.commandName!);
+      } else {
+        vscode.window.showErrorMessage("Could not run command!");
+      }
+    })
   );
+}
+
+function getWorkspaceRoot() {
+  return vscode.workspace.workspaceFolders?.[0];
 }
 
 export function deactivate(context: vscode.ExtensionContext) { }
