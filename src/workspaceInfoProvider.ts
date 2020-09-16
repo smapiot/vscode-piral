@@ -53,19 +53,49 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
   }
 
   private getPiralInfos(packageJson: any) {
-    this.data = [ 
-      new InfoTreeItem('Name', [ new InfoTreeItem(packageJson.name, undefined)]),
-      new InfoTreeItem('Version', [ new InfoTreeItem(packageJson.version, undefined)])
+    let piralName = packageJson.name;
+    let piralVersion = packageJson.version;
+    let piralCliVersion = packageJson.devDependencies["piral-cli"];
+    
+    var treeItems: InfoTreeItem[] = [ 
+      new InfoTreeItem('Piral', [ new InfoTreeItem('Name: ' + piralName, undefined), new InfoTreeItem('Version: ' + piralVersion, undefined)]),
+      new InfoTreeItem('Piral CLI', [ new InfoTreeItem('Version: ' + piralCliVersion, undefined)]),
     ];
+
+    var pluginsTreeItems: InfoTreeItem[] = [];
+    Object.keys(packageJson.dependencies).forEach(function(key) {
+      if(key.includes('piral-')){
+        pluginsTreeItems.push(new InfoTreeItem(key + " (Version: " + packageJson.dependencies[key] + ")"))
+      }
+    })
+    treeItems.push(new InfoTreeItem('Piral Plugins', pluginsTreeItems));
+
+    this.data = treeItems;
   }
 
   private getPiletInfos(packageJson: any) {
-    this.data = [ 
-      new InfoTreeItem('Name', [ new InfoTreeItem(packageJson.name, undefined)]),
-      new InfoTreeItem('Version', [ new InfoTreeItem(packageJson.version, undefined)]),
-      new InfoTreeItem('Piral', [ new InfoTreeItem(packageJson.piral.name, undefined)])
+    let piletName = packageJson.name;
+    let piletVersion = packageJson.version;
+    let appShellName = packageJson.piral.name;
+    let appShellVersion = packageJson.devDependencies[appShellName];
+    // let appShellLatestVersion = "";
+    let piralCliVersion = packageJson.devDependencies["piral-cli"];
+    //let piralCliLatestVersion = "";
+
+    var treeItems: InfoTreeItem[] = [ 
+      new InfoTreeItem('Pilet', [ new InfoTreeItem('Name: ' + piletName, undefined), new InfoTreeItem('Version: ' + piletVersion, undefined)]),
+      new InfoTreeItem('App Shell', [ new InfoTreeItem('Name: ' + appShellName, undefined), new InfoTreeItem('Version: ' + appShellVersion, undefined)]),
+      new InfoTreeItem('Piral CLI', [ new InfoTreeItem('Version: ' + piralCliVersion, undefined)]),
     ];
-  }
+
+    var dependenciesTreeItems: InfoTreeItem[] = [];
+    Object.keys(packageJson.dependencies).forEach(function(key) {
+      dependenciesTreeItems.push(new InfoTreeItem(key + " (Version: " + packageJson.dependencies[key] + ")"))
+    })
+    treeItems.push(new InfoTreeItem('Dependencies', dependenciesTreeItems));
+
+    this.data = treeItems;
+  } 
 }
 
 class InfoTreeItem extends vscode.TreeItem {
