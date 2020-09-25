@@ -1,94 +1,83 @@
 import * as vscode from 'vscode';
-import { resolve } from 'path';
 import { CommandsDataProvider, CommandTreeItem } from './commandsProvider';
 import { WorkspaceInfoDataProvider } from './workspaceInfoProvider';
-
-
-function execCommand(cmd: string | undefined) {
-  if (cmd) {
-    const term = vscode.window.createTerminal({
-      name: 'Piral',
-    });
-    term.sendText(cmd, true);
-    term.show(true);
-  }
-}
-
-function runCommand(cmd: string) {
-  const workspace = getWorkspaceRoot();
-
-  if (!workspace) {
-    vscode.window.showErrorMessage('Require a workspace to run the command.');
-  } else {
-    const project = resolve(workspace.uri.fsPath, 'package.json');
-
-    try {
-      const { scripts = {} } = __non_webpack_require__(project) || {};
-      const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
-      const shellCommand =
-        candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
-
-      if (shellCommand !== undefined) {
-        execCommand(shellCommand);
-      } else {
-        vscode.window.showQuickPick(candidates).then(execCommand);
-      }
-    } catch (err) {
-      vscode.window.showErrorMessage(`Could not load the "package.json". Make sure the workspace is valid "${project}".`);
-    }
-  }
-}
+import { getRepoType, RepoType, runCommand } from './helper';
+import { createRepository } from './webView';
 
 export function activate(context: vscode.ExtensionContext) {
-  let workspaceFolder = getWorkspaceRoot();
-
   // Available Commands View
   const nodeCommandsProvider = new CommandsDataProvider();
   vscode.window.registerTreeDataProvider('piral-available-commands', nodeCommandsProvider);
-  nodeCommandsProvider.refresh(workspaceFolder);
+  nodeCommandsProvider.refresh();
 
   // Workspace Info View
   const nodeWorkspaceInfoProvider = new WorkspaceInfoDataProvider();
   vscode.window.registerTreeDataProvider('piral-workspace-info', nodeWorkspaceInfoProvider);
-  nodeWorkspaceInfoProvider.refresh(workspaceFolder);
-  
+  nodeWorkspaceInfoProvider.refresh();
+
   context.subscriptions.push(
     vscode.commands.registerCommand('vscode-piral.cli.pilet.debug', () => {
-      runCommand('pilet debug');
+      if (getRepoType() == RepoType.Pilet) {
+        runCommand('pilet debug');
+      } else {
+        vscode.window.showErrorMessage('Command works only with pilet repository!');
+      }
     }),
     vscode.commands.registerCommand('vscode-piral.cli.pilet.build', () => {
-      runCommand('pilet build');
+      if (getRepoType() == RepoType.Pilet) {
+        runCommand('pilet build');
+      } else {
+        vscode.window.showErrorMessage('Command works only with pilet repository!');
+      }
     }),
     vscode.commands.registerCommand('vscode-piral.cli.pilet.publish', () => {
-      runCommand('pilet publish');
+      if (getRepoType() == RepoType.Pilet) {
+        runCommand('pilet publish');
+      } else {
+        vscode.window.showErrorMessage('Command works only with pilet repository!');
+      }
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.debug', () => {
-      runCommand('piral debug');
+      if (getRepoType() == RepoType.Piral) {
+        runCommand('piral debug');
+      } else {
+        vscode.window.showErrorMessage('Command works only with piral repository!');
+      }
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.build', () => {
-      runCommand('piral build');
+      if (getRepoType() == RepoType.Piral) {
+        runCommand('piral build');
+      } else {
+        vscode.window.showErrorMessage('Command works only with piral repository!');
+      }
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.declaration', () => {
-      runCommand('piral declaration');
+      if (getRepoType() == RepoType.Piral) {
+        runCommand('piral declaration');
+      } else {
+        vscode.window.showErrorMessage('Command works only with piral repository!');
+      }
     }),
     vscode.commands.registerCommand('vscode-piral.cli.available-commands.refreshEntry', () => {
-      nodeCommandsProvider.refresh(getWorkspaceRoot());
+      nodeCommandsProvider.refresh();
     }),
     vscode.commands.registerCommand('vscode-piral.cli.workspace-info.refreshEntry', () => {
-      nodeWorkspaceInfoProvider.refresh(getWorkspaceRoot());
+      nodeWorkspaceInfoProvider.refresh();
     }),
     vscode.commands.registerCommand('vscode-piral.available-commands.generic', (node: CommandTreeItem) => {
-      if(node.commandName != undefined && vscode.commands.getCommands().then(commands => commands.includes(node.commandName!))) {
+      if (
+        node.commandName != undefined &&
+        vscode.commands.getCommands().then((commands) => commands.includes(node.commandName!))
+      ) {
         vscode.commands.executeCommand(node.commandName!);
       } else {
-        vscode.window.showErrorMessage("Could not run command!");
+        vscode.window.showErrorMessage('Could not run command!');
       }
+    }),
+    vscode.commands.registerCommand('vscode-piral.cli.create', () => {
+      createRepository(context);
     })
   );
 }
 
-function getWorkspaceRoot() {
-  return vscode.workspace.workspaceFolders?.[0];
-}
-
-export function deactivate(context: vscode.ExtensionContext) { }
+export function deactivate(context: vscode.ExtensionContext) {}

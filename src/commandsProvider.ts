@@ -1,13 +1,11 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import { resolve } from 'path';
+import {getRepoType, RepoType} from './helper';
 
 export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<CommandTreeItem | undefined>();
   readonly onDidChangeTreeData: vscode.Event<CommandTreeItem | undefined> = this._onDidChangeTreeData.event;
 
   data: CommandTreeItem[] = [];
-  workspaceFolder: vscode.WorkspaceFolder | undefined;
 
   constructor() {}
 
@@ -22,33 +20,29 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
     return element.children;
   }
 
-  refresh(workspaceFolder: vscode.WorkspaceFolder | undefined): void {
-    this.workspaceFolder = workspaceFolder;
+  refresh(): void {
     this.getAvailableCommands();
     this._onDidChangeTreeData.fire(undefined);
   }
 
   private getAvailableCommands() {
-    if(this.workspaceFolder != undefined) {
-      var filePath = resolve(this.workspaceFolder.uri.fsPath, 'package.json');
+    let repoType = getRepoType();
 
-      if(!fs.existsSync(filePath)) {
-        return;
-      }
-
-      let packageFile = fs.readFileSync(filePath, "utf8");
-      let packageJson = JSON.parse(packageFile);
-
-      if(packageJson.pilets != undefined) {
-        vscode.window.showInformationMessage('Piral workspace found.');
+    switch(repoType) {
+      case RepoType.Piral:
+        //vscode.window.showInformationMessage('Piral workspace found.');
         this.getPiralCommands();
-      } else if(packageJson.piral != undefined) {
-        vscode.window.showInformationMessage('Pilet workspace found.');
+        break;
+      case RepoType.Pilet:
+        //vscode.window.showInformationMessage('Pilet workspace found.');
         this.getPiletCommands();
-      } else {
-        vscode.window.showErrorMessage('No piral or pilet workspace found.');
+        break;
+      case RepoType.Undefined:
+      case RepoType.Pilet:
+      default:
+        //vscode.window.showErrorMessage('No piral or pilet workspace found.');
         this.data = [];
-      }
+        break;
     }
   }
 
@@ -56,7 +50,8 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
     this.data = [ 
       new CommandTreeItem('Debug Piral Instance', 'vscode-piral.cli.piral.debug', undefined),
       new CommandTreeItem('Build Piral Instance', 'vscode-piral.cli.piral.build', undefined),
-      new CommandTreeItem('Generate Piral Instance Declaration', 'vscode-piral.cli.piral.declaration', undefined)
+      new CommandTreeItem('Generate Piral Instance Declaration', 'vscode-piral.cli.piral.declaration', undefined),
+      new CommandTreeItem('Create new Piral or Pilet project', 'vscode-piral.cli.create', undefined)
     ];
   }
 
@@ -64,7 +59,8 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
     this.data = [ 
       new CommandTreeItem('Debug Pilet', 'vscode-piral.cli.pilet.debug', undefined),
       new CommandTreeItem('Build Pilet', 'vscode-piral.cli.pilet.build', undefined),
-      new CommandTreeItem('Publish Pilet', 'vscode-piral.cli.pilet.publish', undefined)
+      new CommandTreeItem('Publish Pilet', 'vscode-piral.cli.pilet.publish', undefined),
+      new CommandTreeItem('Create new Piral or Pilet project', 'vscode-piral.cli.create', undefined)
     ];
   }
 }
