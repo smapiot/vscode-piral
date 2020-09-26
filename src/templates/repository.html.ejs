@@ -13,15 +13,15 @@
   <div id="root">
     <div class="page">
       <div class="header" x-memo>
-        <h1 class="title">Create new project</h1>
+        <h1 class="title">Create Project</h1>
         <p class="subTitle">
-          Create your own Piral or Pilet instance.
+          Create a new Piral instance or a pilet for an existing instance.
         </p>
       </div>
       <div class="container">
         <div class="cards containerColumn">
-          <p class="columnTitle">Select type<span class="errorRepoType errorMessage hide"> [Data is missing!]</span></p>
-        <% repoTypes.forEach(function(repoType, index){ %>
+          <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[Required]</span></p>
+        <% repoTypes.forEach((repoType, index) => { %>
           <div
             key="repoType<%= index %>"
             class="card"
@@ -39,44 +39,44 @@
         <div class="information containerColumn">
           <p class="columnTitle">Provide Information</p>
           <div class="extraItem">
-            <p class="extraItemLabel">Name<span class="errorName errorMessage hide"> [Data is missing!]</span></p>
+            <p class="extraItemLabel">Name <span class="errorName errorMessage hide">[required]</span></p>
             <input
               class="extraItemInput"
-              stateName="name" 
+              stateName="name"
             >
           </div>
           <div class="extraItem">
-            <p class="extraItemLabel">Version<span class="errorVersion errorMessage hide"> [Data is missing!]</span></p>
+            <p class="extraItemLabel">Version <span class="errorVersion errorMessage hide">[required]</span></p>
             <input
               class="extraItemInput"
-              stateName="version" 
+              stateName="version"
               >
-          </div>          
+          </div>
           <div class="extraItem">
-            <p class="extraItemLabel">Description<span class="errorDescription errorMessage hide"> [Data is missing!]</span></p>
+            <p class="extraItemLabel">Description <span class="errorDescription errorMessage hide">[required]</span></p>
             <textarea
               class="extraItemInput"
               stateName="description"
               ></textarea>
-          </div> 
+          </div>
           <div class="extraItem onlyForPilet hide">
-            <p class="extraItemLabel">Piral Package<span class="errorPiralPackage errorMessage hide"> [Data is missing!]</span></p>
+            <p class="extraItemLabel">Piral Package <span class="errorPiralPackage errorMessage hide">[required]</span></p>
             <input
               class="extraItemInput"
-              stateName="piralPackage" 
+              stateName="piralPackage"
               >
-          </div>        
+          </div>
           <div class="extraItem onlyForPilet hide">
-            <p class="extraItemLabel">NPM Registry<span class="errorNpmRegistry errorMessage hide"> [Data is missing!]</span></p>
+            <p class="extraItemLabel">NPM Registry <span class="errorNpmRegistry errorMessage hide">[required]</span></p>
             <input
               class="extraItemInput"
-              stateName="npmRegistry" 
+              stateName="npmRegistry"
               >
-          </div>        
+          </div>
         </div>
         <div class="cards containerColumn">
-          <p class="columnTitle">Select bundler<span class="errorBundler errorMessage hide"> [Data is missing!]</span></p>
-          <% bundlers.forEach(function(bundler, index){ %>
+          <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
+          <% bundlers.forEach((bundler, index) => { %>
             <div
               key="bundler_<%= index %>"
               class="bundlerItem"
@@ -93,9 +93,9 @@
         </div>
       </div>
     </div>
-    <button class="btn create">Create</button>
+    <button class="btn create">Scaffold Project</button>
   </div>
-  <% scripts.forEach(function(script){ %>
+  <% scripts.forEach((script) => { %>
      <script src="<%= script %>"></script>
   <% }); %>
 </body>

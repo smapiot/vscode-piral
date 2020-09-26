@@ -1,60 +1,66 @@
 import * as vscode from 'vscode';
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import * as fs from 'fs';
 
 export enum RepoType {
-    Piral = 0,
-    Pilet = 1,
-    Mono = 2,
-    Undefined = 3
+  Piral = 0,
+  Pilet = 1,
+  Mono = 2,
+  Undefined = 3,
+}
+
+export const bundlers = ['piral-cli-parcel', 'piral-cli-webpack'];
+
+export const piralFramework = ['piral-base', 'piral-core', 'piral'];
+
+export function readPackageJson(filePath: string) {
+  try {
+    const packageFile = readFileSync(filePath, 'utf8');
+    return JSON.parse(packageFile);
+  } catch {
+    return undefined;
+  }
 }
 
 export function getRepoType(): RepoType {
-    let workspaceFolder = getWorkspaceRoot();
-    if(workspaceFolder != undefined) {
-        var filePath = resolve(workspaceFolder.uri.fsPath, 'package.json');
-  
-        if(!fs.existsSync(filePath)) {
-          return RepoType.Undefined;
-        }
-  
-        let packageFile = fs.readFileSync(filePath, "utf8");
-        let packageJson = JSON.parse(packageFile);
-  
-        if(packageJson.pilets != undefined) {
-          return RepoType.Piral;
-        } else if(packageJson.piral != undefined) {
-          vscode.window.showInformationMessage('Pilet workspace found.');
-          return RepoType.Pilet;
-        } else {
-          return RepoType.Undefined;
-        }
-    }
+  const workspaceFolder = getWorkspaceRoot();
 
-    return RepoType.Undefined;
+  if (workspaceFolder !== undefined) {
+    const filePath = resolve(workspaceFolder.uri.fsPath, 'package.json');
+    const packageJson = readPackageJson(filePath);
+
+    if (packageJson) {
+      const { pilets, piral, dependencies = {} } = packageJson;
+
+      if (pilets !== undefined || Object.keys(dependencies).some((m) => piralFramework.includes(m))) {
+        return RepoType.Piral;
+      } else if (piral !== undefined) {
+        vscode.window.showInformationMessage('Pilet workspace found.');
+        return RepoType.Pilet;
+      }
+    }
+  }
+
+  return RepoType.Undefined;
 }
 
 export function getWorkspaceRoot() {
-    return vscode.workspace.workspaceFolders?.[0];
+  return vscode.workspace.workspaceFolders?.[0];
 }
 
 export function getVersionOfDependency(dependency: string) {
-  let workspaceFolder = getWorkspaceRoot();
-  if(workspaceFolder != undefined) {
-    var filePath = resolve(workspaceFolder.uri.fsPath, 'node_modules', dependency, 'package.json');
-    
-    if(!fs.existsSync(filePath)) {
-      return "";
-    }
-  
-    let packageFile = fs.readFileSync(filePath, "utf8");
-    let packageJson = JSON.parse(packageFile);
-    if(packageJson.version != undefined) {
+  const workspaceFolder = getWorkspaceRoot();
+
+  if (workspaceFolder != undefined) {
+    const filePath = resolve(workspaceFolder.uri.fsPath, 'node_modules', dependency, 'package.json');
+    const packageJson = readPackageJson(filePath);
+
+    if (packageJson && packageJson.version !== undefined) {
       return packageJson.version;
-    } 
+    }
   }
 
-  return "";
+  return '';
 }
 
 function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
@@ -73,7 +79,7 @@ function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
 export function runCommand(cmd: string, workspaceMandatory: boolean = true) {
   const workspace = getWorkspaceRoot();
 
-  if(!workspaceMandatory) {
+  if (!workspaceMandatory) {
     return execCommand(cmd);
   }
 

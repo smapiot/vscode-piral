@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -60,6 +59,7 @@ module.exports = {
 
   plugins: [
     // Copy files to dist folder where the runtime can find them
+    new CleanWebpackPlugin(),
     new CopyWebpackPlugin([]),
   ],
 };

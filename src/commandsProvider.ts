@@ -1,22 +1,25 @@
 import * as vscode from 'vscode';
-import {getRepoType, RepoType} from './helper';
+import { getRepoType, RepoType } from './helper';
 
 export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<CommandTreeItem | undefined>();
+  private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<
+    CommandTreeItem | undefined
+  >();
   readonly onDidChangeTreeData: vscode.Event<CommandTreeItem | undefined> = this._onDidChangeTreeData.event;
 
-  data: CommandTreeItem[] = [];
+  data: Array<CommandTreeItem> = [];
 
   constructor() {}
 
-  getTreeItem(element: CommandTreeItem): vscode.TreeItem|Thenable<vscode.TreeItem> {
+  getTreeItem(element: CommandTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
   }
 
-  getChildren(element?: CommandTreeItem|undefined): vscode.ProviderResult<CommandTreeItem[]> {
+  getChildren(element?: CommandTreeItem | undefined): vscode.ProviderResult<Array<CommandTreeItem>> {
     if (element === undefined) {
       return this.data;
     }
+
     return element.children;
   }
 
@@ -26,54 +29,51 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
   }
 
   private getAvailableCommands() {
-    let repoType = getRepoType();
+    const repoType = getRepoType();
 
-    switch(repoType) {
+    switch (repoType) {
       case RepoType.Piral:
-        //vscode.window.showInformationMessage('Piral workspace found.');
         this.getPiralCommands();
         break;
       case RepoType.Pilet:
-        //vscode.window.showInformationMessage('Pilet workspace found.');
         this.getPiletCommands();
         break;
-      case RepoType.Undefined:
-      case RepoType.Pilet:
       default:
-        //vscode.window.showErrorMessage('No piral or pilet workspace found.');
         this.data = [];
         break;
     }
   }
 
   private getPiralCommands() {
-    this.data = [ 
+    this.data = [
       new CommandTreeItem('Debug Piral Instance', 'vscode-piral.cli.piral.debug', undefined),
       new CommandTreeItem('Build Piral Instance', 'vscode-piral.cli.piral.build', undefined),
-      new CommandTreeItem('Generate Piral Instance Declaration', 'vscode-piral.cli.piral.declaration', undefined),
-      new CommandTreeItem('Create new Piral or Pilet project', 'vscode-piral.cli.create', undefined)
+      new CommandTreeItem('Generate Declaration', 'vscode-piral.cli.piral.declaration', undefined),
+      new CommandTreeItem('Validate Piral Instance', 'vscode-piral.cli.piral.validate', undefined),
+      new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
     ];
   }
 
   private getPiletCommands() {
-    this.data = [ 
+    this.data = [
       new CommandTreeItem('Debug Pilet', 'vscode-piral.cli.pilet.debug', undefined),
       new CommandTreeItem('Build Pilet', 'vscode-piral.cli.pilet.build', undefined),
       new CommandTreeItem('Publish Pilet', 'vscode-piral.cli.pilet.publish', undefined),
-      new CommandTreeItem('Create new Piral or Pilet project', 'vscode-piral.cli.create', undefined)
+      new CommandTreeItem('Validate Pilet', 'vscode-piral.cli.pilet.validate', undefined),
+      new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
     ];
   }
 }
 
 export class CommandTreeItem extends vscode.TreeItem {
-  children: CommandTreeItem[]|undefined;
-  commandName: string|undefined;
-  
-  constructor(label: string, commandName: string, children?: CommandTreeItem[]) {
+  children: Array<CommandTreeItem> | undefined;
+  commandName: string | undefined;
+
+  constructor(label: string, commandName: string, children?: Array<CommandTreeItem>) {
     super(
-        label,
-        children === undefined ? vscode.TreeItemCollapsibleState.None :
-                                 vscode.TreeItemCollapsibleState.Expanded);
+      label,
+      children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Expanded,
+    );
     this.children = children;
     this.commandName = commandName;
   }
