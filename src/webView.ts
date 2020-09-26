@@ -64,7 +64,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   webviewPanel = window.createWebviewPanel(
     'piral.createProject',
-    'Piral',
+    'Create Project',
     ViewColumn.One,
     { enableScripts: true }
   );
