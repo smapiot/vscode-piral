@@ -3,7 +3,6 @@ const states = {
   repoType: '',
   name: '',
   version: '1.0.0',
-  description: '',
   bundler: '',
   targetFolder: '',
   piralPackage: '',
@@ -82,7 +81,7 @@ document.querySelectorAll('.extraItemInput').forEach((box) =>
 );
 
 // Handle click on create button
-document.querySelector('button.create').addEventListener('click', () => {
+document.querySelector('a.btn.create').addEventListener('click', () => {
   vscode.postMessage({
     command: 'createPiralPilet',
     parameters: states,

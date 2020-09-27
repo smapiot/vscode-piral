@@ -16,7 +16,6 @@ interface Options {
   repoType: string,
   name: string,
   version: string,
-  description: string,
   bundler: string,
   targetFolder: string,
   piralPackage: string,
@@ -83,7 +82,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
     }
   });
 
-  const onDiskPath = vscode.Uri.file(join(context.extensionPath, 'resources', 'piral.png'));
+  const onDiskPath = vscode.Uri.file(join(extensionPath, 'resources', 'piral.png'));
   webviewPanel.iconPath = onDiskPath;
 
   webviewPanel.webview.onDidReceiveMessage(message => {
@@ -93,7 +92,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
         repoType: '',
         name: '',
         version: '',
-        description: '',
         bundler: '',
         targetFolder: '',
         piralPackage: '',
@@ -131,4 +129,3 @@ export async function createRepository(context: vscode.ExtensionContext) {
     }
   }, undefined, context.subscriptions);
 }
-

@@ -15,12 +15,15 @@ const repoTypeOptions = [
   },
 ];
 
-export function getRepoTypeOptions(baseUriResources: string) {
-  for (const repoTypeOption of repoTypeOptions) {
-    repoTypeOption.icon = `vscode-resource:${join(baseUriResources, repoTypeOption.icon)}`;
-  }
+function mapToLocalIcon<T extends { icon: string }>(items: Array<T>, baseUriResources: string): Array<T> {
+  return items.map(item => ({
+    ...item,
+    icon: `vscode-resource:${join(baseUriResources, item.icon)}`,
+  }));
+}
 
-  return repoTypeOptions;
+export function getRepoTypeOptions(baseUriResources: string) {
+  return mapToLocalIcon(repoTypeOptions, baseUriResources);
 }
 
 let bundlerOptions = [
@@ -39,9 +42,5 @@ let bundlerOptions = [
 ];
 
 export function getBundlerOptions(baseUriResources: string) {
-  for (const bundlerOption of bundlerOptions) {
-    bundlerOption.icon = `vscode-resource:${join(baseUriResources, bundlerOption.icon)}`;
-  }
-
-  return bundlerOptions;
+  return mapToLocalIcon(bundlerOptions, baseUriResources);
 }

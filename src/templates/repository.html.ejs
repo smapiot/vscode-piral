@@ -52,13 +52,6 @@
               stateName="version"
               >
           </div>
-          <div class="extraItem">
-            <p class="extraItemLabel">Description <span class="errorDescription errorMessage hide">[required]</span></p>
-            <textarea
-              class="extraItemInput"
-              stateName="description"
-              ></textarea>
-          </div>
           <div class="extraItem onlyForPilet hide">
             <p class="extraItemLabel">Piral Package <span class="errorPiralPackage errorMessage hide">[required]</span></p>
             <input
@@ -92,8 +85,8 @@
           <% }); %>
         </div>
       </div>
+      <a class="btn create">Scaffold Project</a>
     </div>
-    <button class="btn create">Scaffold Project</button>
   </div>
   <% scripts.forEach((script) => { %>
      <script src="<%= script %>"></script>
