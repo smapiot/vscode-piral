@@ -20,7 +20,7 @@
       </div>
       <div class="container">
         <div class="cards containerColumn">
-          <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[Required]</span></p>
+          <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[required]</span></p>
         <% repoTypes.forEach((repoType, index) => { %>
           <div
             key="repoType<%= index %>"
@@ -46,24 +46,27 @@
             >
           </div>
           <div class="extraItem">
-            <p class="extraItemLabel">Version <span class="errorVersion errorMessage hide">[required]</span></p>
+            <p class="extraItemLabel">Version</p>
             <input
               class="extraItemInput"
               stateName="version"
+              placeholder="1.0.0"
               >
           </div>
           <div class="extraItem onlyForPilet hide">
-            <p class="extraItemLabel">Piral Package <span class="errorPiralPackage errorMessage hide">[required]</span></p>
+            <p class="extraItemLabel">Piral Package</p>
             <input
               class="extraItemInput"
               stateName="piralPackage"
+              placeholder="sample-piral"
               >
           </div>
           <div class="extraItem onlyForPilet hide">
-            <p class="extraItemLabel">NPM Registry <span class="errorNpmRegistry errorMessage hide">[required]</span></p>
+            <p class="extraItemLabel">NPM Registry</p>
             <input
               class="extraItemInput"
               stateName="npmRegistry"
+              placeholder="https://registry.npmjs.org/"
               >
           </div>
         </div>
@@ -72,7 +75,7 @@
           <% bundlers.forEach((bundler, index) => { %>
             <div
               key="bundler_<%= index %>"
-              class="bundlerItem"
+              class="card"
               bundler="<%= bundler.type %>"
               >
               <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
@@ -85,7 +88,7 @@
           <% }); %>
         </div>
       </div>
-      <a class="btn create">Scaffold Project</a>
+      <a class="btn create" title="Start Scaffolding">Scaffold Project</a>
     </div>
   </div>
   <% scripts.forEach((script) => { %>

@@ -25,20 +25,31 @@ interface Options {
 function validateParameters(options: Options): string[] {
   const validationErrors: Array<string> = [];
 
-  if (options.repoType === '') {
+  if (!options.repoType) {
     validationErrors.push('RepoType');
-  } else if (options.repoType === 'pilet') {
-    if (options.piralPackage === '') {
-      validationErrors.push('PiralPackage');
-    }
   }
 
-  if (options.bundler.trim() === '') {
+  if (!options.version.trim()) {
+    options.version = '1.0.0';
+  }
+
+  if (!options.bundler.trim()) {
     validationErrors.push('Bundler');
   }
 
-  if (options.name.trim() === '') {
+  if (!options.name.trim()) {
     validationErrors.push('Name');
+  }
+
+  if (options.repoType === 'pilet') {
+    // nothing for now ...
+    if (!options.piralPackage.trim()) {
+      options.piralPackage = 'sample-piral';
+    }
+
+    if (!options.npmRegistry.trim()) {
+      options.npmRegistry = 'https://registry.npmjs.org/';
+    }
   }
 
   return validationErrors;

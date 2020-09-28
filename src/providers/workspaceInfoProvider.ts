@@ -32,7 +32,7 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
 
   data: Array<InfoTreeItem> = [];
 
-  constructor() { }
+  constructor() {}
 
   getTreeItem(element: InfoTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
@@ -72,70 +72,64 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
   private getPiralInfos(packageJson: any) {
     const piralName = packageJson.name;
     const piralVersion = packageJson.version;
-    const piralCliVersion = getVersionOfDependency('piral-cli');
+    const cliVersion = getVersionOfDependency('piral-cli');
     const bundler = getBundler(packageJson);
 
-    const treeItems: Array<InfoTreeItem> = [
+    this.data = [
       new InfoTreeItem('Piral', [
         new InfoTreeItem(`Name: ${piralName}`, undefined),
         new InfoTreeItem(`Version: ${piralVersion}`, undefined),
       ]),
       new InfoTreeItem('Piral CLI', [
-        new InfoTreeItem('Version: ' + piralCliVersion, undefined),
+        new InfoTreeItem(`Version: ${cliVersion}`, undefined),
+        new InfoTreeItem(`Bundler: ${bundler?.name ?? '(none)'}`),
       ]),
-      new InfoTreeItem('Piral CLI Bundler', bundler ? [
-        new InfoTreeItem(`Name: ${bundler.name}`, undefined),
-        new InfoTreeItem(`Version: ${bundler.version}`, undefined),
-      ] : []),
+      new InfoTreeItem(
+        'Piral Plugins',
+        Object.keys(packageJson.dependencies)
+          .filter(
+            (key) =>
+              key.startsWith('piral-') &&
+              !piralFramework.includes(key) &&
+              key !== 'piral-cli' &&
+              !key.startsWith('piral-cli-'),
+          )
+          .map((key) => {
+            const version = getVersionOfDependency(key);
+            return new InfoTreeItem(`${key} (${version})`);
+          }),
+      ),
     ];
-
-    const pluginsTreeItems: Array<InfoTreeItem> = [];
-
-    Object.keys(packageJson.dependencies).forEach((key) => {
-      if (key.includes('piral-') && !piralFramework.includes(key)) {
-        const version = getVersionOfDependency(key);
-        pluginsTreeItems.push(new InfoTreeItem(`${key} (${version})`));
-      }
-    });
-
-    treeItems.push(new InfoTreeItem('Piral Plugins', pluginsTreeItems));
-    this.data = treeItems;
   }
 
   private getPiletInfos(packageJson: any) {
     const piletName = packageJson.name;
     const piletVersion = packageJson.version;
-    const appShellName = packageJson.piral.name;
-    const appShellVersion = getVersionOfDependency(appShellName);
-    const piralCliVersion = getVersionOfDependency('piral-cli');
+    const appName = packageJson.piral.name;
+    const appVersion = getVersionOfDependency(appName);
+    const cliVersion = getVersionOfDependency('piral-cli');
     const bundler = getBundler(packageJson);
 
-    const treeItems: Array<InfoTreeItem> = [
+    this.data = [
       new InfoTreeItem('Pilet', [
         new InfoTreeItem(`Name: ${piletName}`, undefined),
         new InfoTreeItem(`Version: ${piletVersion}`, undefined),
       ]),
       new InfoTreeItem('App Shell', [
-        new InfoTreeItem(`Name: ${appShellName}`, undefined),
-        new InfoTreeItem(`Version: ${appShellVersion}`, undefined),
+        new InfoTreeItem(`Name: ${appName}`, undefined),
+        new InfoTreeItem(`Version: ${appVersion}`, undefined),
       ]),
       new InfoTreeItem('Piral CLI', [
-        new InfoTreeItem(`Version: ${piralCliVersion}`, undefined),
+        new InfoTreeItem(`Version: ${cliVersion}`, undefined),
+        new InfoTreeItem(`Bundler: ${bundler?.name ?? '(none)'}`),
       ]),
-      new InfoTreeItem('Piral CLI Bundler', bundler ? [
-        new InfoTreeItem(`Name: ${bundler.name}`, undefined),
-        new InfoTreeItem(`Version: ${bundler.version}`, undefined),
-      ] : []),
+      new InfoTreeItem(
+        'Dependencies',
+        Object.keys(packageJson.dependencies).map((key) => {
+          const version = getVersionOfDependency(key);
+          return new InfoTreeItem(`${key} (${version})`);
+        }),
+      ),
     ];
-
-    const dependenciesTreeItems: Array<InfoTreeItem> = [];
-
-    Object.keys(packageJson.dependencies).forEach((key) => {
-      const version = getVersionOfDependency(key);
-      dependenciesTreeItems.push(new InfoTreeItem(key + ' (Version: ' + version + ')'));
-    });
-
-    treeItems.push(new InfoTreeItem('Dependencies', dependenciesTreeItems));
-    this.data = treeItems;
   }
 }
