@@ -1,8 +1,6 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { getTemplateCode } from './template';
-import { getRepoTypeOptions, getBundlerOptions } from './menuConfigs';
-import { runCommand } from './helper';
+import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions } from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -79,7 +77,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
     { enableScripts: true }
   );
 
-  webviewPanel.webview.html = getTemplateCode(extensionPath, 'repository.html.ejs', {
+  webviewPanel.webview.html = getTemplateCode(extensionPath, 'repository', {
     styles: [
       `vscode-resource:${join(extensionPath, 'media', 'media.css')}`
     ],

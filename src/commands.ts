@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { CommandTreeItem } from './providers/items';
 import { createRepository } from './webView';
-import { RepoType, runCommand } from './helper';
+import { RepoType, runCommand } from './helpers';
 
 export function registerCommands(context: vscode.ExtensionContext, refreshCommands: () => void, refreshWorkspace: () => void) {
   context.subscriptions.push(

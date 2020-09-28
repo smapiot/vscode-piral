@@ -9,7 +9,7 @@ import {
   readPackageJson,
   piralFramework,
   getBundler,
-} from '../helper';
+} from '../helpers';
 
 function getWorkspacePackageJson(repoType: RepoType) {
   if (repoType === RepoType.Pilet || repoType === RepoType.Piral) {

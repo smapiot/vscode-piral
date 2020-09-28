@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CommandTreeItem } from './items';
-import { getRepoType, RepoType } from '../helper';
+import { getRepoType, RepoType } from '../helpers';
 
 export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<
