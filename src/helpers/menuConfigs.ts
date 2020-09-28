@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { join } from 'path';
 
 const repoTypeOptions = [
@@ -30,17 +31,21 @@ const bundlerOptions = [
   },
 ];
 
-function mapToLocalIcon<T extends { icon: string }>(items: Array<T>, baseUriResources: string): Array<T> {
+function mapToLocalIcon<T extends { icon: string }>(items: Array<T>, panel: vscode.WebviewPanel, baseUriResources: string): Array<T> {
   return items.map(item => ({
     ...item,
-    icon: `vscode-resource:${join(baseUriResources, item.icon)}`,
+    icon: getResourcePath(panel, baseUriResources, item.icon),
   }));
 }
 
-export function getRepoTypeOptions(baseUriResources: string) {
-  return mapToLocalIcon(repoTypeOptions, baseUriResources);
+export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: string, fileName: string) {
+  return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
 }
 
-export function getBundlerOptions(baseUriResources: string) {
-  return mapToLocalIcon(bundlerOptions, baseUriResources);
+export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
+  return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
+}
+
+export function getBundlerOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
+  return mapToLocalIcon(bundlerOptions, panel, baseUriResources);
 }

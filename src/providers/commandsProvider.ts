@@ -2,6 +2,26 @@ import * as vscode from 'vscode';
 import { CommandTreeItem } from './items';
 import { getRepoType, RepoType } from '../helpers';
 
+function getPiralCommands() {
+  return [
+    new CommandTreeItem('Debug Piral Instance', 'vscode-piral.cli.piral.debug', undefined),
+    new CommandTreeItem('Build Piral Instance', 'vscode-piral.cli.piral.build', undefined),
+    new CommandTreeItem('Generate Declaration', 'vscode-piral.cli.piral.declaration', undefined),
+    new CommandTreeItem('Validate Piral Instance', 'vscode-piral.cli.piral.validate', undefined),
+    new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
+  ];
+}
+
+function getPiletCommands() {
+  return [
+    new CommandTreeItem('Debug Pilet', 'vscode-piral.cli.pilet.debug', undefined),
+    new CommandTreeItem('Build Pilet', 'vscode-piral.cli.pilet.build', undefined),
+    new CommandTreeItem('Publish Pilet', 'vscode-piral.cli.pilet.publish', undefined),
+    new CommandTreeItem('Validate Pilet', 'vscode-piral.cli.pilet.validate', undefined),
+    new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
+  ];
+}
+
 export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<
     CommandTreeItem | undefined
@@ -34,34 +54,14 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
 
     switch (repoType) {
       case RepoType.Piral:
-        this.getPiralCommands();
+        this.data = getPiralCommands();
         break;
       case RepoType.Pilet:
-        this.getPiletCommands();
+        this.data = getPiletCommands();
         break;
       default:
         this.data = [];
         break;
     }
-  }
-
-  private getPiralCommands() {
-    this.data = [
-      new CommandTreeItem('Debug Piral Instance', 'vscode-piral.cli.piral.debug', undefined),
-      new CommandTreeItem('Build Piral Instance', 'vscode-piral.cli.piral.build', undefined),
-      new CommandTreeItem('Generate Declaration', 'vscode-piral.cli.piral.declaration', undefined),
-      new CommandTreeItem('Validate Piral Instance', 'vscode-piral.cli.piral.validate', undefined),
-      new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
-    ];
-  }
-
-  private getPiletCommands() {
-    this.data = [
-      new CommandTreeItem('Debug Pilet', 'vscode-piral.cli.pilet.debug', undefined),
-      new CommandTreeItem('Build Pilet', 'vscode-piral.cli.pilet.build', undefined),
-      new CommandTreeItem('Publish Pilet', 'vscode-piral.cli.pilet.publish', undefined),
-      new CommandTreeItem('Validate Pilet', 'vscode-piral.cli.pilet.validate', undefined),
-      new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
-    ];
   }
 }
