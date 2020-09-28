@@ -63,6 +63,21 @@ export function getVersionOfDependency(dependency: string) {
   return '';
 }
 
+export function getBundler(packageJson: any) {
+  const { devDependencies = {} } = packageJson;
+
+  for (const bundler of bundlers) {
+    if (devDependencies[bundler] !== undefined) {
+      return {
+        name: bundler,
+        version: getVersionOfDependency(bundler),
+      };
+    }
+  }
+
+  return undefined;
+}
+
 function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
   if (cmd) {
     const term = vscode.window.createTerminal({
@@ -76,15 +91,17 @@ function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
   return undefined;
 }
 
-export function runCommand(cmd: string, workspaceMandatory: boolean = true) {
+export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
   const workspace = getWorkspaceRoot();
 
-  if (!workspaceMandatory) {
+  if (requiredRepoType === RepoType.Undefined) {
     return execCommand(cmd);
   }
 
   if (!workspace) {
     vscode.window.showErrorMessage('Require a workspace to run the command.');
+  } else if (getRepoType() !== requiredRepoType) {
+    vscode.window.showErrorMessage(`Command works only with ${requiredRepoType} projects!`);
   } else {
     const project = resolve(workspace.uri.fsPath, 'package.json');
 

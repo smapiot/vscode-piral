@@ -15,18 +15,7 @@ const repoTypeOptions = [
   },
 ];
 
-function mapToLocalIcon<T extends { icon: string }>(items: Array<T>, baseUriResources: string): Array<T> {
-  return items.map(item => ({
-    ...item,
-    icon: `vscode-resource:${join(baseUriResources, item.icon)}`,
-  }));
-}
-
-export function getRepoTypeOptions(baseUriResources: string) {
-  return mapToLocalIcon(repoTypeOptions, baseUriResources);
-}
-
-let bundlerOptions = [
+const bundlerOptions = [
   {
     type: 'parcel',
     icon: 'resources/parcel.png',
@@ -40,6 +29,17 @@ let bundlerOptions = [
     description: 'Use Webpack as bundler for the project.'
   },
 ];
+
+function mapToLocalIcon<T extends { icon: string }>(items: Array<T>, baseUriResources: string): Array<T> {
+  return items.map(item => ({
+    ...item,
+    icon: `vscode-resource:${join(baseUriResources, item.icon)}`,
+  }));
+}
+
+export function getRepoTypeOptions(baseUriResources: string) {
+  return mapToLocalIcon(repoTypeOptions, baseUriResources);
+}
 
 export function getBundlerOptions(baseUriResources: string) {
   return mapToLocalIcon(bundlerOptions, baseUriResources);

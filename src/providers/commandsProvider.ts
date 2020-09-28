@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { getRepoType, RepoType } from './helper';
+import { CommandTreeItem } from './items';
+import { getRepoType, RepoType } from '../helper';
 
 export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<
@@ -62,19 +63,5 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
       new CommandTreeItem('Validate Pilet', 'vscode-piral.cli.pilet.validate', undefined),
       new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),
     ];
-  }
-}
-
-export class CommandTreeItem extends vscode.TreeItem {
-  children: Array<CommandTreeItem> | undefined;
-  commandName: string | undefined;
-
-  constructor(label: string, commandName: string, children?: Array<CommandTreeItem>) {
-    super(
-      label,
-      children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Expanded,
-    );
-    this.children = children;
-    this.commandName = commandName;
   }
 }

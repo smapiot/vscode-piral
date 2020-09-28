@@ -114,14 +114,14 @@ export async function createRepository(context: vscode.ExtensionContext) {
       if (options.repoType === 'piral') {
         // Handle Piral Instance
         const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' -y`;
-        runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`, false);
+        runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
         // Dispose Webview
         disposeWebview();
       } else if (options.repoType === 'pilet') {
         // Handle Pilet Instance
         const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' -y`;
-        runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`, false);
+        runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
         // Dispose Webview
         disposeWebview();

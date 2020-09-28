@@ -1,14 +1,15 @@
 import * as vscode from 'vscode';
 import { resolve } from 'path';
+import { InfoTreeItem } from './items';
 import {
   getRepoType,
   RepoType,
   getWorkspaceRoot,
   getVersionOfDependency,
   readPackageJson,
-  bundlers,
   piralFramework,
-} from './helper';
+  getBundler,
+} from '../helper';
 
 function getWorkspacePackageJson(repoType: RepoType) {
   if (repoType === RepoType.Pilet || repoType === RepoType.Piral) {
@@ -31,7 +32,7 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
 
   data: Array<InfoTreeItem> = [];
 
-  constructor() {}
+  constructor() { }
 
   getTreeItem(element: InfoTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
@@ -72,18 +73,20 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
     const piralName = packageJson.name;
     const piralVersion = packageJson.version;
     const piralCliVersion = getVersionOfDependency('piral-cli');
-    const bundler = this.getBundler(packageJson);
+    const bundler = getBundler(packageJson);
 
     const treeItems: Array<InfoTreeItem> = [
       new InfoTreeItem('Piral', [
-        new InfoTreeItem('Name: ' + piralName, undefined),
-        new InfoTreeItem('Version: ' + piralVersion, undefined),
+        new InfoTreeItem(`Name: ${piralName}`, undefined),
+        new InfoTreeItem(`Version: ${piralVersion}`, undefined),
       ]),
-      new InfoTreeItem('Piral CLI', [new InfoTreeItem('Version: ' + piralCliVersion, undefined)]),
-      new InfoTreeItem('Piral CLI Bundler', [
-        new InfoTreeItem('Name: ' + bundler.name, undefined),
-        new InfoTreeItem('Version: ' + bundler.version, undefined),
+      new InfoTreeItem('Piral CLI', [
+        new InfoTreeItem('Version: ' + piralCliVersion, undefined),
       ]),
+      new InfoTreeItem('Piral CLI Bundler', bundler ? [
+        new InfoTreeItem(`Name: ${bundler.name}`, undefined),
+        new InfoTreeItem(`Version: ${bundler.version}`, undefined),
+      ] : []),
     ];
 
     const pluginsTreeItems: Array<InfoTreeItem> = [];
@@ -91,7 +94,7 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
     Object.keys(packageJson.dependencies).forEach((key) => {
       if (key.includes('piral-') && !piralFramework.includes(key)) {
         const version = getVersionOfDependency(key);
-        pluginsTreeItems.push(new InfoTreeItem(key + ' (Version: ' + version + ')'));
+        pluginsTreeItems.push(new InfoTreeItem(`${key} (${version})`));
       }
     });
 
@@ -105,22 +108,24 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
     const appShellName = packageJson.piral.name;
     const appShellVersion = getVersionOfDependency(appShellName);
     const piralCliVersion = getVersionOfDependency('piral-cli');
-    const bundler = this.getBundler(packageJson);
+    const bundler = getBundler(packageJson);
 
     const treeItems: Array<InfoTreeItem> = [
       new InfoTreeItem('Pilet', [
-        new InfoTreeItem('Name: ' + piletName, undefined),
-        new InfoTreeItem('Version: ' + piletVersion, undefined),
+        new InfoTreeItem(`Name: ${piletName}`, undefined),
+        new InfoTreeItem(`Version: ${piletVersion}`, undefined),
       ]),
       new InfoTreeItem('App Shell', [
-        new InfoTreeItem('Name: ' + appShellName, undefined),
-        new InfoTreeItem('Version: ' + appShellVersion, undefined),
+        new InfoTreeItem(`Name: ${appShellName}`, undefined),
+        new InfoTreeItem(`Version: ${appShellVersion}`, undefined),
       ]),
-      new InfoTreeItem('Piral CLI', [new InfoTreeItem('Version: ' + piralCliVersion, undefined)]),
-      new InfoTreeItem('Piral CLI Bundler', [
-        new InfoTreeItem('Name: ' + bundler.name, undefined),
-        new InfoTreeItem('Version: ' + bundler.version, undefined),
+      new InfoTreeItem('Piral CLI', [
+        new InfoTreeItem(`Version: ${piralCliVersion}`, undefined),
       ]),
+      new InfoTreeItem('Piral CLI Bundler', bundler ? [
+        new InfoTreeItem(`Name: ${bundler.name}`, undefined),
+        new InfoTreeItem(`Version: ${bundler.version}`, undefined),
+      ] : []),
     ];
 
     const dependenciesTreeItems: Array<InfoTreeItem> = [];
@@ -132,35 +137,5 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTr
 
     treeItems.push(new InfoTreeItem('Dependencies', dependenciesTreeItems));
     this.data = treeItems;
-  }
-
-  private getBundler(packageJson: any) {
-    const { devDependencies = {} } = packageJson;
-
-    for (const bundler of bundlers) {
-      if (devDependencies[bundler] !== undefined) {
-        return {
-          name: bundler,
-          version: getVersionOfDependency(bundler),
-        };
-      }
-    }
-
-    return {
-      name: 'not found',
-      version: '',
-    };
-  }
-}
-
-class InfoTreeItem extends vscode.TreeItem {
-  children: Array<InfoTreeItem> | undefined;
-
-  constructor(label: string, children?: Array<InfoTreeItem>) {
-    super(
-      label,
-      children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Expanded,
-    );
-    this.children = children;
   }
 }
