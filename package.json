@@ -5,7 +5,7 @@
   "description": "Makes it easy to create, manage, and debug microfrontends using Pirals.",
   "license": "MIT",
   "icon": "resources/piral.png",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/smapiot/vscode-piral/blob/master/README.md",
   "repository": {
     "type": "git",
@@ -73,8 +73,23 @@
         "category": "Piral"
       },
       {
+        "command": "vscode-piral.cli.piral.validate",
+        "title": "Validate Piral Instance",
+        "category": "Piral"
+      },
+      {
         "command": "vscode-piral.cli.piral.build",
         "title": "Build Piral Instance",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.piral.build.emulator",
+        "title": "Build Piral Instance (Emulator)",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.piral.build.release",
+        "title": "Build Piral Instance (Release)",
         "category": "Piral"
       },
       {
@@ -85,6 +100,11 @@
       {
         "command": "vscode-piral.cli.pilet.build",
         "title": "Build Pilet",
+        "category": "Piral"
+      },
+      {
+        "command": "vscode-piral.cli.pilet.validate",
+        "title": "Validate Pilet",
         "category": "Piral"
       },
       {

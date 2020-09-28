@@ -6,6 +6,8 @@ function getPiralCommands() {
   return [
     new CommandTreeItem('Debug Piral Instance', 'vscode-piral.cli.piral.debug', undefined),
     new CommandTreeItem('Build Piral Instance', 'vscode-piral.cli.piral.build', undefined),
+    new CommandTreeItem('Build Piral Instance (Emulator)', 'vscode-piral.cli.piral.build.emulator', undefined),
+    new CommandTreeItem('Build Piral Instance (Release)', 'vscode-piral.cli.piral.build.release', undefined),
     new CommandTreeItem('Generate Declaration', 'vscode-piral.cli.piral.declaration', undefined),
     new CommandTreeItem('Validate Piral Instance', 'vscode-piral.cli.piral.validate', undefined),
     new CommandTreeItem('Create new Project', 'vscode-piral.cli.create', undefined),

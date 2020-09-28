@@ -24,7 +24,7 @@
         <% repoTypes.forEach((repoType, index) => { %>
           <div
             key="repoType<%= index %>"
-            class="card"
+            class="card project"
             repoType="<%= repoType.type %>"
             >
             <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
@@ -75,7 +75,7 @@
           <% bundlers.forEach((bundler, index) => { %>
             <div
               key="bundler_<%= index %>"
-              class="card"
+              class="card bundler"
               bundler="<%= bundler.type %>"
               >
               <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />

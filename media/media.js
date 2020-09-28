@@ -41,10 +41,10 @@ function showValidationErrors(errors) {
 }
 
 // Handle click on RepoType card
-document.querySelectorAll('div.card').forEach((box) =>
+document.querySelectorAll('div.card.project').forEach((box) =>
   box.addEventListener('click', (event) => {
     states.repoType = event.currentTarget.getAttribute('repoType');
-    updateSingleSelectGroup('div.card', 'repoType', 'selectedCard', states.repoType);
+    updateSingleSelectGroup('div.card.project', 'repoType', 'selectedCard', states.repoType);
 
     switch (states.repoType) {
       case 'piral':
@@ -65,10 +65,10 @@ document.querySelectorAll('div.card').forEach((box) =>
 );
 
 // Handle click on Bundler card
-document.querySelectorAll('div.bundlerItem').forEach((box) =>
+document.querySelectorAll('div.card.bundler').forEach((box) =>
   box.addEventListener('click', (event) => {
     states.bundler = event.currentTarget.getAttribute('bundler');
-    updateSingleSelectGroup('div.bundlerItem', 'bundler', 'selectedCard', states.bundler);
+    updateSingleSelectGroup('div.card.bundler', 'bundler', 'selectedCard', states.bundler);
   }),
 );
 
