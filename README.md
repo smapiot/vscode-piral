@@ -35,7 +35,7 @@ For publishing the official command line tool `vsce` should be used.
 
 ```sh
 vsce package
-vsce publish
+vsce publish -p <token>
 ```
 
-This will package the current version of the repository and publish it. Make sure to have the right token added.
+This will package the current version of the repository and publish it. Make sure to have the right token specified. Follow the [instructions outlined here](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token) to get a new one.
