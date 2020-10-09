@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { CommandTreeItem } from './providers/items';
 import { createRepository } from './webView';
-import { RepoType, runCommand } from './helpers';
+import { RepoType, runCommand, getWorkspaceRoot } from './helpers';
+import { resolve } from 'path';
 
 export function registerCommands(context: vscode.ExtensionContext, refreshCommands: () => void, refreshWorkspace: () => void) {
   context.subscriptions.push(
@@ -49,6 +50,24 @@ export function registerCommands(context: vscode.ExtensionContext, refreshComman
     }),
     vscode.commands.registerCommand('vscode-piral.cli.create', () => {
       createRepository(context);
+    }),
+    vscode.commands.registerCommand('vscode-piral.plugin-show-readme.generic', (node: CommandTreeItem) => {
+      const workspaceFolder = getWorkspaceRoot();
+      if (node.target !== undefined && workspaceFolder !== undefined ) {
+        let uri = resolve(workspaceFolder.uri.fsPath, 'node_modules', node.target, 'README.md');
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(uri));
+      } else {
+        vscode.window.showErrorMessage('Could not run command!');
+      }
+    }),
+    vscode.commands.registerCommand('vscode-piral.plugin-show-docs.generic', (node: CommandTreeItem) => {
+        let url = `https://docs.piral.io`;
+        if(node.target != '') {
+          url += `/plugins/${node.target}`;
+        }
+       
+        // Opens website in browser
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
     }),
   );
 }

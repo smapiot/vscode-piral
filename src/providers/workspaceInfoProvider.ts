@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { resolve } from 'path';
-import { InfoTreeItem } from './items';
+import { CommandTreeItem } from './items';
 import {
   getRepoType,
   RepoType,
@@ -31,16 +31,16 @@ function getPiralInfos(packageJson: any) {
   const bundler = getBundler(packageJson);
 
   return [
-    new InfoTreeItem('Piral', [
-      new InfoTreeItem(`Name: ${piralName}`, undefined),
-      new InfoTreeItem(`Version: ${piralVersion}`, undefined),
-    ]),
-    new InfoTreeItem('Piral CLI', [
-      new InfoTreeItem(`Version: ${cliVersion}`, undefined),
-      new InfoTreeItem(`Bundler: ${bundler?.name ?? '(none)'}`),
-    ]),
-    new InfoTreeItem(
-      'Piral Plugins',
+    new CommandTreeItem('Piral', '', [
+      new CommandTreeItem(`Name: ${piralName}`, '', undefined),
+      new CommandTreeItem(`Version: ${piralVersion}`, '', undefined),
+    ], ''),
+    new CommandTreeItem('Piral CLI', '', [
+      new CommandTreeItem(`Version: ${cliVersion}`, '', undefined),
+      new CommandTreeItem(`Bundler: ${bundler?.name ?? '(none)'}`, '', undefined),
+    ], ''),
+    new CommandTreeItem(
+      'Piral Plugins', '',
       Object.keys(packageJson.dependencies)
         .filter(
           (key) =>
@@ -51,7 +51,7 @@ function getPiralInfos(packageJson: any) {
         )
         .map((key) => {
           const version = getVersionOfDependency(key);
-          return new InfoTreeItem(`${key} (${version})`);
+          return new CommandTreeItem(`${key} (${version})`, '', undefined, key);
         }),
     ),
   ];
@@ -66,43 +66,43 @@ function getPiletInfos(packageJson: any) {
   const bundler = getBundler(packageJson);
 
   return [
-    new InfoTreeItem('Pilet', [
-      new InfoTreeItem(`Name: ${piletName}`, undefined),
-      new InfoTreeItem(`Version: ${piletVersion}`, undefined),
+    new CommandTreeItem('Pilet', '', [
+      new CommandTreeItem(`Name: ${piletName}`, '', undefined),
+      new CommandTreeItem(`Version: ${piletVersion}`, '', undefined),
     ]),
-    new InfoTreeItem('App Shell', [
-      new InfoTreeItem(`Name: ${appName}`, undefined),
-      new InfoTreeItem(`Version: ${appVersion}`, undefined),
+    new CommandTreeItem('App Shell', '', [
+      new CommandTreeItem(`Name: ${appName}`, '', undefined),
+      new CommandTreeItem(`Version: ${appVersion}`, '', undefined),
     ]),
-    new InfoTreeItem('Piral CLI', [
-      new InfoTreeItem(`Version: ${cliVersion}`, undefined),
-      new InfoTreeItem(`Bundler: ${bundler?.name ?? '(none)'}`),
+    new CommandTreeItem('Piral CLI', '', [
+      new CommandTreeItem(`Version: ${cliVersion}`, '', undefined),
+      new CommandTreeItem(`Bundler: ${bundler?.name ?? '(none)'}`,'', undefined),
     ]),
-    new InfoTreeItem(
-      'Dependencies',
+    new CommandTreeItem(
+      'Dependencies', '',
       Object.keys(packageJson.dependencies).map((key) => {
         const version = getVersionOfDependency(key);
-        return new InfoTreeItem(`${key} (${version})`);
+        return new CommandTreeItem(`${key} (${version})`, '', undefined);
       }),
     ),
   ];
 }
 
-export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<InfoTreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<InfoTreeItem | undefined> = new vscode.EventEmitter<
-    InfoTreeItem | undefined
+export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
+  private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined> = new vscode.EventEmitter<
+  CommandTreeItem | undefined
   >();
-  readonly onDidChangeTreeData: vscode.Event<InfoTreeItem | undefined> = this._onDidChangeTreeData.event;
+  readonly onDidChangeTreeData: vscode.Event<CommandTreeItem | undefined> = this._onDidChangeTreeData.event;
 
-  data: Array<InfoTreeItem> = [];
+  data: Array<CommandTreeItem> = [];
 
   constructor() {}
 
-  getTreeItem(element: InfoTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+  getTreeItem(element: CommandTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
     return element;
   }
 
-  getChildren(element?: InfoTreeItem | undefined): vscode.ProviderResult<Array<InfoTreeItem>> {
+  getChildren(element?: CommandTreeItem | undefined): vscode.ProviderResult<Array<CommandTreeItem>> {
     if (element === undefined) {
       return this.data;
     }

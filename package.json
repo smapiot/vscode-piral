@@ -140,7 +140,23 @@
           "light": "resources/light/run.svg",
           "dark": "resources/dark/run.svg"
         }
-      }
+      },
+      {
+        "command": "vscode-piral.plugin-show-readme.generic",
+        "title": "Run",
+        "icon": {
+          "light": "resources/light/file-code.svg",
+          "dark": "resources/dark/file-code.svg"
+        }
+      },
+      {
+        "command": "vscode-piral.plugin-show-docs.generic",
+        "title": "Run",
+        "icon": {
+          "light": "resources/light/link-external.svg",
+          "dark": "resources/dark/link-external.svg"
+        }
+      }      
     ],
     "menus": {
       "view/title": [
@@ -159,6 +175,21 @@
         {
           "command": "vscode-piral.available-commands.generic",
           "when": "view == piral-available-commands",
+          "group": "inline"
+        },
+        {
+          "command": "vscode-piral.plugin-show-readme.generic",
+          "when": "view == piral-workspace-info && viewItem == showFullContextPlugin",
+          "group": "inline"
+        },
+        {
+          "command": "vscode-piral.plugin-show-docs.generic",
+          "when": "view == piral-workspace-info && viewItem == showFullContextPlugin",
+          "group": "inline"
+        },
+        {
+          "command": "vscode-piral.plugin-show-docs.generic",
+          "when": "view == piral-workspace-info && viewItem == showWebLinkContextPlugin",
           "group": "inline"
         }
       ]
