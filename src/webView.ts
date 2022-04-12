@@ -76,7 +76,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   webviewPanel.webview.html = getTemplateCode(extensionPath, 'repository', {
     styles: [getResourcePath(webviewPanel, extensionPath, 'media/media.css')],
-    scripts: [getResourcePath(webviewPanel, extensionPath, 'media/media.js'), getToolkitUri(webviewPanel.webview, extensionUri) ],
+    scripts: [{url: getResourcePath(webviewPanel, extensionPath, 'media/media.js'), type: 'application/javascript'}, {url: getToolkitUri(webviewPanel.webview, extensionUri), type: "module"}],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {

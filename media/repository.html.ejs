@@ -13,10 +13,10 @@
   <div id="root">
     <div class="page">
       <div class="header" x-memo>
-        <div class="title">Create Project</div>
-        <div class="subTitle">
+        <h1 class="title">Create Project</h1>
+        <p class="subTitle">
           Create a new Piral instance or a pilet for an existing instance.
-        </div>
+        </p>
       </div>
       <div class="container">
         <div class="container-type">
@@ -99,7 +99,7 @@
       </div>
   </div>
   <% scripts.forEach((script) => { %>
-     <script type="module" src="<%= script %>"></script>
+     <script type="<%= script.type %>" src="<%= script.url %>"></script>
   <% }); %>
 </body>
 
