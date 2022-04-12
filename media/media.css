@@ -147,8 +147,24 @@ body {
   margin-bottom: 0.125rem;
 }
 
+.extraItem-select-path {
+  display: flex;
+  width: 120%;
+  justify-content: space-between;
+}
+
 vscode-text-field.extraItemInput {
   width: 120%;
+}
+
+.folders-img {
+  height: 16px;
+  position: absolute;
+  right: -16%;
+  top: 25px;
+  z-index: 9;
+  width: 16px;
+  cursor: pointer;
 }
 
 

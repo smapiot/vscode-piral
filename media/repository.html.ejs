@@ -50,6 +50,18 @@
               >
             </div>
             <div class="extraItem">
+              <div class="extraItem-select-path">
+                <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span></p>
+                <img class="folders-img" id="local-path" src="<%= images.folders %>" />
+              </div>
+              <vscode-text-field
+                class="extraItemInput"
+                id="local-path-input"
+                disabled
+                stateName="local-path"
+              >
+            </div>
+            <div class="extraItem">
               <p class="extraItemLabel">Version</p>
               <vscode-text-field
                 class="extraItemInput"
@@ -95,7 +107,7 @@
         </div>
       </div>
       <div class="btn-container">
-        <vscode-button class="btn create" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
+        <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
       </div>
   </div>
   <% scripts.forEach((script) => { %>

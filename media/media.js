@@ -1,4 +1,5 @@
 const vscode = acquireVsCodeApi();
+
 const states = {
   repoType: '',
   name: '',
@@ -38,6 +39,12 @@ function showValidationErrors(errors) {
       node.classList.remove('hide');
     }
   });
+}
+
+// Show the selected local path in the input
+function displayLocalPath(localPath) {
+  const input = document.getElementById('local-path-input')
+  input.value = localPath;
 }
 
 // Handle click on RepoType card
@@ -80,8 +87,16 @@ document.querySelectorAll('.extraItemInput').forEach((box) =>
   }),
 );
 
+// Handle click on file button
+document.getElementById('local-path').addEventListener('click', async () => {
+  vscode.postMessage({
+    command: 'getLocalPath',
+    parameters: states,
+  });
+});
+
 // Handle click on create button
-document.querySelector('a.btn.create').addEventListener('click', () => {
+document.getElementById('create-btn').addEventListener('click', () => {
   vscode.postMessage({
     command: 'createPiralPilet',
     parameters: states,
@@ -96,5 +111,8 @@ window.addEventListener('message', (event) => {
     case 'error':
       const errors = message.data;
       showValidationErrors(errors);
+    case 'sendLocalPath':
+      const localPath = message.data[0].path;
+      displayLocalPath(localPath)
   }
 });

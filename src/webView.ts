@@ -1,6 +1,13 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath, getToolkitUri } from './helpers';
+import {
+  getTemplateCode,
+  runCommand,
+  getRepoTypeOptions,
+  getBundlerOptions,
+  getResourcePath,
+  getToolkitUri,
+} from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -22,6 +29,10 @@ interface Options {
 
 function validateParameters(options: Options): string[] {
   const validationErrors: Array<string> = [];
+
+  if (!options.targetFolder) {
+    validationErrors.push('LocalPath');
+  }
 
   if (!options.repoType) {
     validationErrors.push('RepoType');
@@ -59,16 +70,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   disposeWebview();
 
-  const folders = await window.showOpenDialog({
-    canSelectFolders: true,
-    canSelectFiles: false,
-    canSelectMany: false,
-    openLabel: 'Select a folder to create project',
-  });
-
-  if (!folders || folders.length !== 1) {
-    return;
-  }
+  const folders: vscode.Uri[] = [];
 
   webviewPanel = window.createWebviewPanel('piral.createProject', 'Create Project', ViewColumn.One, {
     enableScripts: true,
@@ -76,18 +78,22 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   webviewPanel.webview.html = getTemplateCode(extensionPath, 'repository', {
     styles: [getResourcePath(webviewPanel, extensionPath, 'media/media.css')],
-    scripts: [{url: getResourcePath(webviewPanel, extensionPath, 'media/media.js'), type: 'application/javascript'}, {url: getToolkitUri(webviewPanel.webview, extensionUri), type: "module"}],
+    scripts: [
+      { url: getResourcePath(webviewPanel, extensionPath, 'media/media.js'), type: 'application/javascript' },
+      { url: getToolkitUri(webviewPanel.webview, extensionUri), type: 'module' },
+    ],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {
       selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selectedItem.png'),
+      folders: getResourcePath(webviewPanel, extensionPath, 'resources/folders.png'),
     },
   });
 
   webviewPanel.iconPath = vscode.Uri.file(join(extensionPath, 'resources/piral.png'));
 
   webviewPanel.webview.onDidReceiveMessage(
-    (message) => {
+    async (message) => {
       if (message.command === 'createPiralPilet') {
         const options: Options = Object.assign(
           {
@@ -101,7 +107,10 @@ export async function createRepository(context: vscode.ExtensionContext) {
           },
           message.parameters,
         );
-        options.targetFolder = folders[0].fsPath;
+
+        if (folders.length > 0) {
+          options.targetFolder = folders[0].fsPath;
+        }
 
         const validationErrors = validateParameters(options);
         const errorMessage = { command: 'error', data: validationErrors };
@@ -130,6 +139,17 @@ export async function createRepository(context: vscode.ExtensionContext) {
           // Dispose Webview
           disposeWebview();
         }
+      } else if (message.command === 'getLocalPath') {
+        const sendLocalPath = await window.showOpenDialog({
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+          openLabel: 'Select a folder to create project',
+        });
+        if (sendLocalPath){
+          folders.push(sendLocalPath[0])
+        }
+        webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: folders});
       }
     },
     undefined,
