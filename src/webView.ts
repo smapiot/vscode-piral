@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath } from './helpers';
+import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath, getToolkitUri } from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -54,7 +54,7 @@ function validateParameters(options: Options): string[] {
 }
 
 export async function createRepository(context: vscode.ExtensionContext) {
-  const { extensionPath } = context;
+  const { extensionPath, extensionUri } = context;
   const { window, ViewColumn } = vscode;
 
   disposeWebview();
@@ -76,7 +76,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   webviewPanel.webview.html = getTemplateCode(extensionPath, 'repository', {
     styles: [getResourcePath(webviewPanel, extensionPath, 'media/media.css')],
-    scripts: [getResourcePath(webviewPanel, extensionPath, 'media/media.js')],
+    scripts: [getResourcePath(webviewPanel, extensionPath, 'media/media.js'), getToolkitUri(webviewPanel.webview, extensionUri) ],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {

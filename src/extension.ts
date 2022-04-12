@@ -20,4 +20,4 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommands(context, () => nodeCommandsProvider.refresh(), () => nodeWorkspaceInfoProvider.refresh());
 }
 
-export function deactivate(context: vscode.ExtensionContext) { }
+export function deactivate(context: vscode.ExtensionContext) {}

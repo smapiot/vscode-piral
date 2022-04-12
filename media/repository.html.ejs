@@ -13,86 +13,93 @@
   <div id="root">
     <div class="page">
       <div class="header" x-memo>
-        <h1 class="title">Create Project</h1>
-        <p class="subTitle">
+        <div class="title">Create Project</div>
+        <div class="subTitle">
           Create a new Piral instance or a pilet for an existing instance.
-        </p>
+        </div>
       </div>
       <div class="container">
-        <div class="cards containerColumn">
-          <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[required]</span></p>
-        <% repoTypes.forEach((repoType, index) => { %>
-          <div
-            key="repoType<%= index %>"
-            class="card project"
-            repoType="<%= repoType.type %>"
-            >
-            <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-            <div class="cardTitle">
-              <img class="cardTitleIcon" src="<%= repoType.icon %>" />
-              <p class="cardTitleTxt"><%= repoType.title %></p>
-            </div>
-            <p class="cardDescription"><%= repoType.description %></p>
-          </div>
-        <% }); %>
-        </div>
-        <div class="information containerColumn">
-          <p class="columnTitle">Provide Information</p>
-          <div class="extraItem">
-            <p class="extraItemLabel">Name <span class="errorName errorMessage hide">[required]</span></p>
-            <input
-              class="extraItemInput"
-              stateName="name"
-            >
-          </div>
-          <div class="extraItem">
-            <p class="extraItemLabel">Version</p>
-            <input
-              class="extraItemInput"
-              stateName="version"
-              placeholder="1.0.0"
-              >
-          </div>
-          <div class="extraItem onlyForPilet hide">
-            <p class="extraItemLabel">Piral Package</p>
-            <input
-              class="extraItemInput"
-              stateName="piralPackage"
-              placeholder="sample-piral"
-              >
-          </div>
-          <div class="extraItem onlyForPilet hide">
-            <p class="extraItemLabel">NPM Registry</p>
-            <input
-              class="extraItemInput"
-              stateName="npmRegistry"
-              placeholder="https://registry.npmjs.org/"
-              >
-          </div>
-        </div>
-        <div class="cards containerColumn">
-          <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
-          <% bundlers.forEach((bundler, index) => { %>
-            <div
-              key="bundler_<%= index %>"
-              class="card bundler"
-              bundler="<%= bundler.type %>"
-              >
-              <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-              <div class="cardTitle">
-                <img class="cardTitleIcon" src="<%= bundler.icon %>" />
-                <p class="cardTitleTxt"><%= bundler.title %></p>
+        <div class="container-type">
+          <div class="cards containerColumn">
+            <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[required]</span></p>
+            <% repoTypes.forEach((repoType, index) => { %>
+              <div
+                key="repoType<%= index %>"
+                class="card project"
+                repoType="<%= repoType.type %>"
+                >
+                <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                <div class="cardTitle">
+                  <img class="cardTitleIcon" src="<%= repoType.icon %>" />
+                  <p class="cardTitleTxt"><%= repoType.title %></p>
+                </div>
+                <p class="cardDescription"><%= repoType.description %></p>
               </div>
-              <div class="cardDescription"><%= bundler.description %></div>
+            <% }); %>
+          </div>
+        </div>
+        <div class="side-border"></div>
+        <div class="container-infos">
+          <div class="informations">
+            <p class="columnTitle">Provide Information</p>
+            <div class="extraItem">
+              <p class="extraItemLabel">Name <span class="errorName errorMessage hide">[required]</span></p>
+              <vscode-text-field
+                class="extraItemInput"
+                stateName="name"
+              >
             </div>
-          <% }); %>
+            <div class="extraItem">
+              <p class="extraItemLabel">Version</p>
+              <vscode-text-field
+                class="extraItemInput"
+                stateName="version"
+                placeholder="1.0.0"
+                >
+            </div>
+            <div class="extraItem onlyForPilet hide">
+              <p class="extraItemLabel">Piral Package</p>
+              <vscode-text-field
+                class="extraItemInput"
+                stateName="piralPackage"
+                placeholder="sample-piral"
+                >
+            </div>
+            <div class="extraItem onlyForPilet hide">
+              <p class="extraItemLabel">NPM Registry</p> 
+              <vscode-text-field
+                class="extraItemInput"
+                stateName="npmRegistry"
+                placeholder="https://registry.npmjs.org/"
+                >
+            </div>
+          </div>  
+          <div class="bundlers">
+            <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
+            <% bundlers.forEach((bundler, index) => { %>
+              <div
+                key="bundler_<%= index %>"
+                class="card bundler"
+                bundler="<%= bundler.type %>"
+                >
+                <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                <div class="cardTitle">
+                  <img class="cardTitleIcon" src="<%= bundler.icon %>" />
+                  <p class="cardTitleTxt"><%= bundler.title %></p>
+                </div>
+                <div class="cardDescription"><%= bundler.description %></div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
         </div>
       </div>
-      <a class="btn create" title="Start Scaffolding">Scaffold Project</a>
-    </div>
+      <div class="btn-container">
+        <vscode-button class="btn create" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
+      </div>
   </div>
   <% scripts.forEach((script) => { %>
-     <script src="<%= script %>"></script>
+     <script type="module" src="<%= script %>"></script>
   <% }); %>
 </body>
 
