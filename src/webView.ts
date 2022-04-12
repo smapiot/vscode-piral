@@ -134,14 +134,14 @@ export async function createRepository(context: vscode.ExtensionContext) {
           disposeWebview();
         }
       } else if (message.command === 'getLocalPath') {
-        const sendLocalPath = await window.showOpenDialog({
+        const localPath = await window.showOpenDialog({
           canSelectFolders: true,
           canSelectFiles: false,
           canSelectMany: false,
           openLabel: 'Select a folder to create project',
         });
-        if (sendLocalPath){
-          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: sendLocalPath});
+        if (localPath){
+          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath});
         }
       }
     },
