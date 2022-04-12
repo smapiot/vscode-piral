@@ -158,13 +158,11 @@ vscode-text-field.extraItemInput {
 }
 
 .folders-img {
-  height: 16px;
-  position: absolute;
-  right: -16%;
-  top: 25px;
+  height: 1rem;
+  position: relative;
+  top: 1.6rem;
   z-index: 9;
-  width: 16px;
-  cursor: pointer;
+  margin-right: 0.25rem;
 }
 
 

@@ -70,8 +70,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   disposeWebview();
 
-  const folders: vscode.Uri[] = [];
-
   webviewPanel = window.createWebviewPanel('piral.createProject', 'Create Project', ViewColumn.One, {
     enableScripts: true,
   });
@@ -108,10 +106,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
           message.parameters,
         );
 
-        if (folders.length > 0) {
-          options.targetFolder = folders[0].fsPath;
-        }
-
         const validationErrors = validateParameters(options);
         const errorMessage = { command: 'error', data: validationErrors };
         webviewPanel.webview.postMessage(errorMessage);
@@ -147,8 +141,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           openLabel: 'Select a folder to create project',
         });
         if (sendLocalPath){
-          folders.push(sendLocalPath[0])
-          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: folders});
+          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: sendLocalPath});
         }
       }
     },

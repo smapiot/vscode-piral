@@ -45,6 +45,7 @@ function showValidationErrors(errors) {
 function displayLocalPath(localPath) {
   const input = document.getElementById('local-path-input');
   input.value = localPath;
+  states.targetFolder = localPath;
 }
 
 // Handle click on RepoType card
