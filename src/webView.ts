@@ -148,8 +148,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
         });
         if (sendLocalPath){
           folders.push(sendLocalPath[0])
+          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: folders});
         }
-        webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: folders});
       }
     },
     undefined,

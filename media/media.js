@@ -41,9 +41,9 @@ function showValidationErrors(errors) {
   });
 }
 
-// Show the selected local path in the input
+// Display the selected local path in the input
 function displayLocalPath(localPath) {
-  const input = document.getElementById('local-path-input')
+  const input = document.getElementById('local-path-input');
   input.value = localPath;
 }
 
@@ -111,8 +111,10 @@ window.addEventListener('message', (event) => {
     case 'error':
       const errors = message.data;
       showValidationErrors(errors);
+      break;
     case 'sendLocalPath':
       const localPath = message.data[0].path;
-      displayLocalPath(localPath)
+      displayLocalPath(localPath);
+      break;
   }
 });
