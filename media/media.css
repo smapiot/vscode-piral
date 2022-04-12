@@ -153,6 +153,7 @@ body {
   display: flex;
   width: 120%;
   justify-content: space-between;
+  max-height: 1.313rem;
 }
 
 vscode-text-field.extraItemInput {
