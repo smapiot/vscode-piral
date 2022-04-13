@@ -7,34 +7,34 @@ import { resolve } from 'path';
 export function registerCommands(context: vscode.ExtensionContext, refreshCommands: () => void, refreshWorkspace: () => void) {
   context.subscriptions.push(
     vscode.commands.registerCommand('vscode-piral.cli.pilet.debug', () => {
-      runCommand('pilet debug', RepoType.Pilet);
+      runCommand('npx pilet debug', RepoType.Pilet);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.pilet.build', () => {
-      runCommand('pilet build', RepoType.Pilet);
+      runCommand('npx  pilet build', RepoType.Pilet);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.pilet.publish', () => {
-      runCommand('pilet publish', RepoType.Pilet);
+      runCommand('npx pilet publish', RepoType.Pilet);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.pilet.validate', () => {
-      runCommand('pilet validate', RepoType.Pilet);
+      runCommand('npx pilet validate', RepoType.Pilet);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.debug', () => {
-      runCommand('piral debug', RepoType.Piral);
+      runCommand('npx piral debug', RepoType.Piral);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.build', () => {
-      runCommand('piral build', RepoType.Piral);
+      runCommand('npx piral build', RepoType.Piral);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.build.emulator', () => {
-      runCommand('piral build --type emulator', RepoType.Piral);
+      runCommand('npx piral build --type emulator', RepoType.Piral);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.build.release', () => {
-      runCommand('piral build --type release', RepoType.Piral);
+      runCommand('npx piral build --type release', RepoType.Piral);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.declaration', () => {
-      runCommand('piral declaration', RepoType.Piral);
+      runCommand('npx piral declaration', RepoType.Piral);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.piral.validate', () => {
-      runCommand('piral validate', RepoType.Piral);
+      runCommand('npx piral validate', RepoType.Piral);
     }),
     vscode.commands.registerCommand('vscode-piral.cli.available-commands.refreshEntry', refreshCommands),
     vscode.commands.registerCommand('vscode-piral.cli.workspace-info.refreshEntry', refreshWorkspace),
