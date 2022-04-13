@@ -13,7 +13,7 @@
   <div id="root">
     <div class="page">
       <div class="header" x-memo>
-        <h1 class="title">Create Project</h1>
+        <h1 class="title">Create Project - Piral</h1>
         <p class="subTitle">
           Create a new Piral instance or a pilet for an existing instance.
         </p>
@@ -47,6 +47,19 @@
               <vscode-text-field
                 class="extraItemInput"
                 stateName="name"
+              >
+            </div>
+            <div class="extraItem">
+              <div class="extraItem-select-path">
+                <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span></p>
+                <div class="img-container">
+                  <img class="folders-img" id="local-path" src="<%= images.folders %>" />
+                </div>
+              </div>
+              <vscode-text-field
+                class="extraItemInput"
+                id="local-path-input"
+                disabled
               >
             </div>
             <div class="extraItem">
@@ -95,7 +108,7 @@
         </div>
       </div>
       <div class="btn-container">
-        <vscode-button class="btn create" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
+        <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
       </div>
   </div>
   <% scripts.forEach((script) => { %>
