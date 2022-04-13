@@ -135,7 +135,7 @@ body {
 
 .btn-container {
   text-align: right;
-  padding-right: 0.8rem;
+  padding-right: 1.063rem;
   margin-top: 1rem;
 }
 
@@ -166,7 +166,7 @@ vscode-text-field.extraItemInput {
   top: 1.6rem;
   z-index: 9;
   margin-right: 0.25rem;
-  left: 11rem;
+  right: -2rem;
 }
 
 
