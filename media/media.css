@@ -143,6 +143,7 @@ body {
   position: relative;
   bottom: 0.313rem;
   margin-bottom: 1rem;
+  width: 120%;
 }
 
 .extraItemLabel {
@@ -151,24 +152,25 @@ body {
 
 .extraItem-select-path {
   display: flex;
-  width: 120%;
   justify-content: space-between;
   max-height: 1.313rem;
+  width: 100%;
 }
 
-vscode-text-field.extraItemInput {
-  width: 120%;
+.img-container {
+  position: absolute;
+  right: 0.25rem;
+  top: 1.6rem;
+  z-index: 9;
 }
 
 .folders-img {
   height: 1rem;
-  position: absolute;
-  top: 1.6rem;
-  z-index: 9;
-  margin-right: 0.25rem;
-  right: -2rem;
 }
 
+vscode-text-field.extraItemInput {
+  width: 100%;
+}
 
 .errorMessage {
   font-size: 0.875rem;
