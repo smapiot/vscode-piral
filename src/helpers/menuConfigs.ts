@@ -30,6 +30,18 @@ const bundlerOptions = [
     description: 'Use Webpack as bundler for the project.',
   },
   {
+    type: 'parcel2',
+    icon: 'resources/parcel.png',
+    title: 'Parcel2',
+    description: 'Use Parcel2 as bundler for the project.',
+  },
+  {
+    type: 'Webpack5',
+    icon: 'resources/webpack.svg',
+    title: 'Webpack5',
+    description: 'Use Webpack5 as bundler for the project.',
+  },
+  {
     type: 'vite',
     icon: 'resources/vite.png',
     title: 'Vite',
