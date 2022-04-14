@@ -78,14 +78,6 @@ export function getBundler(packageJson: any) {
   return undefined;
 }
 
-function detectNpm(root: string) {
-  return new Promise((res) => {
-    access(resolve(root, 'package-lock.json'), constants.F_OK, (noPackageLock) => {
-      res(!noPackageLock);
-    });
-  });
-}
-
 function detectYarn(root: string) {
   return !!existsSync(`${root}/yarn.lock`);
 }
@@ -98,16 +90,24 @@ function detectPnpm(root: string) {
   });
 }
 
+function detectlerna(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'lerna.json'), constants.F_OK, (noPackageLock) => {
+      res(!noPackageLock);
+    });
+  });
+}
+
 async function installDependencies(root: string) {
-  const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
-  if (!hasNpm && !hasYarn && !hasPnpm) {
+  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root), detectlerna(root)]);
+  if (hasLerna) {
     execCommand('npx lerna bootstrap');
-  } else if (hasNpm) {
-    execCommand('npm install');
   } else if (hasYarn) {
     execCommand('yarn install');
   } else if (hasPnpm) {
     execCommand('pnpm install');
+  } else {
+    execCommand('npm install');
   }
 }
 
@@ -140,6 +140,9 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
 
     if (!nodeModulesAreAvailable) {
       // ask user to install node-modules
+      // askToInstallDependencies(workspace.uri.fsPath) {
+
+      // }
       vscode.window
         .showInformationMessage(
           'Dependencies are not installed yet, should we install the dependencies now?',
@@ -153,6 +156,10 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
         });
     } else {
       // execute the command - cmd
+      // const piralAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/piral`)
+      // if (!piralAvailable) {
+
+      // }
       const project = resolve(workspace.uri.fsPath, 'package.json');
 
       try {
@@ -168,7 +175,7 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
         }
       } catch (err) {
         vscode.window.showErrorMessage(
-          `Could not load the "package.json". Make sure the works pace is valid "${project}".`,
+          `Could not load the "package.json". Make sure the workspace is valid "${project}".`,
         );
       }
     }
