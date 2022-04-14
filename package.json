@@ -20,7 +20,7 @@
     "theme": "dark"
   },
   "engines": {
-    "vscode": "^1.45.0"
+    "vscode": "^1.63.0"
   },
   "keywords": [
     "piral",
@@ -253,31 +253,28 @@
     "build:bundle": "webpack --progress",
     "watch": "tsc -watch -p ./",
     "watch:bundle": "webpack --watch --progress",
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "npm run build:bundle && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
+    "@types/ejs": "^3.0.4",
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.10.61",
     "@types/react": "^17.0.44",
     "@types/react-dom": "^17.0.15",
+    "@types/vscode": "1.63.0",
     "@types/webpack-env": "^1.15.2",
+    "@vscode/webview-ui-toolkit": "^0.9.3",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
+    "ejs": "^3.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "terser-webpack-plugin": "^3.0.6",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.6",
-    "vscode": "^1.1.21",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {
-    "@types/ejs": "^3.0.4",
-    "@vscode/webview-ui-toolkit": "^0.9.3",
-    "ejs": "^3.1.5",
-    "minimist": "^1.2.5"
-  }
+  "dependencies": {}
 }
