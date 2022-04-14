@@ -90,7 +90,7 @@ function detectPnpm(root: string) {
   });
 }
 
-function detectlerna(root: string) {
+function detectLerna(root: string) {
   return new Promise((res) => {
     access(resolve(root, 'lerna.json'), constants.F_OK, (noPackageLock) => {
       res(!noPackageLock);
@@ -99,7 +99,7 @@ function detectlerna(root: string) {
 }
 
 async function installDependencies(root: string) {
-  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectlerna(root)]);
+  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectLerna(root)]);
   if (hasLerna) {
     execCommand('npx lerna bootstrap');
   } else if (hasYarn) {
