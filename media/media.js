@@ -96,6 +96,28 @@ document.getElementById('local-path').addEventListener('click', async () => {
   });
 });
 
+// Handle click on next button
+document.querySelectorAll('.navigation-btn').forEach((btn) =>
+  btn.addEventListener('click', (event) => {
+    const direction = event.currentTarget.getAttribute('direction');
+    const firstContainer = document.querySelector('.first-container');
+    const secondContainer = document.querySelector('.second-container');
+
+    switch (direction) {
+      case 'next':
+        firstContainer.classList.add('hide');
+        secondContainer.classList.remove('hide');
+        break;
+      case 'previous':
+        document.querySelectorAll('div.onlyForPilet').forEach((btn) => {
+          firstContainer.classList.remove('hide');
+          secondContainer.classList.add('hide');
+        });
+        break;
+    }
+  }),
+);
+
 // Handle click on create button
 document.getElementById('create-btn').addEventListener('click', () => {
   vscode.postMessage({

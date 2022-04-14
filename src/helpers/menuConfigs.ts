@@ -29,6 +29,30 @@ const bundlerOptions = [
     title: 'Webpack',
     description: 'Use Webpack as bundler for the project.',
   },
+  {
+    type: 'vite',
+    icon: 'resources/vite.png',
+    title: 'Vite',
+    description: 'Use Vite as bundler for the project.',
+  },
+  {
+    type: 'esbuild',
+    icon: 'resources/esbuild.png',
+    title: 'Esbuild',
+    description: 'Use Esbuild as bundler for the project.',
+  },
+  {
+    type: 'rollup',
+    icon: 'resources/rollup.png',
+    title: 'Rollup',
+    description: 'Use Rollup as bundler for the project.',
+  },
+  {
+    type: 'xbuild',
+    icon: 'resources/xbuild.png',
+    title: 'Xbuild',
+    description: 'Use Xbuild as bundler for the project.',
+  },
 ];
 
 function mapToLocalIcon<T extends { icon: string }>(
