@@ -253,7 +253,7 @@
     "build:bundle": "webpack --progress",
     "watch": "tsc -watch -p ./",
     "watch:bundle": "webpack --watch --progress",
-    "test": "npm run build:bundle && node ./node_modules/vscode/bin/test"
+    "test": "npm run build:bundle"
   },
   "devDependencies": {
     "@types/ejs": "^3.0.4",
@@ -276,5 +276,7 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "vscode-test": "^1.6.1"
+  }
 }
