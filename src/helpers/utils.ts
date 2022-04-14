@@ -99,7 +99,7 @@ function detectlerna(root: string) {
 }
 
 async function installDependencies(root: string) {
-  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root), detectlerna(root)]);
+  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectlerna(root)]);
   if (hasLerna) {
     execCommand('npx lerna bootstrap');
   } else if (hasYarn) {
@@ -109,6 +109,16 @@ async function installDependencies(root: string) {
   } else {
     execCommand('npm install');
   }
+}
+
+function askToInstallDependencies(root: string) {
+  vscode.window
+    .showInformationMessage('Dependencies are not installed yet, should we install the dependencies now?', 'Yes', 'No')
+    .then((answer) => {
+      if (answer === 'Yes') {
+        installDependencies(root);
+      }
+    });
 }
 
 function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
@@ -140,43 +150,33 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
 
     if (!nodeModulesAreAvailable) {
       // ask user to install node-modules
-      // askToInstallDependencies(workspace.uri.fsPath) {
-
-      // }
-      vscode.window
-        .showInformationMessage(
-          'Dependencies are not installed yet, should we install the dependencies now?',
-          'Yes',
-          'No',
-        )
-        .then((answer) => {
-          if (answer === 'Yes') {
-            installDependencies(workspace.uri.fsPath);
-          }
-        });
+      askToInstallDependencies(workspace.uri.fsPath);
     } else {
-      // execute the command - cmd
-      // const piralAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/piral`)
-      // if (!piralAvailable) {
+      const piralAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/piral`);
+      const piletAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/pilet`);
+      if (!piralAvailable || !piletAvailable) {
+        // ask user to install node-modules
+        askToInstallDependencies(workspace.uri.fsPath);
+      } else {
+        // execute the command - cmd
+        const project = resolve(workspace.uri.fsPath, 'package.json');
 
-      // }
-      const project = resolve(workspace.uri.fsPath, 'package.json');
+        try {
+          const { scripts = {} } = __non_webpack_require__(project) || {};
+          const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
+          const shellCommand =
+            candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
 
-      try {
-        const { scripts = {} } = __non_webpack_require__(project) || {};
-        const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
-        const shellCommand =
-          candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
-
-        if (shellCommand !== undefined) {
-          execCommand(shellCommand);
-        } else {
-          vscode.window.showQuickPick(candidates).then(execCommand);
+          if (shellCommand !== undefined) {
+            execCommand(shellCommand);
+          } else {
+            vscode.window.showQuickPick(candidates).then(execCommand);
+          }
+        } catch (err) {
+          vscode.window.showErrorMessage(
+            `Could not load the "package.json". Make sure the workspace is valid "${project}".`,
+          );
         }
-      } catch (err) {
-        vscode.window.showErrorMessage(
-          `Could not load the "package.json". Make sure the workspace is valid "${project}".`,
-        );
       }
     }
   }
