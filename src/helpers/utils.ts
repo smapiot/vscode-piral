@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync, access, constants } from 'fs';
 import { resolve } from 'path';
 
 export enum RepoType {
@@ -78,6 +78,49 @@ export function getBundler(packageJson: any) {
   return undefined;
 }
 
+function detectYarn(root: string) {
+  return !!existsSync(`${root}/yarn.lock`);
+}
+
+function detectPnpm(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, (noPnpmLock) => {
+      res(!noPnpmLock);
+    });
+  });
+}
+
+function detectLerna(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'lerna.json'), constants.F_OK, (noPackageLock) => {
+      res(!noPackageLock);
+    });
+  });
+}
+
+async function installDependencies(root: string) {
+  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectLerna(root)]);
+  if (hasLerna) {
+    execCommand('npx lerna bootstrap');
+  } else if (hasYarn) {
+    execCommand('yarn install');
+  } else if (hasPnpm) {
+    execCommand('pnpm install');
+  } else {
+    execCommand('npm install');
+  }
+}
+
+function askToInstallDependencies(root: string) {
+  vscode.window
+    .showInformationMessage('Dependencies are not installed yet, should we install the dependencies now?', 'Yes', 'No')
+    .then((answer) => {
+      if (answer === 'Yes') {
+        installDependencies(root);
+      }
+    });
+}
+
 function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
   if (cmd) {
     const term = vscode.window.createTerminal({
@@ -85,6 +128,7 @@ function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
     });
     term.sendText(cmd, true);
     term.show(true);
+
     return term;
   }
 
@@ -93,7 +137,6 @@ function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
 
 export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
   const workspace = getWorkspaceRoot();
-
   if (requiredRepoType === RepoType.Undefined) {
     return execCommand(cmd);
   }
@@ -103,23 +146,38 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
   } else if (getRepoType() !== requiredRepoType) {
     vscode.window.showErrorMessage(`Command works only with ${requiredRepoType} projects!`);
   } else {
-    const project = resolve(workspace.uri.fsPath, 'package.json');
+    const nodeModulesAreAvailable = existsSync(`${workspace.uri.fsPath}/node_modules`);
 
-    try {
-      const { scripts = {} } = __non_webpack_require__(project) || {};
-      const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
-      const shellCommand =
-        candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
-
-      if (shellCommand !== undefined) {
-        execCommand(shellCommand);
+    if (!nodeModulesAreAvailable) {
+      // ask user to install node-modules
+      askToInstallDependencies(workspace.uri.fsPath);
+    } else {
+      const piralAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/piral`);
+      const piletAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/pilet`);
+      if (!piralAvailable || !piletAvailable) {
+        // ask user to install node-modules
+        askToInstallDependencies(workspace.uri.fsPath);
       } else {
-        vscode.window.showQuickPick(candidates).then(execCommand);
+        // execute the command - cmd
+        const project = resolve(workspace.uri.fsPath, 'package.json');
+
+        try {
+          const { scripts = {} } = __non_webpack_require__(project) || {};
+          const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
+          const shellCommand =
+            candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
+
+          if (shellCommand !== undefined) {
+            execCommand(shellCommand);
+          } else {
+            vscode.window.showQuickPick(candidates).then(execCommand);
+          }
+        } catch (err) {
+          vscode.window.showErrorMessage(
+            `Could not load the "package.json". Make sure the workspace is valid "${project}".`,
+          );
+        }
       }
-    } catch (err) {
-      vscode.window.showErrorMessage(
-        `Could not load the "package.json". Make sure the workspace is valid "${project}".`,
-      );
     }
   }
 }
