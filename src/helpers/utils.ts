@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, access, constants } from 'fs';
 import { resolve } from 'path';
 
 export enum RepoType {
@@ -78,13 +78,36 @@ export function getBundler(packageJson: any) {
   return undefined;
 }
 
-function installDependencies(workspaceFsPath: string) {
-  if (existsSync(`${workspaceFsPath}/yarn.lock`)) {
-    execCommand('yarn install')  
-  } else if (existsSync(`${workspaceFsPath}/pnpm-lock-.yaml`)){
-    execCommand('pnpm install')  
-  } else {
+function detectNpm(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'package-lock.json'), constants.F_OK, (noPackageLock) => {
+      res(!noPackageLock);
+    });
+  });
+}
+
+function detectYarn(root: string) {
+  return !!(existsSync(`${root}/yarn.lock`));
+}
+
+function detectPnpm(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, (noPnpmLock) => {
+      res(!noPnpmLock);
+    });
+  });
+}
+
+async function installDependencies(root: string) {
+  const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
+  if (!hasNpm && !hasYarn && !hasPnpm) {
+    execCommand('npx lerna bootstrap')
+  } else if (hasNpm) {
     execCommand('npm install')
+  } else if (hasYarn) {
+    execCommand('yarn install')
+  } else if (hasPnpm) {
+    execCommand('pnpm install')
   }
 }
 
