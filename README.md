@@ -1,6 +1,8 @@
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
+
 # `piral-vscode`
 
-The official VS Code extension for Piral.
+The official VS Code extension for [Piral](https://piral.io).
 
 ## Overview
 
