@@ -78,6 +78,16 @@ export function getBundler(packageJson: any) {
   return undefined;
 }
 
+function installDependencies(workspaceFsPath: string) {
+  if (existsSync(`${workspaceFsPath}/yarn.lock`)) {
+    execCommand('yarn install')  
+  } else if (existsSync(`${workspaceFsPath}/pnpm-lock-.yaml`)){
+    execCommand('pnpm install')  
+  } else {
+    execCommand('npm install')
+  }
+}
+
 function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
   if (cmd) {
     const term = vscode.window.createTerminal({
@@ -103,9 +113,7 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
   } else if (getRepoType() !== requiredRepoType) {
     vscode.window.showErrorMessage(`Command works only with ${requiredRepoType} projects!`);
   } else {
-    const piralOrPilet = cmd.split(' ')[1];
     const nodeModulesAreAvailable = existsSync(`${workspace.uri.fsPath}/node_modules`);
-    const piralCliIsAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/${piralOrPilet}`);
 
     if (!nodeModulesAreAvailable) {
       // ask user to install node-modules
@@ -117,39 +125,28 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
         )
         .then((answer) => {
           if (answer === 'Yes') {
-            execCommand('npm i');
+            installDependencies(workspace.uri.fsPath)
           }
         });
     } else {
-      if (!piralCliIsAvailable) {
-        // ask user to install piral-cli
-        vscode.window
-          .showInformationMessage('Piral CLI not installed yet, should we install the dependencies now?', 'Yes', 'No')
-          .then((answer) => {
-            if (answer === 'Yes') {
-              execCommand('npm i piral-cli');
-            }
-          });
-      } else {
-        // execute the command - cmd
-        const project = resolve(workspace.uri.fsPath, 'package.json');
+      // execute the command - cmd
+      const project = resolve(workspace.uri.fsPath, 'package.json');
 
-        try {
-          const { scripts = {} } = __non_webpack_require__(project) || {};
-          const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
-          const shellCommand =
-            candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
+      try {
+        const { scripts = {} } = __non_webpack_require__(project) || {};
+        const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
+        const shellCommand =
+          candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;
 
-          if (shellCommand !== undefined) {
-            execCommand(shellCommand);
-          } else {
-            vscode.window.showQuickPick(candidates).then(execCommand);
-          }
-        } catch (err) {
-          vscode.window.showErrorMessage(
-            `Could not load the "package.json". Make sure the works pace is valid "${project}".`,
-          );
+        if (shellCommand !== undefined) {
+          execCommand(shellCommand);
+        } else {
+          vscode.window.showQuickPick(candidates).then(execCommand);
         }
+      } catch (err) {
+        vscode.window.showErrorMessage(
+          `Could not load the "package.json". Make sure the works pace is valid "${project}".`,
+        );
       }
     }
   }
