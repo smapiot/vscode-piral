@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, access, constants } from 'fs';
 import { resolve } from 'path';
 
 export enum RepoType {
@@ -78,6 +78,49 @@ export function getBundler(packageJson: any) {
   return undefined;
 }
 
+function detectYarn(root: string) {
+  return !!existsSync(`${root}/yarn.lock`);
+}
+
+function detectPnpm(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'pnpm-lock.yaml'), constants.F_OK, (noPnpmLock) => {
+      res(!noPnpmLock);
+    });
+  });
+}
+
+function detectLerna(root: string) {
+  return new Promise((res) => {
+    access(resolve(root, 'lerna.json'), constants.F_OK, (noPackageLock) => {
+      res(!noPackageLock);
+    });
+  });
+}
+
+async function installDependencies(root: string) {
+  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectLerna(root)]);
+  if (hasLerna) {
+    execCommand('npx lerna bootstrap');
+  } else if (hasYarn) {
+    execCommand('yarn install');
+  } else if (hasPnpm) {
+    execCommand('pnpm install');
+  } else {
+    execCommand('npm install');
+  }
+}
+
+function askToInstallDependencies(root: string) {
+  vscode.window
+    .showInformationMessage('Dependencies are not installed yet, should we install the dependencies now?', 'Yes', 'No')
+    .then((answer) => {
+      if (answer === 'Yes') {
+        installDependencies(root);
+      }
+    });
+}
+
 function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
   if (cmd) {
     const term = vscode.window.createTerminal({
@@ -103,33 +146,17 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
   } else if (getRepoType() !== requiredRepoType) {
     vscode.window.showErrorMessage(`Command works only with ${requiredRepoType} projects!`);
   } else {
-    const piralOrPilet = cmd.split(' ')[1];
     const nodeModulesAreAvailable = existsSync(`${workspace.uri.fsPath}/node_modules`);
-    const piralCliIsAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/${piralOrPilet}`);
 
     if (!nodeModulesAreAvailable) {
       // ask user to install node-modules
-      vscode.window
-        .showInformationMessage(
-          'Dependencies are not installed yet, should we install the dependencies now?',
-          'Yes',
-          'No',
-        )
-        .then((answer) => {
-          if (answer === 'Yes') {
-            execCommand('npm i');
-          }
-        });
+      askToInstallDependencies(workspace.uri.fsPath);
     } else {
-      if (!piralCliIsAvailable) {
-        // ask user to install piral-cli
-        vscode.window
-          .showInformationMessage('Piral CLI not installed yet, should we install the dependencies now?', 'Yes', 'No')
-          .then((answer) => {
-            if (answer === 'Yes') {
-              execCommand('npm i piral-cli');
-            }
-          });
+      const piralAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/piral`);
+      const piletAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/pilet`);
+      if (!piralAvailable || !piletAvailable) {
+        // ask user to install node-modules
+        askToInstallDependencies(workspace.uri.fsPath);
       } else {
         // execute the command - cmd
         const project = resolve(workspace.uri.fsPath, 'package.json');
@@ -147,7 +174,7 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
           }
         } catch (err) {
           vscode.window.showErrorMessage(
-            `Could not load the "package.json". Make sure the works pace is valid "${project}".`,
+            `Could not load the "package.json". Make sure the workspace is valid "${project}".`,
           );
         }
       }
