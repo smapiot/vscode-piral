@@ -87,7 +87,7 @@ function detectNpm(root: string) {
 }
 
 function detectYarn(root: string) {
-  return !!(existsSync(`${root}/yarn.lock`));
+  return !!existsSync(`${root}/yarn.lock`);
 }
 
 function detectPnpm(root: string) {
@@ -101,13 +101,13 @@ function detectPnpm(root: string) {
 async function installDependencies(root: string) {
   const [hasNpm, hasYarn, hasPnpm] = await Promise.all([detectNpm(root), detectYarn(root), detectPnpm(root)]);
   if (!hasNpm && !hasYarn && !hasPnpm) {
-    execCommand('npx lerna bootstrap')
+    execCommand('npx lerna bootstrap');
   } else if (hasNpm) {
-    execCommand('npm install')
+    execCommand('npm install');
   } else if (hasYarn) {
-    execCommand('yarn install')
+    execCommand('yarn install');
   } else if (hasPnpm) {
-    execCommand('pnpm install')
+    execCommand('pnpm install');
   }
 }
 
@@ -148,7 +148,7 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
         )
         .then((answer) => {
           if (answer === 'Yes') {
-            installDependencies(workspace.uri.fsPath)
+            installDependencies(workspace.uri.fsPath);
           }
         });
     } else {
