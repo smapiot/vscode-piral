@@ -13,9 +13,9 @@
   <div id="root">
     <div class="page">
       <div class="header" x-memo>
-        <h1 class="title">Create Project - Piral</h1>
+        <h1 class="title">Create New Project</h1>
         <p class="subTitle">
-          Create a new Piral instance or a pilet for an existing instance.
+          Create a new Piral instance or a new pilet for an existing Piral instance.
         </p>
       </div>
       <div class="first-container">
@@ -80,14 +80,14 @@
                   >
               </div>
               <div class="extraItem onlyForPilet hide">
-                <p class="extraItemLabel">NPM Registry</p> 
+                <p class="extraItemLabel">NPM Registry</p>
                 <vscode-text-field
                   class="extraItemInput"
                   stateName="npmRegistry"
                   placeholder="https://registry.npmjs.org/"
                   >
               </div>
-            </div>  
+            </div>
             <div class="bundlers">
               <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
               <% bundlers.forEach((bundler, index) => { %>
