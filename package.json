@@ -5,7 +5,7 @@
   "description": "Makes it easy to create, manage, and debug microfrontends using Pirals.",
   "license": "MIT",
   "icon": "resources/piral.png",
-  "version": "0.2.0",
+  "version": "0.2",
   "homepage": "https://github.com/smapiot/vscode-piral/blob/master/README.md",
   "repository": {
     "type": "git",

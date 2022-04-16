@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
+      - run: sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1.${{ github.run_number }}/" 'package.json'
       - run: npm run build
       - run: npm run test
       - name: Publish to Visual Studio Marketplace
@@ -37,7 +38,14 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - name: Publish to Visual Studio Marketplace
+      - run: sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1.${{ github.run_number }}/" 'package.json'
+      - name: Prepublish to Open VSX Registry
+        uses: HaaLeo/publish-vscode-extension@v1
+        with:
+          pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          preRelease: true
+          registryUrl: https://open-vsx.org
+      - name: Prepublish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.VSCODE_TOKEN }}
@@ -57,10 +65,12 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
+      - run: sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1.${{ github.run_number }}/" 'package.json'
       - name: Publish to Open VSX Registry
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          registryUrl: https://open-vsx.org
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
