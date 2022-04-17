@@ -249,6 +249,7 @@
   "scripts": {
     "vscode:prepublish": "npm run build:bundle",
     "ci:publish": "vsce publish -p $VSCODE_TOKEN",
+    "ci:version": "node tools/version.js",
     "build": "tsc -p ./",
     "build:bundle": "webpack --progress",
     "watch": "tsc -watch -p ./",
