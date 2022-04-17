@@ -57,9 +57,11 @@ export class CommandsDataProvider implements vscode.TreeDataProvider<CommandTree
     switch (repoType) {
       case RepoType.Piral:
         this.data = getPiralCommands();
+        vscode.window.showInformationMessage('Piral instance workspace found.');
         break;
       case RepoType.Pilet:
         this.data = getPiletCommands();
+        vscode.window.showInformationMessage('Pilet workspace found.');
         break;
       default:
         this.data = [];

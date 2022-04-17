@@ -35,7 +35,6 @@ export function getRepoType(): RepoType {
       if (pilets !== undefined || Object.keys(dependencies).some((m) => piralFramework.includes(m))) {
         return RepoType.Piral;
       } else if (piral !== undefined) {
-        vscode.window.showInformationMessage('Pilet workspace found.');
         return RepoType.Pilet;
       }
     }
