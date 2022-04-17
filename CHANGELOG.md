@@ -1,10 +1,10 @@
-# Change Log
+# Changelog
 
 All notable changes to the "piral-vscode" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## 0.2.0
+## 0.2
 
 - Linked dependencies to their READMEs (#10)
 - Linked documentation pages (#11)
@@ -13,11 +13,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Automated releases of the extension
 - Added Open VSX registry as release target
 
-## 0.1.0
+## 0.1
 
 - Fixed workspace issue (#6)
 - Added support for `.codegen` file (#4)
 
 ## 0.0.1
 
-- Initial release on the marketplace
+- Initial release on the VS Code marketplace

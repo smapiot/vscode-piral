@@ -5,8 +5,8 @@
   "description": "Makes it easy to create, manage, and debug microfrontends using Pirals.",
   "license": "MIT",
   "icon": "resources/piral.png",
-  "version": "0.2",
-  "homepage": "https://github.com/smapiot/vscode-piral/blob/master/README.md",
+  "version": "0.2.0",
+  "homepage": "https://github.com/smapiot/vscode-piral/blob/main/README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/smapiot/vscode-piral"
@@ -272,11 +272,10 @@
     "terser-webpack-plugin": "^3.0.6",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.6",
+    "vscode-test": "^1.6.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {
-    "vscode-test": "^1.6.1"
-  }
+  "dependencies": {}
 }

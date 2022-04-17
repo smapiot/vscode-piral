@@ -24,7 +24,9 @@ Right now the following features are part of this extension:
 - A workspace panel info with plugins, dependencies, versions, ...
 - Additions to the command palette using useful commands (e.g., `piral debug`)
 - A provider for `.codegen` files (essentially using JavaScript as language)
-- Webview for scaffolding new projects (Piral instances or pilets)
+- A wizard for scaffolding new projects (Piral instances or pilets)
+- Additional debugging utilities and tools
+- Start, build, validate, ... run all commands without a command line
 
 ## Development
 
