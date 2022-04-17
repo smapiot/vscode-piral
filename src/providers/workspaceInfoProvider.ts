@@ -122,9 +122,11 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<Comman
     switch (repoType) {
       case RepoType.Piral:
         this.data = getPiralInfos(packageJson);
+        vscode.window.showInformationMessage('Piral instance workspace found.');
         break;
       case RepoType.Pilet:
         this.data = getPiletInfos(packageJson);
+        vscode.window.showInformationMessage('Pilet workspace found.');
         break;
       case RepoType.Undefined:
       default:

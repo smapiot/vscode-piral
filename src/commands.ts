@@ -1,10 +1,14 @@
 import * as vscode from 'vscode';
+import { resolve } from 'path';
 import { CommandTreeItem } from './providers/items';
 import { createRepository } from './webView';
 import { RepoType, runCommand, getWorkspaceRoot } from './helpers';
-import { resolve } from 'path';
 
-export function registerCommands(context: vscode.ExtensionContext, refreshCommands: () => void, refreshWorkspace: () => void) {
+export function registerCommands(
+  context: vscode.ExtensionContext,
+  refreshCommands: () => void,
+  refreshWorkspace: () => void,
+) {
   context.subscriptions.push(
     vscode.commands.registerCommand('vscode-piral.cli.pilet.debug', () => {
       runCommand('npx pilet debug', RepoType.Pilet);
@@ -53,21 +57,22 @@ export function registerCommands(context: vscode.ExtensionContext, refreshComman
     }),
     vscode.commands.registerCommand('vscode-piral.plugin-show-readme.generic', (node: CommandTreeItem) => {
       const workspaceFolder = getWorkspaceRoot();
-      if (node.target !== undefined && workspaceFolder !== undefined ) {
-        let uri = resolve(workspaceFolder.uri.fsPath, 'node_modules', node.target, 'README.md');
-        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(uri));
+      if (node.target !== undefined && workspaceFolder !== undefined) {
+        const url = resolve(workspaceFolder.uri.fsPath, 'node_modules', node.target, 'README.md');
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
       } else {
         vscode.window.showErrorMessage('Could not run command!');
       }
     }),
     vscode.commands.registerCommand('vscode-piral.plugin-show-docs.generic', (node: CommandTreeItem) => {
-        let url = `https://docs.piral.io`;
-        if(node.target != '') {
-          url += `/plugins/${node.target}`;
-        }
-       
-        // Opens website in browser
-        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
+      let url = `https://docs.piral.io`;
+
+      if (node.target !== '') {
+        url += `/plugins/${node.target}`;
+      }
+
+      // Opens website in browser
+      vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
     }),
   );
 }

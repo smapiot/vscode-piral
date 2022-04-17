@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { readFileSync, existsSync, access, constants } from 'fs';
 import { resolve } from 'path';
+import { bundlerPackages, getBundlerInfos } from './menuConfigs';
 
 export enum RepoType {
   Piral = 0,
@@ -8,8 +9,6 @@ export enum RepoType {
   Mono = 2,
   Undefined = 3,
 }
-
-export const bundlers = ['piral-cli-parcel', 'piral-cli-webpack'];
 
 export const piralFramework = ['piral-base', 'piral-core', 'piral'];
 
@@ -65,10 +64,10 @@ export function getVersionOfDependency(dependency: string) {
 export function getBundler(packageJson: any) {
   const { devDependencies = {} } = packageJson;
 
-  for (const bundler of bundlers) {
+  for (const bundler of bundlerPackages) {
     if (devDependencies[bundler] !== undefined) {
       return {
-        name: bundler,
+        name: getBundlerInfos(bundler)?.title,
         version: getVersionOfDependency(bundler),
       };
     }
@@ -161,7 +160,7 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
         const project = resolve(workspace.uri.fsPath, 'package.json');
 
         try {
-          const { scripts = {} } = __non_webpack_require__(project) || {};
+          const { scripts = {} } = require(project) || {};
           const candidates = Object.keys(scripts).filter((m) => scripts[m].trim().startsWith(cmd));
           const shellCommand =
             candidates.length === 0 ? cmd : candidates.length === 1 ? scripts[candidates.pop() ?? ''] : undefined;

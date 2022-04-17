@@ -20,49 +20,57 @@ const bundlerOptions = [
   {
     type: 'parcel',
     icon: 'resources/parcel.png',
-    title: 'Parcel',
-    description: 'Use Parcel as bundler for the project.',
+    title: 'Parcel v1',
+    package: 'piral-cli-parcel',
+    description: 'Use Parcel v1 as bundler for the project.',
   },
   {
     type: 'webpack',
     icon: 'resources/webpack.svg',
-    title: 'Webpack',
-    description: 'Use Webpack as bundler for the project.',
+    title: 'Webpack v4',
+    package: 'piral-cli-webpack',
+    description: 'Use Webpack v4 as bundler for the project.',
   },
   {
     type: 'parcel2',
     icon: 'resources/parcel.png',
-    title: 'Parcel2',
-    description: 'Use Parcel2 as bundler for the project.',
+    title: 'Parcel v2',
+    package: 'piral-cli-parcel2',
+    description: 'Use Parcel v2 as bundler for the project.',
   },
   {
     type: 'Webpack5',
     icon: 'resources/webpack.svg',
-    title: 'Webpack5',
-    description: 'Use Webpack5 as bundler for the project.',
+    title: 'Webpack v5',
+    package: 'piral-cli-webpack5',
+    description: 'Use Webpack v5 as bundler for the project.',
   },
   {
     type: 'vite',
     icon: 'resources/vite.png',
     title: 'Vite',
+    package: 'piral-cli-vite',
     description: 'Use Vite as bundler for the project.',
   },
   {
     type: 'esbuild',
     icon: 'resources/esbuild.png',
-    title: 'Esbuild',
+    title: 'esbuild',
+    package: 'piral-cli-esbuild',
     description: 'Use Esbuild as bundler for the project.',
   },
   {
     type: 'rollup',
     icon: 'resources/rollup.png',
     title: 'Rollup',
+    package: 'piral-cli-rollup',
     description: 'Use Rollup as bundler for the project.',
   },
   {
     type: 'xbuild',
     icon: 'resources/xbuild.png',
-    title: 'Xbuild',
+    title: 'xbuild',
+    package: 'piral-cli-xbuild',
     description: 'Use Xbuild as bundler for the project.',
   },
 ];
@@ -77,6 +85,8 @@ function mapToLocalIcon<T extends { icon: string }>(
     icon: getResourcePath(panel, baseUriResources, item.icon),
   }));
 }
+
+export const bundlerPackages = bundlerOptions.map(b => b.package);
 
 export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: string, fileName: string) {
   return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
@@ -95,6 +105,10 @@ export function getToolkitUri(webview: vscode.Webview, extensionUri: vscode.Uri)
 
 export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
+}
+
+export function getBundlerInfos(packageName: string) {
+  return bundlerOptions.find(b => b.package === packageName);
 }
 
 export function getBundlerOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
