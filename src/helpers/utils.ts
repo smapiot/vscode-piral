@@ -98,6 +98,7 @@ function detectLerna(root: string) {
 
 async function installDependencies(root: string) {
   const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectLerna(root)]);
+
   if (hasLerna) {
     execCommand('npx lerna bootstrap');
   } else if (hasYarn) {
@@ -135,6 +136,7 @@ function execCommand(cmd: string | undefined): vscode.Terminal | undefined {
 
 export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
   const workspace = getWorkspaceRoot();
+
   if (requiredRepoType === RepoType.Undefined) {
     return execCommand(cmd);
   }
@@ -151,8 +153,8 @@ export function runCommand(cmd: string, requiredRepoType = RepoType.Undefined) {
       askToInstallDependencies(workspace.uri.fsPath);
     } else {
       const piralAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/piral`);
-      const piletAvailable = existsSync(`${workspace.uri.fsPath}/node_modules/.bin/pilet`);
-      if (!piralAvailable || !piletAvailable) {
+
+      if (!piralAvailable) {
         // ask user to install node-modules
         askToInstallDependencies(workspace.uri.fsPath);
       } else {

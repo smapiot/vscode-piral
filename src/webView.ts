@@ -105,7 +105,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           },
           message.parameters,
         );
-          console.log(options)
+        console.log(options);
         const validationErrors = validateParameters(options);
         const errorMessage = { command: 'error', data: validationErrors };
         webviewPanel.webview.postMessage(errorMessage);
@@ -120,14 +120,14 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
         if (options.repoType === 'piral') {
           // Handle Piral Instance
-          const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' -y`;
+          const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
           runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
           // Dispose Webview
           disposeWebview();
         } else if (options.repoType === 'pilet') {
           // Handle Pilet Instance
-          const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' -y`;
+          const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
           runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
           // Dispose Webview
@@ -140,8 +140,9 @@ export async function createRepository(context: vscode.ExtensionContext) {
           canSelectMany: false,
           openLabel: 'Select a folder to create project',
         });
-        if (localPath){
-          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath});
+
+        if (localPath) {
+          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath });
         }
       }
     },

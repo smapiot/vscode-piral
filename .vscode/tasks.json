@@ -4,17 +4,50 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "npm",
-            "script": "watch",
-            "problemMatcher": "$tsc-watch",
-            "isBackground": true,
-            "presentation": {
-                "reveal": "never"
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
+          "type": "npm",
+          "script": "watch",
+          "label": "npm run watch",
+          "isBackground": true,
+          "problemMatcher": {
+            "owner": "esbuild",
+            "severity": "error",
+            "fileLocation": "absolute",
+            "pattern": [
+              {
+                "regexp": "ERROR in (.*)",
+                "file": 1
+              },
+              {
+                "regexp": "\\((\\d+),(\\d+)\\):(.*)",
+                "line": 1,
+                "column": 2,
+                "message": 3
+              }
+            ],
+            "background": {
+              "activeOnStart": true,
+              "beginsPattern": "[watch]",
+              "endsPattern": "build finished"
             }
+          },
+          "options": {
+            "cwd": "${workspaceFolder}"
+          },
+          "dependsOn": []
+        },
+        {
+          "label": "terminate all",
+          "command": "echo ${input:terminate}",
+          "type": "shell",
+          "problemMatcher": []
         }
+    ],
+    "inputs": [
+      {
+        "id": "terminate",
+        "type": "command",
+        "command": "workbench.action.tasks.terminate",
+        "args": "terminateAll"
+      }
     ]
 }

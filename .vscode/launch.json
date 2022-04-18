@@ -14,7 +14,8 @@
       ],
       "stopOnEntry": false,
       "sourceMaps": true,
-      "preLaunchTask": "npm: build:bundle"
+      "preLaunchTask": "npm run watch",
+      "postDebugTask": "terminate all"
     },
     {
       "name": "Extension Tests",
