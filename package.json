@@ -247,13 +247,13 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run build:bundle",
+    "vscode:prepublish": "npm run build",
     "ci:publish": "vsce publish -p $VSCODE_TOKEN",
     "ci:version": "node tools/version.js",
-    "build:check": "tsc --noEmit",
-    "build:bundle": "esbuild --bundle src/extension.ts --sourcemap --external:vscode --platform=node --outdir=dist",
-    "watch": "npm run build:bundle -- --watch",
-    "test": "npm run build:check && npm run build:bundle"
+    "check": "tsc --noEmit",
+    "build": "esbuild --bundle src/extension.ts --sourcemap --external:vscode --platform=node --outdir=dist",
+    "watch": "npm run build -- --watch",
+    "test": "npm run check && npm run build"
   },
   "devDependencies": {
     "@types/ejs": "^3.0.4",
