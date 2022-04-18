@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm run ci:version -- ${{ github.run_number }
+      - run: npm run ci:version -- ${{ github.run_number }}
       - run: npm run build
       - run: npm run test
       - name: Publish to Visual Studio Marketplace
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm run ci:version -- ${{ github.run_number }
+      - run: npm run ci:version -- ${{ github.run_number }}
       - name: Prepublish to Open VSX Registry
         uses: HaaLeo/publish-vscode-extension@v1
         with:
@@ -65,7 +65,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm run ci:version -- ${{ github.run_number }
+      - run: npm run ci:version -- ${{ github.run_number }}
       - name: Publish to Open VSX Registry
         uses: HaaLeo/publish-vscode-extension@v1
         with:
