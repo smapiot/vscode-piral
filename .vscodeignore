@@ -9,4 +9,3 @@ src/**
 prettier.config.js
 tsconfig.json
 resources/readme/**
-webpack.config.js
