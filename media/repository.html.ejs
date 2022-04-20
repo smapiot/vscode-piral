@@ -53,15 +53,19 @@
               <div class="extraItem">
                 <div class="extraItem-select-path">
                   <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span></p>
-                  <div class="img-container">
+                </div>
+                <div class="local-path-input-container">
+                  <div class="input-local-path">
+                    <vscode-text-field
+                      id="local-path-input"
+                      class="extraItemInput"
+                      stateName="targetFolder"
+                    >
+                  </div>
+                  <div class="img-container2">
                     <img class="folders-img" id="local-path" src="<%= images.foldersIcon %>" />
                   </div>
                 </div>
-                <vscode-text-field
-                  class="extraItemInput"
-                  id="local-path-input"
-                  disabled
-                >
               </div>
               <div class="extraItem">
                 <p class="extraItemLabel">Version</p>
@@ -110,6 +114,7 @@
         <div class="btn-container">
           <!-- <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button> -->
           <vscode-button class="navigation-btn" direction="next" href="#">Next</vscode-button>
+          <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
         </div>
       </div>
       <div class="second-container hide">
