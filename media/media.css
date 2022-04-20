@@ -182,10 +182,6 @@ vscode-text-field.extraItemInput {
   width: 100%;
 }
 
-input#control.control {
-  padding-right: 28px;
-}
-
 .errorMessage {
   font-size: 0.875rem;
   color: #ff1010;
