@@ -83,8 +83,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {
-      selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selectedItem.png'),
-      foldersIcon: getResourcePath(webviewPanel, extensionPath, 'resources/foldersIcon.png'),
+      selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
+      foldersIcon: getResourcePath(webviewPanel, extensionPath, 'resources/folders-icon.png'),
     },
   });
 
