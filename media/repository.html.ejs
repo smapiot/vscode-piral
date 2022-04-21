@@ -51,22 +51,14 @@
                 >
               </div>
               <div class="extraItem">
-                <div class="extraItem-select-path">
+                <vscode-text-field id="local-path-input" class="extraItemInput" stateName="targetFolder">
                   <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span></p>
-                </div>
-                <div class="local-path-input-container">
-                  <div class="input-local-path">
-                    <vscode-text-field
-                      id="local-path-input"
-                      class="extraItemInput"
-                      stateName="targetFolder"
-                    >
-                  </div>
-                  <div class="img-container2">
-                    <img class="folders-img" id="local-path" src="<%= images.foldersIcon %>" />
-                  </div>
-                </div>
+                  <span slot="end" id="local-path">
+                    <img class="folders-img" src="<%= images.foldersIcon %>" />
+                  </span>
+                </vscode-text-field>
               </div>
+
               <div class="extraItem">
                 <p class="extraItemLabel">Version</p>
                 <vscode-text-field

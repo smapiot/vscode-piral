@@ -157,29 +157,21 @@ body {
   width: 100%;
 }
 
-.local-path-input-container {
-  display: flex;
-  background: #3c3c3c;
-  height: 27px;
-  align-items: center;
-}
-
-.input-local-path {
-  flex: 1;
-}
-
 .img-container {
   width: 28px;
 }
 
 .folders-img {
-  height: 1rem;
   margin: 5px;
   margin-bottom: 4px;
 }
 
 vscode-text-field.extraItemInput {
   width: 100%;
+}
+
+vscode-text-field span {
+  height: 2rem;
 }
 
 .errorMessage {
