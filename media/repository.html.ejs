@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
-  <% styles.forEach(function(style){ %>
-     <link rel="stylesheet" href="<%= style %>" />
-  <% }); %>
+<% styles.forEach(function(style){ %>
+  <link rel="stylesheet" href="<%= style %>" />
+<% }); %>
 </head>
 
 <body>
@@ -104,13 +104,12 @@
           </div>
         </div>
         <div class="btn-container">
-          <!-- <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button> -->
           <vscode-button class="navigation-btn" direction="next" href="#">Next</vscode-button>
         </div>
       </div>
       <div class="second-container hide">
         <div class="container">
-          <h1>second page</h1>
+          <h1>More Options</h1>
         </div>
         <div class="btn-container">
           <vscode-button class="navigation-btn" direction="previous" href="#">Previous</vscode-button>

@@ -115,7 +115,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
         }
 
         // Go to target folder & create app folder
-        const createAppFolder = `cd '${options.targetFolder}' && mkdir '${options.name}' && cd '${options.name}'`;
+        const folder = `${options.targetFolder}/${options.name}`;
+        const createAppFolder = `mkdir -p '${folder}' && cd '${folder}'`;
         const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
 
         if (options.repoType === 'piral') {
