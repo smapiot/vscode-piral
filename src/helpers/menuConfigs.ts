@@ -92,17 +92,6 @@ export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: st
   return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
 }
 
-export function getToolkitUri(webview: vscode.Webview, extensionUri: vscode.Uri) {
-  const pathList = [
-    'node_modules',
-    '@vscode',
-    'webview-ui-toolkit',
-    'dist',
-    'toolkit.min.js'
-  ];
-  return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
-}
-
 export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
 }

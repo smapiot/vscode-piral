@@ -248,6 +248,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
+    "postinstall": "cp node_modules/@vscode/webview-ui-toolkit/dist/toolkit.min.js media/toolkit.min.js",
     "ci:publish": "vsce publish -p $VSCODE_TOKEN",
     "ci:version": "node tools/version.js",
     "check": "tsc --noEmit",
