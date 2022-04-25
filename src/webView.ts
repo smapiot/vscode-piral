@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath } from './helpers';
+import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath, getPiralTemplatesOptions, getPiletTemplatesOptions, getToolkitUri } from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -59,7 +59,7 @@ function validateParameters(options: Options): string[] {
 }
 
 export async function createRepository(context: vscode.ExtensionContext) {
-  const { extensionPath } = context;
+  const { extensionPath, extensionUri } = context;
   const { window, ViewColumn } = vscode;
 
   disposeWebview();
@@ -72,7 +72,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
     styles: [getResourcePath(webviewPanel, extensionPath, 'media/media.css')],
     scripts: [
       { url: getResourcePath(webviewPanel, extensionPath, 'media/media.js'), type: 'application/javascript' },
-      { url: getResourcePath(webviewPanel, extensionPath, 'media/toolkit.min.js'), type: 'module' },
+      // { url: getResourcePath(webviewPanel, extensionPath, 'media/toolkit.min.js'), type: 'module' },
+      { url: getToolkitUri(webviewPanel.webview, extensionUri), type: 'module' },
     ],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
     piralTemplates: await getPiralTemplatesOptions(),
