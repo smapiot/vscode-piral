@@ -182,6 +182,7 @@ vscode-text-field.extraItemInput {
 
 vscode-text-field span {
   height: 2rem;
+  cursor: pointer;
 }
 
 .errorMessage {
