@@ -64,6 +64,16 @@ body {
   overflow: scroll;
 }
 
+.templates {
+  display: block;
+  height: calc(100vh - 15rem);
+  overflow: scroll;
+}
+
+.templates .card {
+  width: 13.75rem;
+}
+
 .container-infos > div {
   margin-right: 5rem;
 }

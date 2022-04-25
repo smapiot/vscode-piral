@@ -7,6 +7,8 @@ import {
   getBundlerOptions,
   getResourcePath,
   getToolkitUri,
+  getPiletTemplatesOptions,
+  getPiralTemplatesOptions,
 } from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
@@ -25,6 +27,7 @@ interface Options {
   targetFolder: string;
   piralPackage: string;
   npmRegistry: string;
+  options: string;
 }
 
 function validateParameters(options: Options): string[] {
@@ -81,6 +84,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
       { url: getToolkitUri(webviewPanel.webview, extensionUri), type: 'module' },
     ],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
+    piralTemplates: await getPiralTemplatesOptions(),
+    piletTemplates: await getPiletTemplatesOptions(),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {
       selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
@@ -102,10 +107,10 @@ export async function createRepository(context: vscode.ExtensionContext) {
             targetFolder: '',
             piralPackage: '',
             npmRegistry: '',
+            template: '',
           },
           message.parameters,
         );
-        console.log(options);
         const validationErrors = validateParameters(options);
         const errorMessage = { command: 'error', data: validationErrors };
         webviewPanel.webview.postMessage(errorMessage);

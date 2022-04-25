@@ -8,6 +8,7 @@ const states = {
   targetFolder: '',
   piralPackage: '',
   npmRepository: '',
+  template: '',
 };
 
 // Highlight style of cards after selection
@@ -62,13 +63,33 @@ document.querySelectorAll('div.card.project').forEach((box) =>
           states.piralPackage = '';
           states.npmRepository = '';
         });
+        document.querySelectorAll('div.piral-template').forEach((box) => {
+          box.classList.remove('hide');
+        });
+        document.querySelectorAll('div.pilet-template').forEach((box) => {
+          box.classList.add('hide');
+        });
         break;
       case 'pilet':
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
           box.classList.remove('hide');
         });
+        document.querySelectorAll('div.pilet-template').forEach((box) => {
+          box.classList.remove('hide');
+        });
+        document.querySelectorAll('div.piral-template').forEach((box) => {
+          box.classList.add('hide');
+        });
         break;
     }
+  }),
+);
+
+// Handle click on template card
+document.querySelectorAll('div.card.template').forEach((box) =>
+  box.addEventListener('click', (event) => {
+    states.template = event.currentTarget.getAttribute('template');
+    updateSingleSelectGroup('div.card.template', 'template', 'selectedCard', states.template);
   }),
 );
 

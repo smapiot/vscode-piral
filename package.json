@@ -270,5 +270,7 @@
     "typescript": "^3.9.6",
     "vscode-test": "^1.6.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^0.26.1"
+  }
 }
