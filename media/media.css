@@ -168,12 +168,12 @@ body {
 }
 
 .img-container {
-  width: 28px;
+  width: 1.75rem;
 }
 
 .folders-img {
-  margin: 5px;
-  margin-bottom: 4px;
+  margin: 0.313rem;
+  margin-bottom: 0.25rem;
 }
 
 vscode-text-field.extraItemInput {
