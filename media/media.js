@@ -35,7 +35,6 @@ function updateSingleSelectGroup(selector, className, selectedClassName, state) 
 // Validation errors will be hidden
 function resetValidationErrors() {
   document.querySelectorAll('span.errorMessage').forEach((box) => {
-    display(box);
     hide(box);
   });
 }
@@ -72,7 +71,6 @@ document.querySelectorAll('div.card.project').forEach((box) =>
       case 'piral':
         nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          display(box);
           hide(box);
           states.piralPackage = '';
           states.npmRepository = '';

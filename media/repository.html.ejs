@@ -43,7 +43,7 @@
           <div class="templates container-infos">
             <p class="columnTitle">Select templates</p>
             <!-- piral templates -->
-            <div class="piral-templates">
+            <div class="piral-templates" loading="lazy">
               <% piralTemplates.forEach((template, index)=> { %>
                 <div key="template<%= index %>" class="card template piral-template" template="<%= template %>">
                   <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
@@ -56,7 +56,7 @@
               <% }); %>
             </div>
             <!-- pilet templates -->
-            <div class="pilet-templates hide">
+            <div class="pilet-templates hide" loading="lazy">
               <% piletTemplates.forEach((template, index)=> { %>
                 <div key="template<%= index %>" class="card template pilet-template" template="<%= template %>">
                   <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />

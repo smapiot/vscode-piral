@@ -269,9 +269,9 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "typescript": "^3.9.6",
-    "vscode-test": "^1.6.1"
+    "vscode-test": "^1.6.1",
+    "axios": "^0.26.1"
   },
   "dependencies": {
-    "axios": "^0.26.1"
   }
 }
