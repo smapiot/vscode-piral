@@ -6,7 +6,7 @@ import {
   getRepoTypeOptions,
   getBundlerOptions,
   getResourcePath,
-  getTemplatesOptions,
+  getTemplatesNames,
 } from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
@@ -82,8 +82,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
       { url: getResourcePath(webviewPanel, extensionPath, 'media/toolkit.min.js'), type: 'module' },
     ],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
-    piralTemplates: await getTemplatesOptions('piral'),
-    piletTemplates: await getTemplatesOptions('pilet'),
+    piralTemplates: await getTemplatesNames('piral'),
+    piletTemplates: await getTemplatesNames('pilet'),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {
       selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),

@@ -64,32 +64,27 @@ document.querySelectorAll('div.card.project').forEach((box) =>
   box.addEventListener('click', (event) => {
     states.repoType = event.currentTarget.getAttribute('repoType');
     updateSingleSelectGroup('div.card.project', 'repoType', 'selectedCard', states.repoType);
+    const piralTemplates = document.querySelector('div.piral-templates');
+    const piletTemplates = document.querySelector('div.pilet-templates');
+    const nextButton = document.getElementById('next');
 
     switch (states.repoType) {
       case 'piral':
+        nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
           display(box);
           hide(box);
           states.piralPackage = '';
           states.npmRepository = '';
         });
-        document.querySelectorAll('div.piral-template').forEach((box) => {
-          display(box);
-        });
-        document.querySelectorAll('div.pilet-template').forEach((box) => {
-          hide(box);
-        });
+        display(piralTemplates);
+        hide(piletTemplates);
         break;
       case 'pilet':
-        document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          display(box);
-        });
-        document.querySelectorAll('div.pilet-template').forEach((box) => {
-          display(box);
-        });
-        document.querySelectorAll('div.piral-template').forEach((box) => {
-          hide(box);
-        });
+        nextButton.removeAttribute('disabled');
+        document.querySelectorAll('div.onlyForPilet').forEach((box) => display(box));
+        display(piletTemplates);
+        hide(piralTemplates);
         break;
     }
   }),
@@ -148,10 +143,8 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
         display(secondContainer);
         break;
       case 'previous':
-        document.querySelectorAll('div.onlyForPilet').forEach((btn) => {
-          hide(secondContainer);
-          display(firstContainer);
-        });
+        hide(secondContainer);
+        display(firstContainer);
         break;
     }
   }),

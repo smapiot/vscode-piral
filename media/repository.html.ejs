@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
   <% styles.forEach(function(style){ %>
     <link rel="stylesheet" href="<%= style %>" />
-    <% }); %>
+  <% }); %>
 </head>
 
 <body>
@@ -36,35 +36,43 @@
                     <%= repoType.description %>
                   </p>
                 </div>
-                <% }); %>
+              <% }); %>
             </div>
           </div>
           <div class="side-border"></div>
           <div class="templates container-infos">
             <p class="columnTitle">Select templates</p>
             <!-- piral templates -->
-            <% piralTemplates.forEach((template, index)=> { %>
-              <div key="template<%= index %>" class="card template piral-template" template="<%= template %>">
-                <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                <p class="cardDescription">
-                  <%= template %>
-                </p>
-              </div>
-              <% }); %>
-                <!-- pilet templates -->
-                <% piletTemplates.forEach((template, index)=> { %>
-                  <div key="template<%= index %>" class="card template pilet-template hide" template="<%= template %>">
-                    <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                    <div class="cardDescription">
+            <div class="piral-templates">
+              <% piralTemplates.forEach((template, index)=> { %>
+                <div key="template<%= index %>" class="card template piral-template" template="<%= template %>">
+                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                  <div class="cardTitle">
+                    <p class="cardTitleTxt">
                       <%= template %>
-                    </div>
+                    </p>
                   </div>
-                  <% }); %>
+                </div>
+              <% }); %>
+            </div>
+            <!-- pilet templates -->
+            <div class="pilet-templates hide">
+              <% piletTemplates.forEach((template, index)=> { %>
+                <div key="template<%= index %>" class="card template pilet-template" template="<%= template %>">
+                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                  <div class="cardTitle">
+                    <p class="cardTitleTxt">
+                      <%= template %>
+                    </p>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
           </div>
         </div>
         <div class="btn-container">
           <!-- <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button> -->
-          <vscode-button class="navigation-btn next" direction="next" href="#">Next</vscode-button>
+          <vscode-button class="navigation-btn" id="next" direction="next" href="#" disabled>Next</vscode-button>
         </div>
       </div>
       <div class="second-container hide">
@@ -91,32 +99,37 @@
               </vscode-text-field>
             </div>
             <div class="extraItem onlyForPilet hide">
-              <vscode-text-field id="local-path-input" class="extraItemInput" stateName="piralPackage" placeholder="sample-piral">
+              <vscode-text-field id="local-path-input" class="extraItemInput" stateName="piralPackage"
+                placeholder="sample-piral">
                 <p class="extraItemLabel">Piral Package</p>
               </vscode-text-field>
             </div>
             <div class="extraItem onlyForPilet hide">
-              <vscode-text-field id="local-path-input" class="extraItemInput" stateName="npmRegistry" placeholder="https://registry.npmjs.org/">
+              <vscode-text-field id="local-path-input" class="extraItemInput" stateName="npmRegistry"
+                placeholder="https://registry.npmjs.org/">
                 <p class="extraItemLabel">NPM Registry</p>
               </vscode-text-field>
             </div>
           </div>
+          <div class="side-border"></div>
           <div class="bundlers">
             <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
-            <% bundlers.forEach((bundler, index)=> { %>
-              <div key="bundler_<%= index %>" class="card bundler" bundler="<%= bundler.type %>">
-                <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                <div class="cardTitle">
-                  <img class="cardTitleIcon" src="<%= bundler.icon %>" />
-                  <p class="cardTitleTxt">
-                    <%= bundler.title %>
-                  </p>
+            <div>
+              <% bundlers.forEach((bundler, index)=> { %>
+                <div key="bundler_<%= index %>" class="card bundler" bundler="<%= bundler.type %>">
+                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                  <div class="cardTitle">
+                    <img class="cardTitleIcon" src="<%= bundler.icon %>" />
+                    <p class="cardTitleTxt">
+                      <%= bundler.title %>
+                    </p>
+                  </div>
+                  <div class="cardDescription">
+                    <%= bundler.description %>
+                  </div>
                 </div>
-                <div class="cardDescription">
-                  <%= bundler.description %>
-                </div>
-              </div>
               <% }); %>
+            </div>
           </div>
         </div>
         <div class="btn-container">
@@ -128,7 +141,7 @@
   </div>
   <% scripts.forEach((script)=> { %>
     <script type="<%= script.type %>" src="<%= script.url %>"></script>
-    <% }); %>
+  <% }); %>
 </body>
 
 </html>

@@ -59,23 +59,55 @@ body {
 
 .container-infos {
   display: flex;
-  flex-wrap: wrap;
   height: calc(100vh - 15rem);
   overflow: scroll;
 }
 
 .templates {
-  display: block;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   height: calc(100vh - 15rem);
   overflow: scroll;
 }
 
-.templates .card {
+.templates div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.piral-template, .pilet-template {
   width: 13.75rem;
+  max-width: 13.75rem;
+  margin: 0 1rem 1rem 0;
+  text-align: center;
+  min-width: 9rem;
+  background-image: linear-gradient(109.6deg, rgba(0,0,0,0.93) 11.2%, rgba(63,61,61,1) 78.9% );
+}
+
+.piral-template .cardTitle, .pilet-template .cardTitle {
+  margin: 0;
 }
 
 .container-infos > div {
-  margin-right: 5rem;
+  margin-right: 2rem;
+}
+
+.bundlers {
+  flex: 1
+}
+
+.bundlers div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bundler {
+  width: 13.75rem;
+  max-width: 13.75rem;
+  margin: 0 1rem 1rem 0;
+  min-width: 9rem;
 }
 
 .card {
@@ -192,7 +224,7 @@ vscode-text-field span {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 span {

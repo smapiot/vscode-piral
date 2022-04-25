@@ -97,11 +97,12 @@ export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources:
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
 }
 
-export async function getTemplatesOptions(type: 'piral' | 'pilet', size = 50) {
+export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
   const baseUrl = `https://registry.npmjs.org/-/v1/search?text=keywords:${type}+template&size=${size}`;
   const result = await axios.get(baseUrl);
   const templates = await result.data.objects.map((elm: any) => {
-    return elm.package.name;
+    const len = elm.package.name.split('-').length
+    return elm.package.name.split('-')[len - 1];
   });
 
   return templates;
