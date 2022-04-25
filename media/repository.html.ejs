@@ -41,32 +41,14 @@
           </div>
           <div class="side-border"></div>
           <div class="templates container-infos">
-            <p class="columnTitle">Select templates</p>
+            <p class="columnTitle">Select templates <span class="errorTemplate errorMessage hide">[required]</span></p>
             <!-- piral templates -->
-            <div class="piral-templates" loading="lazy">
-              <% piralTemplates.forEach((template, index)=> { %>
-                <div key="template<%= index %>" class="card template piral-template" template="<%= template %>">
-                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                  <div class="cardTitle">
-                    <p class="cardTitleTxt">
-                      <%= template %>
-                    </p>
-                  </div>
-                </div>
-              <% }); %>
+            <div class="piral-templates">
+              <img class="spinner-img" src="<%= images.spinner %>" alt="loading...">
             </div>
             <!-- pilet templates -->
-            <div class="pilet-templates hide" loading="lazy">
-              <% piletTemplates.forEach((template, index)=> { %>
-                <div key="template<%= index %>" class="card template pilet-template" template="<%= template %>">
-                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                  <div class="cardTitle">
-                    <p class="cardTitleTxt">
-                      <%= template %>
-                    </p>
-                  </div>
-                </div>
-              <% }); %>
+            <div class="pilet-templates hide">
+              <img class="spinner-img" src="<%= images.spinner %>" alt="loading...">
             </div>
           </div>
         </div>

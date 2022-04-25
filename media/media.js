@@ -1,5 +1,7 @@
 const vscode = acquireVsCodeApi();
 
+const templates = {};
+
 const states = {
   repoType: '',
   name: '',
@@ -35,6 +37,7 @@ function updateSingleSelectGroup(selector, className, selectedClassName, state) 
 // Validation errors will be hidden
 function resetValidationErrors() {
   document.querySelectorAll('span.errorMessage').forEach((box) => {
+    display(box);
     hide(box);
   });
 }
@@ -58,6 +61,50 @@ function displayLocalPath(localPath) {
   states.targetFolder = localPath;
 }
 
+// Insert html code under select templates
+function insertTemplatesNames(type) {
+  const className = `div.${type}-templates`;
+  const node = document.querySelector(className);
+
+  let html = '';
+  templates[`${type}`].forEach((template, index) => {
+    html += `                
+    <div key="template${index}" class="card template" template="${template}">
+      <img class="selectedCardTag" src="resources/selected-item.png" />
+      <div class="cardTitle">
+        <p class="cardTitleTxt">
+        ${template}
+        </p>
+      </div>
+    </div>`;
+  });
+  node.innerHTML = html;
+}
+
+// Send message to vscode to load templates names
+function loadTemplates(type) {
+  switch (type) {
+    case 'piral':
+      if (templates.piral) {
+        insertTemplatesNames(type);
+        return;
+      }
+
+    case 'pilet':
+      if (templates.pilet) {
+        insertTemplatesNames(type);
+        return;
+      }
+  }
+
+  vscode.postMessage({
+    command: 'getTemplatesNames',
+    parameters: type,
+  });
+}
+
+loadTemplates('piral');
+
 // Handle click on RepoType card
 document.querySelectorAll('div.card.project').forEach((box) =>
   box.addEventListener('click', (event) => {
@@ -69,8 +116,10 @@ document.querySelectorAll('div.card.project').forEach((box) =>
 
     switch (states.repoType) {
       case 'piral':
+        loadTemplates('piral');
         nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
+          display(box);
           hide(box);
           states.piralPackage = '';
           states.npmRepository = '';
@@ -79,6 +128,7 @@ document.querySelectorAll('div.card.project').forEach((box) =>
         hide(piletTemplates);
         break;
       case 'pilet':
+        loadTemplates('pilet');
         nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => display(box));
         display(piletTemplates);
@@ -91,6 +141,7 @@ document.querySelectorAll('div.card.project').forEach((box) =>
 // Handle click on template card
 document.querySelectorAll('div.card.template').forEach((box) =>
   box.addEventListener('click', (event) => {
+    console.log('box');
     states.template = event.currentTarget.getAttribute('template');
     updateSingleSelectGroup('div.card.template', 'template', 'selectedCard', states.template);
   }),
@@ -130,7 +181,7 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
     switch (direction) {
       case 'next':
         const node = document.querySelector(`span.errorRepoType`);
-        if (states.repoType === '') {
+        if (!states.repoType) {
           display(node);
           return;
         } else {
@@ -169,5 +220,9 @@ window.addEventListener('message', (event) => {
       const localPath = message.data[0].path;
       displayLocalPath(localPath);
       break;
+
+    case 'sendTemplatesNames':
+      templates[message.type] = message.data;
+      insertTemplatesNames(message.type);
   }
 });

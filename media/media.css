@@ -171,6 +171,12 @@ body {
   line-height: 1.125rem;
 }
 
+.spinner-img {
+  height: 40px;
+  position: relative;
+  left: 26px;
+}
+
 .btn-container {
   text-align: right;
   position: relative;
