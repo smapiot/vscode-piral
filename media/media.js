@@ -117,7 +117,7 @@ document.getElementById('local-path').addEventListener('click', async () => {
   });
 });
 
-// Handle click on next button
+// Handle click on Next/ Previous button
 document.querySelectorAll('.navigation-btn').forEach((btn) =>
   btn.addEventListener('click', (event) => {
     const direction = event.currentTarget.getAttribute('direction');
@@ -126,6 +126,14 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
 
     switch (direction) {
       case 'next':
+        const node = document.querySelector(`span.errorRepoType`);
+        if (states.repoType === '') {
+          node.classList.remove('hide')
+          return
+        } else {
+          node.classList.add('hide')
+        }
+
         firstContainer.classList.add('hide');
         secondContainer.classList.remove('hide');
         break;
