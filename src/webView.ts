@@ -1,6 +1,13 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath, getPiralTemplatesOptions, getPiletTemplatesOptions, getToolkitUri } from './helpers';
+import {
+  getTemplateCode,
+  runCommand,
+  getRepoTypeOptions,
+  getBundlerOptions,
+  getResourcePath,
+  getTemplatesOptions,
+} from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -59,7 +66,7 @@ function validateParameters(options: Options): string[] {
 }
 
 export async function createRepository(context: vscode.ExtensionContext) {
-  const { extensionPath, extensionUri } = context;
+  const { extensionPath } = context;
   const { window, ViewColumn } = vscode;
 
   disposeWebview();
@@ -72,12 +79,11 @@ export async function createRepository(context: vscode.ExtensionContext) {
     styles: [getResourcePath(webviewPanel, extensionPath, 'media/media.css')],
     scripts: [
       { url: getResourcePath(webviewPanel, extensionPath, 'media/media.js'), type: 'application/javascript' },
-      // { url: getResourcePath(webviewPanel, extensionPath, 'media/toolkit.min.js'), type: 'module' },
-      { url: getToolkitUri(webviewPanel.webview, extensionUri), type: 'module' },
+      { url: getResourcePath(webviewPanel, extensionPath, 'media/toolkit.min.js'), type: 'module' },
     ],
     repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
-    piralTemplates: await getPiralTemplatesOptions(),
-    piletTemplates: await getPiletTemplatesOptions(),
+    piralTemplates: await getTemplatesOptions('piral'),
+    piletTemplates: await getTemplatesOptions('pilet'),
     bundlers: getBundlerOptions(webviewPanel, extensionPath),
     images: {
       selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),

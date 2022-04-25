@@ -93,33 +93,18 @@ export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: st
   return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
 }
 
-export function getToolkitUri(webview: vscode.Webview, extensionUri: vscode.Uri) {
-  const pathList = ['node_modules', '@vscode', 'webview-ui-toolkit', 'dist', 'toolkit.min.js'];
-  return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
-}
-
 export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
 }
 
-export async function getPiralTemplatesOptions() {
-  const baseUrl = 'https://registry.npmjs.org/-/v1/search?text=keywords:piral+template&size=250';
+export async function getTemplatesOptions(type: 'piral' | 'pilet', size = 50) {
+  const baseUrl = `https://registry.npmjs.org/-/v1/search?text=keywords:${type}+template&size=${size}`;
   const result = await axios.get(baseUrl);
-  const piralTemplates = await result.data.objects.map((elm: any) => {
+  const templates = await result.data.objects.map((elm: any) => {
     return elm.package.name;
   });
 
-  return piralTemplates;
-}
-
-export async function getPiletTemplatesOptions() {
-  const baseUrl = 'https://registry.npmjs.org/-/v1/search?text=keywords:pilet+template&size=250';
-  const result = await axios.get(baseUrl);
-  const piletTemplates = await result.data.objects.map((elm: any) => {
-    return elm.package.name;
-  });
-
-  return piletTemplates;
+  return templates;
 }
 
 export function getBundlerInfos(packageName: string) {

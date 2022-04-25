@@ -11,6 +11,16 @@ const states = {
   template: '',
 };
 
+// hide elements
+function hide(box) {
+  box.classList.add('hide');
+}
+
+// display elements
+function display(box) {
+  box.classList.remove('hide');
+}
+
 // Highlight style of cards after selection
 function updateSingleSelectGroup(selector, className, selectedClassName, state) {
   Array.from(document.querySelectorAll(selector)).forEach((e) => {
@@ -25,8 +35,8 @@ function updateSingleSelectGroup(selector, className, selectedClassName, state) 
 // Validation errors will be hidden
 function resetValidationErrors() {
   document.querySelectorAll('span.errorMessage').forEach((box) => {
-    box.classList.remove('hide');
-    box.classList.add('hide');
+    display(box);
+    hide(box);
   });
 }
 
@@ -37,7 +47,7 @@ function showValidationErrors(errors) {
     const node = document.querySelector(`span.error${item}`);
 
     if (node !== undefined) {
-      node.classList.remove('hide');
+      display(node);
     }
   });
 }
@@ -58,27 +68,27 @@ document.querySelectorAll('div.card.project').forEach((box) =>
     switch (states.repoType) {
       case 'piral':
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          box.classList.remove('hide');
-          box.classList.add('hide');
+          display(box);
+          hide(box);
           states.piralPackage = '';
           states.npmRepository = '';
         });
         document.querySelectorAll('div.piral-template').forEach((box) => {
-          box.classList.remove('hide');
+          display(box);
         });
         document.querySelectorAll('div.pilet-template').forEach((box) => {
-          box.classList.add('hide');
+          hide(box);
         });
         break;
       case 'pilet':
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          box.classList.remove('hide');
+          display(box);
         });
         document.querySelectorAll('div.pilet-template').forEach((box) => {
-          box.classList.remove('hide');
+          display(box);
         });
         document.querySelectorAll('div.piral-template').forEach((box) => {
-          box.classList.add('hide');
+          hide(box);
         });
         break;
     }
@@ -128,19 +138,19 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
       case 'next':
         const node = document.querySelector(`span.errorRepoType`);
         if (states.repoType === '') {
-          node.classList.remove('hide')
-          return
+          display(node);
+          return;
         } else {
-          node.classList.add('hide')
+          hide(node);
         }
 
-        firstContainer.classList.add('hide');
-        secondContainer.classList.remove('hide');
+        hide(firstContainer);
+        display(secondContainer);
         break;
       case 'previous':
         document.querySelectorAll('div.onlyForPilet').forEach((btn) => {
-          firstContainer.classList.remove('hide');
-          secondContainer.classList.add('hide');
+          hide(secondContainer);
+          display(firstContainer);
         });
         break;
     }
