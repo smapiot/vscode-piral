@@ -122,6 +122,9 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
 };
 
 const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
+  const { state, actions } = useStore();
+  const [selectedBundler, setSelectedBundler] = React.useState<string | undefined>(undefined);
+
   return (
     <>
       <div className="container">
@@ -180,20 +183,19 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 Select bundler <span className="errorBundler errorMessage hide">[required]</span>
               </p>
               <div>
-                {/* <% bundlers.forEach((bundler, index)=> { %>
-                  <div key="bundler_<%= index %>" className="card bundler" bundler="<%= bundler.type %>">
-                    <img className="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                {state.bundlers.map((bundler) => (
+                  <div
+                    key={bundler.type}
+                    onClick={() => setSelectedBundler(bundler.type)}
+                    className={selectedBundler === bundler.type ? 'card bundler selectedCard' : 'card bundler'}>
+                    <img className="selectedCardTag" src={selectedItemIcon} />
                     <div className="cardTitle">
-                      <img className="cardTitleIcon" src="<%= bundler.icon %>" />
-                      <p className="cardTitleTxt">
-                        <%= bundler.title %>
-                      </p>
+                      <img className="cardTitleIcon" src={getRef(bundler.icon)} />
+                      <p className="cardTitleTxt">{bundler.title}</p>
                     </div>
-                    <div className="cardDescription">
-                      <%= bundler.description %>
-                    </div>
+                    <div className="cardDescription">{bundler.description}</div>
                   </div>
-                <% }); %> */}
+                ))}
               </div>
             </div>
           </div>

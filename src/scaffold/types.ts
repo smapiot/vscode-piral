@@ -30,6 +30,7 @@ export interface RepoType {
 
 export interface Bundler {
   type: string;
+  title: string;
   icon: Uri;
   description: string;
 }
@@ -37,6 +38,8 @@ export interface Bundler {
 export interface StoreActions {
   initialize(): void;
   loadTemplates(repoType: string): void;
+  selectLocalPath(): void;
+  scaffold(parameters: any): void;
 }
 
 export interface Store {

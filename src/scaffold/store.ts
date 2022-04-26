@@ -65,6 +65,17 @@ export const useStore = create<Store>((set) => {
           type: repoType,
         });
       },
+      selectLocalPath() {
+        vscode.postMessage({
+          command: 'getLocalPath',
+        });
+      },
+      scaffold(parameters) {
+        vscode.postMessage({
+          command: 'createPiralPilet',
+          parameters,
+        });
+      },
     },
   };
 });
