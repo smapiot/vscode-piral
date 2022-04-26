@@ -99,19 +99,17 @@ export async function createRepository(context: vscode.ExtensionContext) {
     async (message) => {
       switch (message.command) {
         case 'createPiralPilet':
-          const options: Options = Object.assign(
-            {
-              repoType: '',
-              template: '',
-              name: '',
-              version: '',
-              bundler: '',
-              targetFolder: '',
-              piralPackage: '',
-              npmRegistry: '',
-            },
-            message.parameters,
-          );
+          const options = {
+            repoType: '',
+            template: '',
+            name: '',
+            version: '',
+            bundler: '',
+            targetFolder: '',
+            piralPackage: '',
+            npmRegistry: '',
+            ...message.parameters,
+          };
           const validationErrors = validateParameters(options);
           const errorMessage = { command: 'error', data: validationErrors };
           webviewPanel.webview.postMessage(errorMessage);

@@ -183,6 +183,9 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
     const direction = event.currentTarget.getAttribute('direction');
     const firstContainer = document.querySelector('.first-container');
     const secondContainer = document.querySelector('.second-container');
+    const nextButton = document.getElementById('next');
+    const previousButton = document.getElementById(`previous`);
+    const createButton = document.getElementById(`create-btn`);
 
     switch (direction) {
       case 'next':
@@ -194,12 +197,18 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
           hide(node);
         }
 
+        hide(nextButton)
+        display(previousButton)
+        display(createButton)
         hide(firstContainer);
         display(secondContainer);
         break;
       case 'previous':
         hide(secondContainer);
+        hide(previousButton);
+        hide(createButton);
         display(firstContainer);
+        display(nextButton);
         break;
     }
   }),

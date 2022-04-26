@@ -10,6 +10,14 @@ body {
 .page {
   padding: 1rem;
   position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 100%;
+  flex: 1;
 }
 
 .title {
@@ -36,21 +44,23 @@ body {
   margin-bottom: 1.563rem;
 }
 
-.header {
-  margin-bottom: 2.5rem;
-}
-
 .container {
-  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: calc(100vh - 15rem);
+  height: 100%;
+  flex: 8;
+  overflow: scroll;
+}
+
+.first-container, .second-container {
+  flex: 1;
 }
 
 .sideBorder {
   position: relative;
-  top: -.06em;
+  bottom: 0.375rem;
   width: 0.063rem;
   background: #434557;
   margin-right: 2.5rem;
@@ -59,21 +69,19 @@ body {
 
 .containerInfos {
   display: flex;
-  height: calc(100vh - 15rem);
-  overflow: scroll;
+  flex: 1;
+  height: 100%;
 }
 
 .templates {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: scroll;
 }
 
 .templates div {
   display: flex;
   flex-wrap: wrap;
-  flex: 1;
 }
 
 .card.template {
@@ -174,8 +182,6 @@ body {
 
 .btnContainer {
   text-align: right;
-  position: relative;
-  top: 2.625rem;
 }
 
 .extraItem {
@@ -221,19 +227,20 @@ span {
 /* spinner  */
 .spinner {
   display: inline-block;
-  width: 80px;
-  height: 80px;
+  width: 5rem;
+  height: 5rem;
   margin: auto;
-  margin-left: 47%;
+  margin: 25%;
+  margin-left: 50%;
 }
 .spinner:after {
   content: " ";
   display: block;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
+  width: 4rem;
+  height: 4rem;
+  margin: 0.5rem;
   border-radius: 50%;
-  border: 6px solid #0e639c;
+  border: 0.375rem solid #0e639c;
   border-color: #0e639c transparent #0e639c transparent;
   animation: spinner 1.2s linear infinite;
 }
