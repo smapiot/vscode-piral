@@ -90,9 +90,9 @@ body {
 }
 
 .spinner-img {
-  height: 40px;
+  height: 2.5rem;
   position: relative;
-  bottom: 42px;
+  bottom: 2.625rem;
   margin: auto;
 }
 
