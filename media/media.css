@@ -48,7 +48,7 @@ body {
   height: calc(100vh - 15rem);
 }
 
-.side-border {
+.sideBorder {
   position: relative;
   top: -.06em;
   width: 0.063rem;
@@ -57,7 +57,7 @@ body {
   margin-left: 2.5rem;
 }
 
-.container-infos {
+.containerInfos {
   display: flex;
   height: calc(100vh - 15rem);
   overflow: scroll;
@@ -89,14 +89,7 @@ body {
   margin: 0;
 }
 
-.spinner-img {
-  height: 2.5rem;
-  position: relative;
-  bottom: 2.625rem;
-  margin: auto;
-}
-
-.container-infos > div {
+.containerInfos > div {
   margin-right: 2rem;
 }
 
@@ -179,7 +172,7 @@ body {
   line-height: 1.125rem;
 }
 
-.btn-container {
+.btnContainer {
   text-align: right;
   position: relative;
   top: 2.625rem;
@@ -196,18 +189,7 @@ body {
   margin-bottom: 0.125rem;
 }
 
-.extraItem-select-path {
-  display: flex;
-  justify-content: space-between;
-  max-height: 1.313rem;
-  width: 100%;
-}
-
-.img-container {
-  width: 1.75rem;
-}
-
-.folders-img {
+.foldersImg {
   margin: 0.313rem;
   margin-bottom: 0.25rem;
 }
@@ -234,4 +216,32 @@ vscode-text-field span {
 span {
   margin-bottom: 0.625rem;
   padding-bottom: 0.625rem;
+}
+
+/* spinner  */
+.spinner {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+  margin-left: 47%;
+}
+.spinner:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #0e639c;
+  border-color: #0e639c transparent #0e639c transparent;
+  animation: spinner 1.2s linear infinite;
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

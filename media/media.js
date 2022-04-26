@@ -64,7 +64,7 @@ function displayLocalPath(localPath) {
 function insertTemplatesNames(type) {
   const { scheme, authority, path } = templates.selectedItemIcon
   const imgSrc = `${scheme}://${authority}${path}`
-  const className = `div.${type}-templates`;
+  const className = `div.templates-names`;
   const node = document.querySelector(className);
 
   let html = '';
@@ -113,26 +113,19 @@ document.querySelectorAll('div.card.project').forEach((box) =>
   box.addEventListener('click', (event) => {
     states.repoType = event.currentTarget.getAttribute('repoType');
     updateSingleSelectGroup('div.card.project', 'repoType', 'selectedCard', states.repoType);
-    const piralTemplates = document.querySelector('div.piral-templates');
-    const piletTemplates = document.querySelector('div.pilet-templates');
 
     switch (states.repoType) {
       case 'piral':
         loadTemplates('piral');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          display(box);
           hide(box);
           states.piralPackage = '';
           states.npmRepository = '';
         });
-        display(piralTemplates);
-        hide(piletTemplates);
         break;
       case 'pilet':
         loadTemplates('pilet');
-        document.querySelectorAll('div.onlyForPilet').forEach((box) => display(box));
-        display(piletTemplates);
-        hide(piralTemplates);
+        document.querySelectorAll('div.onlyForPilet').forEach(display);
         break;
     }
   }),

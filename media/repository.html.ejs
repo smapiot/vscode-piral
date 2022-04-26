@@ -39,26 +39,21 @@
               <% }); %>
             </div>
           </div>
-          <div class="side-border"></div>
-          <div class="templates container-infos">
+          <div class="sideBorder"></div>
+          <div class="templates containerInfos">
             <p class="columnTitle">Select templates <span class="errorTemplate errorMessage hide">[required]</span></p>
-            <!-- piral templates -->
-            <div class="piral-templates">
-              <img class="spinner-img" src="<%= images.spinner %>" alt="loading...">
-            </div>
-            <!-- pilet templates -->
-            <div class="pilet-templates hide">
-              <img class="spinner-img" src="<%= images.spinner %>" alt="loading...">
+            <div class="templates-names">
+              <div class="spinner"></div>
             </div>
           </div>
         </div>
-        <div class="btn-container">
+        <div class="btnContainer">
           <!-- <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button> -->
           <vscode-button class="navigation-btn" id="next" direction="next" href="#" disabled>Next</vscode-button>
         </div>
       </div>
       <div class="second-container hide">
-        <div class="container-infos">
+        <div class="containerInfos">
           <div class="informations">
             <p class="columnTitle">Provide Information</p>
             <div class="extraItem">
@@ -70,7 +65,7 @@
                 <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span>
                 </p>
                 <span slot="end" id="local-path">
-                  <img class="folders-img" src="<%= images.foldersIcon %>" />
+                  <img class="foldersImg" src="<%= images.foldersIcon %>" />
                 </span>
               </vscode-text-field>
             </div>
@@ -93,7 +88,7 @@
               </vscode-text-field>
             </div>
           </div>
-          <div class="side-border"></div>
+          <div class="sideBorder"></div>
           <div class="bundlers">
             <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
             <div>
@@ -114,7 +109,7 @@
             </div>
           </div>
         </div>
-        <div class="btn-container">
+        <div class="btnContainer">
           <vscode-button class="navigation-btn" direction="previous" href="#">Previous</vscode-button>
           <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
         </div>

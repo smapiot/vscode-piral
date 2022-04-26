@@ -90,7 +90,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
     images: {
       selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
       foldersIcon: getResourcePath(webviewPanel, extensionPath, 'resources/folders-icon.png'),
-      spinner: getResourcePath(webviewPanel, extensionPath, 'resources/spinner.gif'),
     },
   });
 
@@ -154,14 +153,18 @@ export async function createRepository(context: vscode.ExtensionContext) {
             webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath });
           }
 
+          break;
+
         case 'getTemplatesNames':
           const templatesNames = await getTemplatesNames(message.parameters);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
             type: message.parameters,
             templatesNames: templatesNames,
-            selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png')
+            selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
           });
+
+          break;
       }
     },
     undefined,
