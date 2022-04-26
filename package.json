@@ -264,6 +264,7 @@
     "@types/react-dom": "^17.0.15",
     "@types/vscode": "1.63.0",
     "@vscode/webview-ui-toolkit": "^0.9.3",
+    "axios": "^0.26.1",
     "ejs": "^3.1.7",
     "esbuild": "^0.14.37",
     "react": "^17.0.2",
@@ -271,5 +272,6 @@
     "typescript": "^3.9.6",
     "vscode-test": "^1.6.1"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }

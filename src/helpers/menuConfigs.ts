@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
+import axios from 'axios';
 
 const repoTypeOptions = [
   {
@@ -86,7 +87,7 @@ function mapToLocalIcon<T extends { icon: string }>(
   }));
 }
 
-export const bundlerPackages = bundlerOptions.map(b => b.package);
+export const bundlerPackages = bundlerOptions.map((b) => b.package);
 
 export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: string, fileName: string) {
   return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
@@ -96,8 +97,19 @@ export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources:
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
 }
 
+export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
+  const baseUrl = `https://registry.npmjs.org/-/v1/search?text=keywords:${type}+template&size=${size}`;
+  const result = await axios.get(baseUrl);
+  const templates = await result.data.objects.map((elm: any) => {
+    const len = elm.package.name.split('-').length;
+    return elm.package.name.split('-')[len - 1];
+  });
+
+  return templates;
+}
+
 export function getBundlerInfos(packageName: string) {
-  return bundlerOptions.find(b => b.package === packageName);
+  return bundlerOptions.find((b) => b.package === packageName);
 }
 
 export function getBundlerOptions(panel: vscode.WebviewPanel, baseUriResources: string) {

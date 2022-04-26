@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
-<% styles.forEach(function(style){ %>
-  <link rel="stylesheet" href="<%= style %>" />
-<% }); %>
+  <% styles.forEach(function(style){ %>
+    <link rel="stylesheet" href="<%= style %>" />
+  <% }); %>
 </head>
 
 <body>
@@ -18,111 +18,106 @@
           Create a new Piral instance or a new pilet for an existing Piral instance.
         </p>
       </div>
-      <div class="first-container">
-        <div class="container">
-          <div class="container-type">
-            <div class="cards containerColumn">
-              <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[required]</span></p>
-              <% repoTypes.forEach((repoType, index) => { %>
-                <div
-                  key="repoType<%= index %>"
-                  class="card project"
-                  repoType="<%= repoType.type %>"
-                  >
-                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                  <div class="cardTitle">
-                    <img class="cardTitleIcon" src="<%= repoType.icon %>" />
-                    <p class="cardTitleTxt"><%= repoType.title %></p>
+      <div class="container">
+        <div class="first-container">
+          <div class="containerInfos">
+            <div class="container-type">
+              <div class="cards containerColumn">
+                <p class="columnTitle">Select Type <span class="errorRepoType errorMessage hide">[required]</span></p>
+                <% repoTypes.forEach((repoType, index)=> { %>
+                  <div key="repoType<%= index %>" class="card project" repoType="<%= repoType.type %>">
+                    <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                    <div class="cardTitle">
+                      <img class="cardTitleIcon" src="<%= repoType.icon %>" />
+                      <p class="cardTitleTxt">
+                        <%= repoType.title %>
+                      </p>
+                    </div>
+                    <p class="cardDescription">
+                      <%= repoType.description %>
+                    </p>
                   </div>
-                  <p class="cardDescription"><%= repoType.description %></p>
-                </div>
-              <% }); %>
+                <% }); %>
+              </div>
+            </div>
+            <div class="sideBorder"></div>
+            <div class="templates containerInfos">
+              <p class="columnTitle">Select templates <span class="errorTemplate errorMessage hide">[required]</span></p>
+              <div class="templates-names">
+                <div class="spinner"></div>
+              </div>
             </div>
           </div>
-          <div class="side-border"></div>
-          <div class="container-infos">
+        </div>
+        <div class="second-container hide">
+          <div class="containerInfos">
             <div class="informations">
               <p class="columnTitle">Provide Information</p>
               <div class="extraItem">
                 <p class="extraItemLabel">Name <span class="errorName errorMessage hide">[required]</span></p>
-                <vscode-text-field
-                  class="extraItemInput"
-                  stateName="name"
-                >
+                <vscode-text-field class="extraItemInput" stateName="name">
               </div>
               <div class="extraItem">
                 <vscode-text-field id="local-path-input" class="extraItemInput" stateName="targetFolder">
-                  <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span></p>
+                  <p class="extraItemLabel">Local Path <span class="errorLocalPath errorMessage hide">[required]</span>
+                  </p>
                   <span slot="end" id="local-path">
-                    <img class="folders-img" src="<%= images.foldersIcon %>" />
+                    <img class="foldersImg" src="<%= images.foldersIcon %>" />
                   </span>
                 </vscode-text-field>
               </div>
-
+  
               <div class="extraItem">
-                <p class="extraItemLabel">Version</p>
-                <vscode-text-field
-                  class="extraItemInput"
-                  stateName="version"
-                  placeholder="1.0.0"
-                  >
+                <vscode-text-field id="local-path-input" class="extraItemInput" stateName="version" placeholder="1.0.0">
+                  <p class="extraItemLabel">Version</p>
+                </vscode-text-field>
               </div>
               <div class="extraItem onlyForPilet hide">
-                <p class="extraItemLabel">Piral Package</p>
-                <vscode-text-field
-                  class="extraItemInput"
-                  stateName="piralPackage"
-                  placeholder="sample-piral"
-                  >
+                <vscode-text-field id="local-path-input" class="extraItemInput" stateName="piralPackage"
+                  placeholder="sample-piral">
+                  <p class="extraItemLabel">Piral Package</p>
+                </vscode-text-field>
               </div>
               <div class="extraItem onlyForPilet hide">
-                <p class="extraItemLabel">NPM Registry</p>
-                <vscode-text-field
-                  class="extraItemInput"
-                  stateName="npmRegistry"
-                  placeholder="https://registry.npmjs.org/"
-                  >
+                <vscode-text-field id="local-path-input" class="extraItemInput" stateName="npmRegistry"
+                  placeholder="https://registry.npmjs.org/">
+                  <p class="extraItemLabel">NPM Registry</p>
+                </vscode-text-field>
               </div>
             </div>
+            <div class="sideBorder"></div>
             <div class="bundlers">
               <p class="columnTitle">Select bundler <span class="errorBundler errorMessage hide">[required]</span></p>
-              <% bundlers.forEach((bundler, index) => { %>
-                <div
-                  key="bundler_<%= index %>"
-                  class="card bundler"
-                  bundler="<%= bundler.type %>"
-                  >
-                  <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
-                  <div class="cardTitle">
-                    <img class="cardTitleIcon" src="<%= bundler.icon %>" />
-                    <p class="cardTitleTxt"><%= bundler.title %></p>
+              <div>
+                <% bundlers.forEach((bundler, index)=> { %>
+                  <div key="bundler_<%= index %>" class="card bundler" bundler="<%= bundler.type %>">
+                    <img class="selectedCardTag" src="<%= images.selectedItemIcon %>" />
+                    <div class="cardTitle">
+                      <img class="cardTitleIcon" src="<%= bundler.icon %>" />
+                      <p class="cardTitleTxt">
+                        <%= bundler.title %>
+                      </p>
+                    </div>
+                    <div class="cardDescription">
+                      <%= bundler.description %>
+                    </div>
                   </div>
-                  <div class="cardDescription"><%= bundler.description %></div>
-                </div>
-              <% }); %>
+                <% }); %>
+              </div>
             </div>
           </div>
         </div>
-        <div class="btn-container">
-          <vscode-button class="navigation-btn" direction="next" href="#">Next</vscode-button>
-        </div>
       </div>
-      <div class="second-container hide">
-        <div class="container">
-          <h1>More Options</h1>
-        </div>
-        <div class="btn-container">
-          <vscode-button class="navigation-btn" direction="previous" href="#">Previous</vscode-button>
-          <vscode-button id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
-        </div>
+      <div class="btnContainer">
+        <vscode-button class="navigation-btn" id="next" direction="next" href="#" disabled>Next</vscode-button>
+        <vscode-button class="navigation-btn hide" id="previous" direction="previous" href="#">Previous</vscode-button>
+        <vscode-button class="hide" id="create-btn" title="Start Scaffolding" href="#">Scaffold Project</vscode-button>
       </div>
     </div>
   </div>
-  <% scripts.forEach((script) => { %>
-     <script type="<%= script.type %>" src="<%= script.url %>"></script>
+  <% scripts.forEach((script)=> { %>
+    <script type="<%= script.type %>" src="<%= script.url %>"></script>
   <% }); %>
 </body>
 
 </html>
-
-

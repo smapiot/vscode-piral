@@ -1,5 +1,7 @@
 const vscode = acquireVsCodeApi();
 
+const templates = {};
+
 const states = {
   repoType: '',
   name: '',
@@ -8,7 +10,18 @@ const states = {
   targetFolder: '',
   piralPackage: '',
   npmRepository: '',
+  template: '',
 };
+
+// hide elements
+function hide(box) {
+  box.classList.add('hide');
+}
+
+// display elements
+function display(box) {
+  box.classList.remove('hide');
+}
 
 // Highlight style of cards after selection
 function updateSingleSelectGroup(selector, className, selectedClassName, state) {
@@ -24,8 +37,7 @@ function updateSingleSelectGroup(selector, className, selectedClassName, state) 
 // Validation errors will be hidden
 function resetValidationErrors() {
   document.querySelectorAll('span.errorMessage').forEach((box) => {
-    box.classList.remove('hide');
-    box.classList.add('hide');
+    hide(box);
   });
 }
 
@@ -36,7 +48,7 @@ function showValidationErrors(errors) {
     const node = document.querySelector(`span.error${item}`);
 
     if (node !== undefined) {
-      node.classList.remove('hide');
+      display(node);
     }
   });
 }
@@ -48,6 +60,61 @@ function displayLocalPath(localPath) {
   states.targetFolder = localPath;
 }
 
+// Insert html code under select templates
+function insertTemplatesNames(type) {
+  const className = `div.templates-names`;
+  const node = document.querySelector(className);
+  let html = '';
+
+  if (type === 'spinner') {
+    html += `<div class="spinner"></div>`
+    node.innerHTML = html;
+    return
+  }
+  
+  const { scheme, authority, path } = templates.selectedItemIcon;
+  const imgSrc = `${scheme}://${authority}${path}`;
+  templates[`${type}`].forEach((template, index) => {
+    html += `                
+      <div key="template${index}" class="card template" template="${template}">
+        <img class="selectedCardTag" src="${imgSrc}" />
+        <div class="cardTitle">
+          <p class="cardTitleTxt">
+          ${template}
+          </p>
+        </div>
+      </div>`;
+  });
+  node.innerHTML = html;
+  handleTemplateClick();
+}
+
+// Send message to vscode to load templates names
+function loadTemplates(type) {
+  switch (type) {
+    case 'piral':
+      if (templates.piral) {
+        insertTemplatesNames(type);
+        return;
+      }
+
+    case 'pilet':
+      if (templates.pilet) {
+        insertTemplatesNames(type);
+        return;
+      } else {
+        insertTemplatesNames("spinner")
+      }
+  }
+
+  vscode.postMessage({
+    command: 'getTemplatesNames',
+    parameters: type,
+  });
+}
+
+loadTemplates('piral');
+
 // Handle click on RepoType card
 document.querySelectorAll('div.card.project').forEach((box) =>
   box.addEventListener('click', (event) => {
@@ -56,21 +123,35 @@ document.querySelectorAll('div.card.project').forEach((box) =>
 
     switch (states.repoType) {
       case 'piral':
+        loadTemplates('piral');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          box.classList.remove('hide');
-          box.classList.add('hide');
+          hide(box);
           states.piralPackage = '';
           states.npmRepository = '';
         });
         break;
       case 'pilet':
-        document.querySelectorAll('div.onlyForPilet').forEach((box) => {
-          box.classList.remove('hide');
-        });
+        loadTemplates('pilet');
+        document.querySelectorAll('div.onlyForPilet').forEach(display);
         break;
     }
   }),
 );
+
+// Handle click on template card
+function handleTemplateClick() {
+  document.querySelectorAll('div.card.template').forEach((box) =>
+    box.addEventListener('click', (event) => {
+      if (states.repoType) {
+        const nextButton = document.getElementById('next');
+        nextButton.removeAttribute('disabled');
+      }
+
+      states.template = event.currentTarget.getAttribute('template');
+      updateSingleSelectGroup('div.card.template', 'template', 'selectedCard', states.template);
+    }),
+  );
+}
 
 // Handle click on Bundler card
 document.querySelectorAll('div.card.bundler').forEach((box) =>
@@ -96,23 +177,38 @@ document.getElementById('local-path').addEventListener('click', async () => {
   });
 });
 
-// Handle click on next button
+// Handle click on Next/ Previous button
 document.querySelectorAll('.navigation-btn').forEach((btn) =>
   btn.addEventListener('click', (event) => {
     const direction = event.currentTarget.getAttribute('direction');
     const firstContainer = document.querySelector('.first-container');
     const secondContainer = document.querySelector('.second-container');
+    const nextButton = document.getElementById('next');
+    const previousButton = document.getElementById(`previous`);
+    const createButton = document.getElementById(`create-btn`);
 
     switch (direction) {
       case 'next':
-        firstContainer.classList.add('hide');
-        secondContainer.classList.remove('hide');
+        const node = document.querySelector(`span.errorRepoType`);
+        if (!states.repoType || !states.template) {
+          display(node);
+          return;
+        } else {
+          hide(node);
+        }
+
+        hide(nextButton)
+        display(previousButton)
+        display(createButton)
+        hide(firstContainer);
+        display(secondContainer);
         break;
       case 'previous':
-        document.querySelectorAll('div.onlyForPilet').forEach((btn) => {
-          firstContainer.classList.remove('hide');
-          secondContainer.classList.add('hide');
-        });
+        hide(secondContainer);
+        hide(previousButton);
+        hide(createButton);
+        display(firstContainer);
+        display(nextButton);
         break;
     }
   }),
@@ -139,5 +235,10 @@ window.addEventListener('message', (event) => {
       const localPath = message.data[0].path;
       displayLocalPath(localPath);
       break;
+
+    case 'sendTemplatesNames':
+      templates[message.type] = message.templatesNames;
+      templates['selectedItemIcon'] = message.selectedItemIcon;
+      insertTemplatesNames(message.type);
   }
 });

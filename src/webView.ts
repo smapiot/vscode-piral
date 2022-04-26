@@ -1,6 +1,13 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { getTemplateCode, runCommand, getRepoTypeOptions, getBundlerOptions, getResourcePath } from './helpers';
+import {
+  getTemplateCode,
+  runCommand,
+  getRepoTypeOptions,
+  getBundlerOptions,
+  getResourcePath,
+  getTemplatesNames,
+} from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -18,6 +25,7 @@ interface Options {
   targetFolder: string;
   piralPackage: string;
   npmRegistry: string;
+  template: string;
 }
 
 function validateParameters(options: Options): string[] {
@@ -29,6 +37,10 @@ function validateParameters(options: Options): string[] {
 
   if (!options.repoType) {
     validationErrors.push('RepoType');
+  }
+
+  if (!options.template) {
+    validationErrors.push('Template');
   }
 
   if (!options.version.trim()) {
@@ -85,59 +97,72 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   webviewPanel.webview.onDidReceiveMessage(
     async (message) => {
-      if (message.command === 'createPiralPilet') {
-        const options: Options = Object.assign(
-          {
+      switch (message.command) {
+        case 'createPiralPilet':
+          const options = {
             repoType: '',
+            template: '',
             name: '',
             version: '',
             bundler: '',
             targetFolder: '',
             piralPackage: '',
             npmRegistry: '',
-          },
-          message.parameters,
-        );
-        console.log(options);
-        const validationErrors = validateParameters(options);
-        const errorMessage = { command: 'error', data: validationErrors };
-        webviewPanel.webview.postMessage(errorMessage);
+            ...message.parameters,
+          };
+          const validationErrors = validateParameters(options);
+          const errorMessage = { command: 'error', data: validationErrors };
+          webviewPanel.webview.postMessage(errorMessage);
 
-        if (validationErrors.length > 0) {
-          return;
-        }
+          if (validationErrors.length > 0) {
+            return;
+          }
 
-        // Go to target folder & create app folder
-        const folder = `${options.targetFolder}/${options.name}`;
-        const createAppFolder = `mkdir -p '${folder}' && cd '${folder}'`;
-        const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
+          // Go to target folder & create app folder
+          const createAppFolder = `cd '${options.targetFolder}' && mkdir '${options.name}' && cd '${options.name}'`;
+          const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
 
-        if (options.repoType === 'piral') {
-          // Handle Piral Instance
-          const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
-          runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
+          if (options.repoType === 'piral') {
+            // Handle Piral Instance
+            const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
+            runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
-          // Dispose Webview
-          disposeWebview();
-        } else if (options.repoType === 'pilet') {
-          // Handle Pilet Instance
-          const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
-          runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
+            // Dispose Webview
+            disposeWebview();
+          } else if (options.repoType === 'pilet') {
+            // Handle Pilet Instance
+            const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
+            runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
-          // Dispose Webview
-          disposeWebview();
-        }
-      } else if (message.command === 'getLocalPath') {
-        const localPath = await window.showOpenDialog({
-          canSelectFolders: true,
-          canSelectFiles: false,
-          canSelectMany: false,
-          openLabel: 'Select a folder to create project',
-        });
+            // Dispose Webview
+            disposeWebview();
+          }
+          break;
 
-        if (localPath) {
-          webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath });
-        }
+        case 'getLocalPath':
+          const localPath = await window.showOpenDialog({
+            canSelectFolders: true,
+            canSelectFiles: false,
+            canSelectMany: false,
+            openLabel: 'Select a folder to create project',
+          });
+
+          if (localPath) {
+            webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath });
+          }
+
+          break;
+
+        case 'getTemplatesNames':
+          const templatesNames = await getTemplatesNames(message.parameters);
+          webviewPanel.webview.postMessage({
+            command: 'sendTemplatesNames',
+            type: message.parameters,
+            templatesNames: templatesNames,
+            selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
+          });
+
+          break;
       }
     },
     undefined,
