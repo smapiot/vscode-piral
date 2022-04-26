@@ -100,9 +100,18 @@ export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources:
 export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
   const baseUrl = `https://registry.npmjs.org/-/v1/search?text=keywords:${type}+template&size=${size}`;
   const result = await axios.get(baseUrl);
+  const test = /@smapiot\/.*-template-(.*)/;
+
   const templates = await result.data.objects.map((elm: any) => {
-    const len = elm.package.name.split('-').length;
-    return elm.package.name.split('-')[len - 1];
+    const { author, description, name: packageName } = elm.package;
+    const shortName = test.exec(packageName);
+    const name = shortName ? shortName[1] : packageName;
+    return {
+      name,
+      author,
+      packageName,
+      description,
+    };
   });
 
   return templates;

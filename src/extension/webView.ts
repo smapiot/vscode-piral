@@ -79,25 +79,22 @@ export async function createRepository(context: vscode.ExtensionContext) {
     enableScripts: true,
   });
 
-  webviewPanel.webview.html = getTemplateCode(extensionPath, 'repository', {
-    styles: [getResourcePath(webviewPanel, extensionPath, 'media/media.css')],
-    scripts: [
-      { url: getResourcePath(webviewPanel, extensionPath, 'media/media.js'), type: 'application/javascript' },
-      { url: getResourcePath(webviewPanel, extensionPath, 'media/toolkit.min.js'), type: 'module' },
-    ],
-    repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
-    bundlers: getBundlerOptions(webviewPanel, extensionPath),
-    images: {
-      selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
-      foldersIcon: getResourcePath(webviewPanel, extensionPath, 'resources/folders-icon.png'),
-    },
-  });
+  webviewPanel.webview.html = getTemplateCode(getResourcePath(webviewPanel, extensionPath, 'dist/scaffold.js'));
 
   webviewPanel.iconPath = vscode.Uri.file(join(extensionPath, 'resources/piral.png'));
 
   webviewPanel.webview.onDidReceiveMessage(
     async (message) => {
       switch (message.command) {
+        case 'initialize':
+          webviewPanel.webview.postMessage({
+            command: 'sendInitialState',
+            data: {
+              repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
+              bundlers: getBundlerOptions(webviewPanel, extensionPath),
+            },
+          });
+          break;
         case 'createPiralPilet':
           const options = {
             repoType: '',
@@ -154,12 +151,11 @@ export async function createRepository(context: vscode.ExtensionContext) {
           break;
 
         case 'getTemplatesNames':
-          const templatesNames = await getTemplatesNames(message.parameters);
+          const templates = await getTemplatesNames(message.type);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
-            type: message.parameters,
-            templatesNames: templatesNames,
-            selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png'),
+            type: message.type,
+            templates,
           });
 
           break;

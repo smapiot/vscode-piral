@@ -7,6 +7,7 @@
       "es6",
       "DOM"
     ],
+    "jsx": "react",
     "sourceMap": true,
     "rootDir": "src",
     "strict": true,
