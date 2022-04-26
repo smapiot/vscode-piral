@@ -62,27 +62,32 @@ function displayLocalPath(localPath) {
 
 // Insert html code under select templates
 function insertTemplatesNames(type) {
-  const { scheme, authority, path } = templates.selectedItemIcon
-  const imgSrc = `${scheme}://${authority}${path}`
   const className = `div.templates-names`;
   const node = document.querySelector(className);
-
   let html = '';
+
+  if (type === 'spinner') {
+    html += `<div class="spinner"></div>`
+    node.innerHTML = html;
+    return
+  }
+  
+  const { scheme, authority, path } = templates.selectedItemIcon;
+  const imgSrc = `${scheme}://${authority}${path}`;
   templates[`${type}`].forEach((template, index) => {
     html += `                
-    <div key="template${index}" class="card template" template="${template}">
-      <img class="selectedCardTag" src="${imgSrc}" />
-      <div class="cardTitle">
-        <p class="cardTitleTxt">
-        ${template}
-        </p>
-      </div>
-    </div>`;
+      <div key="template${index}" class="card template" template="${template}">
+        <img class="selectedCardTag" src="${imgSrc}" />
+        <div class="cardTitle">
+          <p class="cardTitleTxt">
+          ${template}
+          </p>
+        </div>
+      </div>`;
   });
   node.innerHTML = html;
-  handleTemplateClick()
+  handleTemplateClick();
 }
-
 
 // Send message to vscode to load templates names
 function loadTemplates(type) {
@@ -97,6 +102,8 @@ function loadTemplates(type) {
       if (templates.pilet) {
         insertTemplatesNames(type);
         return;
+      } else {
+        insertTemplatesNames("spinner")
       }
   }
 
