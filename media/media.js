@@ -63,6 +63,8 @@ function displayLocalPath(localPath) {
 
 // Insert html code under select templates
 function insertTemplatesNames(type) {
+  const { scheme, authority, path } = templates.selectedItemIcon
+  const imgSrc = `${scheme}://${authority}${path}`
   const className = `div.${type}-templates`;
   const node = document.querySelector(className);
 
@@ -70,7 +72,7 @@ function insertTemplatesNames(type) {
   templates[`${type}`].forEach((template, index) => {
     html += `                
     <div key="template${index}" class="card template" template="${template}">
-      <img class="selectedCardTag" src="resources/selected-item.png" />
+      <img class="selectedCardTag" src="${imgSrc}" />
       <div class="cardTitle">
         <p class="cardTitleTxt">
         ${template}
@@ -79,7 +81,9 @@ function insertTemplatesNames(type) {
     </div>`;
   });
   node.innerHTML = html;
+  handleTemplateClick()
 }
+
 
 // Send message to vscode to load templates names
 function loadTemplates(type) {
@@ -112,12 +116,10 @@ document.querySelectorAll('div.card.project').forEach((box) =>
     updateSingleSelectGroup('div.card.project', 'repoType', 'selectedCard', states.repoType);
     const piralTemplates = document.querySelector('div.piral-templates');
     const piletTemplates = document.querySelector('div.pilet-templates');
-    const nextButton = document.getElementById('next');
 
     switch (states.repoType) {
       case 'piral':
         loadTemplates('piral');
-        nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => {
           display(box);
           hide(box);
@@ -129,7 +131,7 @@ document.querySelectorAll('div.card.project').forEach((box) =>
         break;
       case 'pilet':
         loadTemplates('pilet');
-        nextButton.removeAttribute('disabled');
+        // nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => display(box));
         display(piletTemplates);
         hide(piralTemplates);
@@ -139,13 +141,19 @@ document.querySelectorAll('div.card.project').forEach((box) =>
 );
 
 // Handle click on template card
-document.querySelectorAll('div.card.template').forEach((box) =>
-  box.addEventListener('click', (event) => {
-    console.log('box');
-    states.template = event.currentTarget.getAttribute('template');
-    updateSingleSelectGroup('div.card.template', 'template', 'selectedCard', states.template);
-  }),
-);
+function handleTemplateClick() {
+  document.querySelectorAll('div.card.template').forEach((box) =>
+    box.addEventListener('click', (event) => {
+      if (states.repoType) {
+        const nextButton = document.getElementById('next');
+        nextButton.removeAttribute('disabled');
+      }
+
+      states.template = event.currentTarget.getAttribute('template');
+      updateSingleSelectGroup('div.card.template', 'template', 'selectedCard', states.template);
+    }),
+  );
+}
 
 // Handle click on Bundler card
 document.querySelectorAll('div.card.bundler').forEach((box) =>
@@ -181,7 +189,7 @@ document.querySelectorAll('.navigation-btn').forEach((btn) =>
     switch (direction) {
       case 'next':
         const node = document.querySelector(`span.errorRepoType`);
-        if (!states.repoType) {
+        if (!states.repoType || !states.template) {
           display(node);
           return;
         } else {
@@ -223,6 +231,7 @@ window.addEventListener('message', (event) => {
 
     case 'sendTemplatesNames':
       templates[message.type] = message.data;
+      templates['selectedItemIcon'] = message.selectedItemIcon;
       insertTemplatesNames(message.type);
   }
 });
