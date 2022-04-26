@@ -37,7 +37,6 @@ function updateSingleSelectGroup(selector, className, selectedClassName, state) 
 // Validation errors will be hidden
 function resetValidationErrors() {
   document.querySelectorAll('span.errorMessage').forEach((box) => {
-    display(box);
     hide(box);
   });
 }
@@ -131,7 +130,6 @@ document.querySelectorAll('div.card.project').forEach((box) =>
         break;
       case 'pilet':
         loadTemplates('pilet');
-        // nextButton.removeAttribute('disabled');
         document.querySelectorAll('div.onlyForPilet').forEach((box) => display(box));
         display(piletTemplates);
         hide(piralTemplates);
@@ -230,7 +228,7 @@ window.addEventListener('message', (event) => {
       break;
 
     case 'sendTemplatesNames':
-      templates[message.type] = message.data;
+      templates[message.type] = message.templatesNames;
       templates['selectedItemIcon'] = message.selectedItemIcon;
       insertTemplatesNames(message.type);
   }

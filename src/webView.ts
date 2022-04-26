@@ -25,7 +25,6 @@ interface Options {
   targetFolder: string;
   piralPackage: string;
   npmRegistry: string;
-  options: string;
   template: string;
 }
 
@@ -160,7 +159,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
             type: message.parameters,
-            data: templatesNames,
+            templatesNames: templatesNames,
             selectedItemIcon: getResourcePath(webviewPanel, extensionPath, 'resources/selected-item.png')
           });
       }
