@@ -1,4 +1,4 @@
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
 
 export const globalStyle = css`
   * {
@@ -21,8 +21,6 @@ export const globalStyle = css`
       margin-top: 1.5rem;
     }
   }
-
-  .header {}
 
   .title {
     font-weight: 600;
@@ -54,82 +52,11 @@ export const globalStyle = css`
     width: 100%;
     height: 100%;
     overflow: scroll;
-  }
 
-  .first-container, .second-container {
-    flex: 1;
-  }
-
-  .sideBorder {
-    position: relative;
-    bottom: 0.375rem;
-    width: 0.063rem;
-    background: #434557;
-    margin-right: 2.5rem;
-    margin-left: 2.5rem;
-  }
-
-  .containerInfos {
-    display: flex;
-    flex: 1;
-    height: 100%;
-  }
-
-  .templates {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
-  .templates div {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .card.template {
-    max-width: 13.75rem;
-    min-width: 10rem;
-    margin: 0 1rem 1rem 0;
-    text-align: center;
-    background-image: linear-gradient(109.6deg, rgba(0,0,0,0.93) 11.2%, rgba(63,61,61,1) 78.9% );
-    align-items: center;
-  }
-
-  .template .cardTitle, .template .cardTitle {
-    margin: 0;
-  }
-
-  .containerInfos > div {
-    margin-right: 2rem;
-  }
-
-  .bundlers {
-    flex: 1
-
-    div {
-      display: flex;
-      flex-wrap: wrap;
+    & .first-container,
+    & .second-container {
+      flex: 1;
     }
-  }
-
-  .bundler {
-    width: 13.75rem;
-    margin: 0 1rem 1rem 0;
-  }
-
-  .card {
-    padding: 0.625rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-bottom: 1rem;
-    height: 7rem;
-    border: 0.063rem solid #47524a;
-    overflow: hidden;
-    cursor: pointer;
-    max-width: 13.75rem;
-    min-width: 8.125rem
   }
 
   .selectedCardTag {
@@ -154,8 +81,51 @@ export const globalStyle = css`
     }
   }
 
+  .sideBorder {
+    position: relative;
+    bottom: 0.375rem;
+    width: 0.063rem;
+    background: #434557;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+  }
+
+  .containerInfos {
+    display: flex;
+    flex: 1;
+    height: 100%;
+
+    .information{
+      margin-right: 1.5rem;
+    }
+  }
+
+  .card {
+    padding: 0.625rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 1rem;
+    height: 7rem;
+    border: 0.063rem solid #47524a;
+    overflow: hidden;
+    cursor: pointer;
+    max-width: 13.75rem;
+    min-width: 8.125rem;
+  }
+
   .card:hover {
     border: 0.063rem solid #0e639c !important;
+  }
+
+  .card.template {
+    max-width: 13.75rem;
+    min-width: 10rem;
+    margin: 0 1rem 1rem 0;
+    text-align: center;
+    background-image: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgba(63, 61, 61, 1) 78.9%);
+    align-items: center;
   }
 
   .cardTitle {
@@ -182,51 +152,24 @@ export const globalStyle = css`
     line-height: 1.125rem;
   }
 
-  .btnContainer {
-    text-align: right;
+  .templates {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    & .templatesNames,
+    & spinnerContainer {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .template .cardTitle,
+    & .template .cardTitle {
+      margin: 0;
+    }
   }
 
-  .extraItem {
-    position: relative;
-    bottom: 0.313rem;
-    margin-bottom: 1rem;
-    width: 120%;
-  }
-
-  .extraItemLabel {
-    margin-bottom: 0.125rem;
-  }
-
-  .foldersImg {
-    margin: 0.313rem;
-    margin-bottom: 0.25rem;
-  }
-
-  vscode-text-field.extraItemInput {
-    width: 100%;
-  }
-
-  vscode-text-field span {
-    height: 2rem;
-    cursor: pointer;
-  }
-
-  .errorMessage {
-    font-size: 0.875rem;
-    color: #ff1010;
-    margin-bottom: 0.625rem;
-  }
-
-  .hide {
-    display: none !important;
-  }
-
-  span {
-    margin-bottom: 0.625rem;
-    padding-bottom: 0.625rem;
-  }
-
-  .spinner-container {
+  .spinnerContainer {
     display: flex;
     flex: 1;
     align-items: center;
@@ -239,7 +182,7 @@ export const globalStyle = css`
     height: 5rem;
 
     &::after {
-      content: " ";
+      content: ' ';
       display: block;
       width: 4rem;
       height: 4rem;
@@ -258,5 +201,62 @@ export const globalStyle = css`
     100% {
       transform: rotate(360deg);
     }
+  }
+
+  .extraItem {
+    position: relative;
+    bottom: 0.313rem;
+    margin-bottom: 1rem;
+    width: 120%;
+
+    & .extraItemLabel {
+      margin-bottom: 0.125rem;
+    }
+
+    & .foldersImg {
+      margin: 0.313rem;
+      margin-bottom: 0.25rem;
+    }
+
+    & vscode-text-field.extraItemInput {
+      width: 100%;
+    }
+
+    & vscode-text-field span {
+      height: 2rem;
+      cursor: pointer;
+    }
+  }
+
+  .bundlers {
+    flex: 1;
+
+    & .bundlersCards {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .bundler {
+      width: 13.75rem;
+      margin: 0 1rem 1rem 0;
+      height: 8rem;
+    }
+  }
+
+  .btnContainer {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .hide {
+    display: none !important;
+  }
+
+  span {
+    margin-bottom: 0.625rem;
+    padding-bottom: 0.625rem;
   }
 `;

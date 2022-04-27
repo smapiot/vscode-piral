@@ -12,6 +12,7 @@ export interface StoreState {
   templates: {
     [repoType: string]: Array<TemplateInfo>;
   };
+  localPath: string;
 }
 
 export interface TemplateInfo {

@@ -273,5 +273,7 @@
     "vscode-test": "^1.6.1",
     "zustand": "^4.0.0-rc.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "is-valid-path": "^0.1.1"
+  }
 }

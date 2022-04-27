@@ -18,14 +18,12 @@ export const useStore = create<Store>((set) => {
     const message = ev.data;
 
     switch (message.command) {
-      case 'error':
-        // const errors = message.data;
-        // showValidationErrors(errors);
-        break;
-
       case 'sendLocalPath':
-        // const localPath = message.data[0].path;
-        // displayLocalPath(localPath);
+        const localPath = message.data[0].path;
+        dispatch(set, (state) => ({
+          ...state,
+          localPath: localPath,
+        }));
         break;
 
       case 'sendTemplatesNames':
@@ -52,6 +50,7 @@ export const useStore = create<Store>((set) => {
       bundlers: [],
       repoTypes: [],
       templates: {},
+      localPath: '',
     },
     actions: {
       initialize() {

@@ -107,9 +107,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
             npmRegistry: '',
             ...message.parameters,
           };
+
           const validationErrors = validateParameters(options);
-          const errorMessage = { command: 'error', data: validationErrors };
-          webviewPanel.webview.postMessage(errorMessage);
 
           if (validationErrors.length > 0) {
             return;
