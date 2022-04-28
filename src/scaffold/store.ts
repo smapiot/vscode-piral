@@ -18,14 +18,12 @@ export const useStore = create<Store>((set) => {
     const message = ev.data;
 
     switch (message.command) {
-      case 'error':
-        // const errors = message.data;
-        // showValidationErrors(errors);
-        break;
-
       case 'sendLocalPath':
-        // const localPath = message.data[0].path;
-        // displayLocalPath(localPath);
+        const localPath = message.data[0].path;
+        dispatch(set, (state) => ({
+          ...state,
+          localPath: localPath,
+        }));
         break;
 
       case 'sendTemplatesNames':
@@ -52,6 +50,18 @@ export const useStore = create<Store>((set) => {
       bundlers: [],
       repoTypes: [],
       templates: {},
+      localPath: '',
+      options: {
+        repoType: '',
+        template: '',
+        name: '',
+        version: '',
+        bundler: '',
+        targetFolder: '',
+        piralPackage: '',
+        npmRegistry: '',
+        nodeModules: true,
+      },
     },
     actions: {
       initialize() {
@@ -70,10 +80,17 @@ export const useStore = create<Store>((set) => {
           command: 'getLocalPath',
         });
       },
-      scaffold(parameters) {
+      updateOptions(options) {
+        dispatch(set, (state) => ({
+          ...state,
+          options,
+        }));
+      },
+      scaffold() {
+        const options = useStore.getState().state.options;
         vscode.postMessage({
           command: 'createPiralPilet',
-          parameters,
+          options,
         });
       },
     },

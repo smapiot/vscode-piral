@@ -96,20 +96,9 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
           break;
         case 'createPiralPilet':
-          const options = {
-            repoType: '',
-            template: '',
-            name: '',
-            version: '',
-            bundler: '',
-            targetFolder: '',
-            piralPackage: '',
-            npmRegistry: '',
-            ...message.parameters,
-          };
+          const options = message.options;
+
           const validationErrors = validateParameters(options);
-          const errorMessage = { command: 'error', data: validationErrors };
-          webviewPanel.webview.postMessage(errorMessage);
 
           if (validationErrors.length > 0) {
             return;
@@ -118,17 +107,18 @@ export async function createRepository(context: vscode.ExtensionContext) {
           // Go to target folder & create app folder
           const createAppFolder = `cd '${options.targetFolder}' && mkdir '${options.name}' && cd '${options.name}'`;
           const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
+          const installDependencies = options.nodeModules ? '--install' : '--no-install';
 
           if (options.repoType === 'piral') {
             // Handle Piral Instance
-            const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
+            const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
             runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
             // Dispose Webview
             disposeWebview();
           } else if (options.repoType === 'pilet') {
             // Handle Pilet Instance
-            const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults`;
+            const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
             runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
             // Dispose Webview
