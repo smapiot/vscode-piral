@@ -24,28 +24,21 @@ function getRef(uri: Uri) {
 const FirstPage: React.FC<PageProps> = ({ onNext }) => {
   const { state, actions } = useStore();
   const options = state.options;
-  const availableTemplates = options.repoType ? state.templates[options.repoType] : undefined;
+  const { repoType } = options;
+  const availableTemplates = repoType ? state.templates[repoType] : undefined;
   const canGoNext = options.template !== '';
   const loading = availableTemplates === undefined;
-  const next = () => {
-    if (options.repoType && options.template) {
-      onNext({
-        repoType: options.repoType,
-        template: options.template,
-      });
-    }
-  };
 
   React.useEffect(() => {
-    if (options.repoType) {
-      actions.loadTemplates(options.repoType);
+    if (repoType) {
+      actions.loadTemplates(repoType);
     }
-  }, [options.repoType]);
+  }, [repoType]);
 
   return (
     <>
       <div className="container">
-        <div className="first-container">
+        <div className="firstContainer">
           <div className="containerInfos">
             <div className="container-type">
               <div className="cards containerColumn">
@@ -67,7 +60,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
             </div>
             <div className="sideBorder" />
             <div className="templates containerInfos">
-              {options.repoType === '' ? undefined : loading ? (
+              {repoType === '' ? undefined : loading ? (
                 <div className="spinnerContainer">
                   <div className="spinner" />
                 </div>
@@ -97,7 +90,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
         </div>
       </div>
       <div className="btnContainer">
-        <VSCodeButton className="navigation-btn" href="#" disabled={!canGoNext} onClick={next}>
+        <VSCodeButton className="navigation-btn" href="#" disabled={!canGoNext} onClick={onNext}>
           Next
         </VSCodeButton>
       </div>
@@ -108,8 +101,9 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
 const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   const { state, actions } = useStore();
   const options = state.options;
+  const [valid, setValid] = React.useState(true)
 
-  const { repoType, template, name, bundler, targetFolder } = options;
+  const { repoType, template, name, bundler, targetFolder, version, piralPackage, npmRegistry } = options;
   const canScaffold = repoType !== '' && template !== '' && name !== '' && bundler !== '' && targetFolder !== '';
 
   const openLocalPathModal = () => {
@@ -117,6 +111,13 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   };
 
   const createPiralPilet = () => {
+    const test = /(\/[A-Za-z_\/-\s0-9\.]+)+$/;
+    const isValid = test.exec(options.targetFolder);
+    if (!isValid) {
+      setValid(false);
+      return
+    } 
+
     actions.scaffold(options);
   };
 
@@ -127,7 +128,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   return (
     <>
       <div className="container">
-        <div className="second-container">
+        <div className="secondContainer">
           <div className="containerInfos">
             <div className="information">
               <p className="columnTitle">Provide Information</p>
@@ -136,16 +137,16 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 <VSCodeTextField
                   className="extraItemInput"
                   stateName="name"
-                  value={options.name}
+                  value={name}
                   onChange={(ev: any) => actions.updateOptions({ ...state.options, name: ev.target.value })}
                 />
               </div>
               <div className="extraItem">
                 <VSCodeTextField
                   className="extraItemInput"
-                  value={options.targetFolder}
+                  value={targetFolder}
                   onChange={(ev: any) => actions.updateOptions({ ...state.options, targetFolder: ev.target.value })}>
-                  <p className="extraItemLabel">Local Path</p>
+                  <p className="extraItemLabel">Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span></p>
                   <span slot="end" id="local-path" onClick={openLocalPathModal}>
                     <img className="foldersImg" src={folderImage} />
                   </span>
@@ -156,7 +157,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 <VSCodeTextField
                   className="extraItemInput"
                   placeholder="1.0.0"
-                  value={options.version}
+                  value={version}
                   onChange={(ev: any) => actions.updateOptions({ ...state.options, version: ev.target.value })}>
                   <p className="extraItemLabel">Version</p>
                 </VSCodeTextField>
@@ -165,7 +166,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 <VSCodeTextField
                   className="extraItemInput"
                   placeholder="sample-piral"
-                  value={options.piralPackage}
+                  value={piralPackage}
                   onChange={(ev: any) => actions.updateOptions({ ...state.options, piralPackage: ev.target.value })}>
                   <p className="extraItemLabel">Piral Package</p>
                 </VSCodeTextField>
@@ -174,7 +175,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 <VSCodeTextField
                   className="extraItemInput"
                   placeholder="https://registry.npmjs.org/"
-                  value={options.npmRegistry}
+                  value={npmRegistry}
                   onChange={(ev: any) => actions.updateOptions({ ...state.options, npmRegistry: ev.target.value })}>
                   <p className="extraItemLabel">NPM Registry</p>
                 </VSCodeTextField>
@@ -182,10 +183,10 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
               <div className={`extraItem`}>
                 <VSCodeRadioGroup className="extraItemInput radioGroup">
                   <label slot="label">Install Node Modules</label>
-                  <VSCodeRadio onChange={(ev: any) => actions.updateOptions({ ...state.options, nodeModules: true })}>
+                  <VSCodeRadio onChange={() => actions.updateOptions({ ...state.options, nodeModules: true })}>
                     Yes
                   </VSCodeRadio>
-                  <VSCodeRadio onChange={(ev: any) => actions.updateOptions({ ...state.options, nodeModules: false })}>
+                  <VSCodeRadio onChange={() => actions.updateOptions({ ...state.options, nodeModules: false })}>
                     No
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
@@ -198,7 +199,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 {state.bundlers.map((bundler) => (
                   <div
                     key={bundler.type}
-                    onClick={(ev: any) => actions.updateOptions({ ...state.options, bundler: bundler.type })}
+                    onClick={() => actions.updateOptions({ ...state.options, bundler: bundler.type })}
                     className={options.bundler === bundler.type ? 'card bundler selectedCard' : 'card bundler'}>
                     <img className="selectedCardTag" src={selectedItemIcon} />
                     <div className="cardTitle">
@@ -236,8 +237,7 @@ const ScaffoldView: React.FC = () => {
   return (
     <Page
       state={state.current}
-      onNext={(newState) => {
-        state.current = newState;
+      onNext={() => {
         setPageIndex((p) => p + 1);
       }}
       onPrevious={() => {

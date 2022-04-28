@@ -51,10 +51,10 @@ export const globalStyle = css`
     flex-direction: row;
     width: 100%;
     height: 100%;
-    overflow: scroll;
+    overflow: hidden;
 
-    & .first-container,
-    & .second-container {
+    & .firstContainer {
+      overflow: scroll;
       flex: 1;
     }
   }
@@ -236,6 +236,7 @@ export const globalStyle = css`
 
   .bundlers {
     flex: 1;
+    overflow: scroll;
 
     & .bundlersCards {
       display: flex;
@@ -259,6 +260,12 @@ export const globalStyle = css`
 
   .hide {
     display: none !important;
+  }
+
+  .errorMessage {
+    font-size: 0.875rem;
+    color: #ff1010;
+    margin-bottom: 0.625rem;
   }
 
   span {

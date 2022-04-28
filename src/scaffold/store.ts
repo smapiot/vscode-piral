@@ -78,7 +78,7 @@ export const useStore = create<Store>((set) => {
       updateOptions(options) {
         dispatch(set, (state) => ({
           ...state,
-          options: options,
+          options,
         }));
       },
       selectLocalPath() {
