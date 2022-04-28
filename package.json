@@ -274,6 +274,5 @@
     "zustand": "^4.0.0-rc.0"
   },
   "dependencies": {
-    "is-valid-path": "^0.1.1"
   }
 }

@@ -70,10 +70,10 @@ export const globalStyle = css`
 
   .selectedCard {
     padding: 0.563rem;
-    border: 0.125rem solid #0e639c !important;
+    border: 0.063rem solid #0e639c !important;
 
     &:hover {
-      border: 0.125rem solid #0e639c !important;
+      border: 0.063rem solid #0e639c !important;
     }
 
     & .selectedCardTag {
@@ -126,6 +126,12 @@ export const globalStyle = css`
     text-align: center;
     background-image: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgba(63, 61, 61, 1) 78.9%);
     align-items: center;
+    height: 8.25rem;
+    padding: 14px;
+
+    & .cardTitle {
+      margin-bottom: 4px !important;
+    }
   }
 
   .cardTitle {
@@ -258,5 +264,10 @@ export const globalStyle = css`
   span {
     margin-bottom: 0.625rem;
     padding-bottom: 0.625rem;
+  }
+
+  .radioGroup {
+    display: flex;
+    gap: 6px;
   }
 `;

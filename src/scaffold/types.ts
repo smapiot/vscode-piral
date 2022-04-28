@@ -13,6 +13,7 @@ export interface StoreState {
     [repoType: string]: Array<TemplateInfo>;
   };
   localPath: string;
+  options: Options
 }
 
 export interface TemplateInfo {
@@ -36,10 +37,23 @@ export interface Bundler {
   description: string;
 }
 
+export interface Options {
+  repoType: string;
+  template: string;
+  name: string;
+  version: string;
+  bundler: string;
+  targetFolder: string;
+  piralPackage: string;
+  npmRegistry: string;
+  nodeModules: boolean,
+}
+
 export interface StoreActions {
   initialize(): void;
   loadTemplates(repoType: string): void;
   selectLocalPath(): void;
+  updateOptions(options: Options): void;
   scaffold(parameters: any): void;
 }
 

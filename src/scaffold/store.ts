@@ -51,6 +51,17 @@ export const useStore = create<Store>((set) => {
       repoTypes: [],
       templates: {},
       localPath: '',
+      options: {
+        repoType: '',
+        template: '',
+        name: '',
+        version: '',
+        bundler: '',
+        targetFolder: '',
+        piralPackage: '',
+        npmRegistry: '',
+        nodeModules: true,
+      }
     },
     actions: {
       initialize() {
@@ -63,6 +74,12 @@ export const useStore = create<Store>((set) => {
           command: 'getTemplatesNames',
           type: repoType,
         });
+      },
+      updateOptions(options) {
+        dispatch(set, (state) => ({
+          ...state,
+          options: options,
+        }));
       },
       selectLocalPath() {
         vscode.postMessage({
