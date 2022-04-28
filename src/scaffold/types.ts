@@ -54,7 +54,7 @@ export interface StoreActions {
   loadTemplates(repoType: string): void;
   selectLocalPath(): void;
   updateOptions(options: Options): void;
-  scaffold(parameters: any): void;
+  scaffold(): void;
 }
 
 export interface Store {

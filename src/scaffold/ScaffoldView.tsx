@@ -101,7 +101,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
 const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   const { state, actions } = useStore();
   const options = state.options;
-  const [valid, setValid] = React.useState(true)
+  const [valid, setValid] = React.useState(true);
 
   const { repoType, template, name, bundler, targetFolder, version, piralPackage, npmRegistry } = options;
   const canScaffold = repoType !== '' && template !== '' && name !== '' && bundler !== '' && targetFolder !== '';
@@ -115,10 +115,10 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     const isValid = test.exec(options.targetFolder);
     if (!isValid) {
       setValid(false);
-      return
-    } 
+      return;
+    }
 
-    actions.scaffold(options);
+    actions.scaffold();
   };
 
   React.useEffect(() => {
@@ -146,7 +146,9 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   className="extraItemInput"
                   value={targetFolder}
                   onChange={(ev: any) => actions.updateOptions({ ...state.options, targetFolder: ev.target.value })}>
-                  <p className="extraItemLabel">Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span></p>
+                  <p className="extraItemLabel">
+                    Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
+                  </p>
                   <span slot="end" id="local-path" onClick={openLocalPathModal}>
                     <img className="foldersImg" src={folderImage} />
                   </span>

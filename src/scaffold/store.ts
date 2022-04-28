@@ -46,7 +46,7 @@ export const useStore = create<Store>((set) => {
   });
 
   return {
-    state: {
+    state:  {
       bundlers: [],
       repoTypes: [],
       templates: {},
@@ -61,7 +61,7 @@ export const useStore = create<Store>((set) => {
         piralPackage: '',
         npmRegistry: '',
         nodeModules: true,
-      }
+      },
     },
     actions: {
       initialize() {
@@ -75,21 +75,23 @@ export const useStore = create<Store>((set) => {
           type: repoType,
         });
       },
+      selectLocalPath() {
+        vscode.postMessage({
+          command: 'getLocalPath',
+        });
+      },
       updateOptions(options) {
         dispatch(set, (state) => ({
           ...state,
           options,
         }));
       },
-      selectLocalPath() {
-        vscode.postMessage({
-          command: 'getLocalPath',
-        });
-      },
-      scaffold(parameters) {
+      scaffold() {
+        const options = useStore.getState().state.options
+        console.log('command', options)
         vscode.postMessage({
           command: 'createPiralPilet',
-          parameters,
+          options,
         });
       },
     },

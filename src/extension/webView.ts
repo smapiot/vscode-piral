@@ -96,17 +96,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
           break;
         case 'createPiralPilet':
-          const options = {
-            repoType: '',
-            template: '',
-            name: '',
-            version: '',
-            bundler: '',
-            targetFolder: '',
-            piralPackage: '',
-            npmRegistry: '',
-            ...message.parameters,
-          };
+          const options = message.options
 
           const validationErrors = validateParameters(options);
 
