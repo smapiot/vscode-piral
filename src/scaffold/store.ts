@@ -46,7 +46,7 @@ export const useStore = create<Store>((set) => {
   });
 
   return {
-    state:  {
+    state: {
       bundlers: [],
       repoTypes: [],
       templates: {},
@@ -87,8 +87,7 @@ export const useStore = create<Store>((set) => {
         }));
       },
       scaffold() {
-        const options = useStore.getState().state.options
-        console.log('command', options)
+        const options = useStore.getState().state.options;
         vscode.postMessage({
           command: 'createPiralPilet',
           options,

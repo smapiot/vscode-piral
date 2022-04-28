@@ -96,7 +96,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
           break;
         case 'createPiralPilet':
-          const options = message.options
+          const options = message.options;
 
           const validationErrors = validateParameters(options);
 
@@ -107,7 +107,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           // Go to target folder & create app folder
           const createAppFolder = `cd '${options.targetFolder}' && mkdir '${options.name}' && cd '${options.name}'`;
           const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
-          const installDependencies = options.nodeModules ? '--install' : '--no-install'
+          const installDependencies = options.nodeModules ? '--install' : '--no-install';
 
           if (options.repoType === 'piral') {
             // Handle Piral Instance
