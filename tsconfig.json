@@ -9,9 +9,9 @@
     ],
     "jsx": "react",
     "sourceMap": true,
-    "rootDir": "src",
+    "skipLibCheck": true,
     "strict": true,
-    "noUnusedLocals": true,
+    "rootDir": "src"
   },
   "exclude": [
     "node_modules",
