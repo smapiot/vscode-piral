@@ -95,7 +95,7 @@ export const globalStyle = css`
     flex: 1;
     height: 100%;
 
-    .information{
+    .information {
       margin-right: 1.5rem;
     }
   }
@@ -128,11 +128,10 @@ export const globalStyle = css`
     padding: 14px;
     justify-content: space-between;
 
-
     & .cardTitle {
       margin-top: 16px;
       display: flex;
-      flex-direction: column; 
+      flex-direction: column;
     }
 
     & .cardDescription {
@@ -143,7 +142,7 @@ export const globalStyle = css`
     & .cardTitle .packageName {
       font-size: 11px;
     }
-    
+
     & .spaceTop {
       position: relative;
       bottom: 1px;

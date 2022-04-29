@@ -1,6 +1,12 @@
 import * as React from 'react';
 import type { Uri } from 'vscode';
-import { VSCodeButton, VSCodeTextField, VSCodeRadio, VSCodeRadioGroup, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
+import {
+  VSCodeButton,
+  VSCodeTextField,
+  VSCodeRadio,
+  VSCodeRadioGroup,
+  VSCodeCheckbox,
+} from '@vscode/webview-ui-toolkit/react';
 import { useStore } from './store';
 import folderImage from '../../resources/folders-icon.png';
 import selectedItemIcon from '../../resources/selected-item.png';
@@ -78,9 +84,13 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                         <img className="selectedCardTag" src={selectedItemIcon} />
                         <div className="cardTitle">
                           <p className="cardTitleTxt">{template.name}</p>
-                          {template.name !== template.packageName && <p className="cardTitleTxt packageName">{template.packageName}</p>}
+                          {template.name !== template.packageName && (
+                            <p className="cardTitleTxt packageName">{template.packageName}</p>
+                          )}
                         </div>
-                        <p className={`cardDescription ${template.name === template.packageName ? 'spaceTop' : ''}`}>{template.description}</p>
+                        <p className={`cardDescription ${template.name === template.packageName ? 'spaceTop' : ''}`}>
+                          {template.description}
+                        </p>
                         <div className="cardFooter">
                           <p>{template.author}</p>
                         </div>
@@ -129,7 +139,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ ...state.options, targetFolder: state.localPath });
   }, [state.localPath]);
 
-  console.log(nodeModules)
+  console.log(nodeModules);
 
   return (
     <>
@@ -191,8 +201,6 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
               <div className={`extraItem`}>
                 <VSCodeRadioGroup className="extraItemInput radioGroup">
                   <label slot="label">Install dependencies</label>
-                  {/* <VSCodeCheckbox checked={true} onChange={() => actions.updateOptions({ ...state.options, nodeModules: true })}>Yes</VSCodeCheckbox>
-                  <VSCodeCheckbox checked={true} onChange={() => actions.updateOptions({ ...state.options, nodeModules: false })}>No</VSCodeCheckbox> */}
                   <VSCodeRadio onChange={() => actions.updateOptions({ ...state.options, nodeModules: true })}>
                     Yes
                   </VSCodeRadio>
@@ -201,7 +209,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
               </div>
-            </div>   
+            </div>
             <div className="sideBorder"></div>
             <div className="bundlers">
               <p className="columnTitle">Select bundler</p>
