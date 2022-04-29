@@ -123,14 +123,38 @@ export const globalStyle = css`
     max-width: 13.75rem;
     min-width: 10rem;
     margin: 0 1rem 1rem 0;
-    text-align: center;
     background-image: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgba(63, 61, 61, 1) 78.9%);
-    align-items: center;
-    height: 8.25rem;
+    height: 10.25rem;
     padding: 14px;
+    justify-content: space-between;
+
 
     & .cardTitle {
-      margin-bottom: 4px !important;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column; 
+    }
+
+    & .cardDescription {
+      position: relative;
+      bottom: 10px;
+    }
+
+    & .cardTitle .packageName {
+      font-size: 11px;
+    }
+    
+    & .spaceTop {
+      position: relative;
+      bottom: 1px;
+    }
+
+    & .cardFooter {
+      border-top: 1px solid;
+      padding-top: 1px;
+      font-size: 0.75rem;
+      color: #979797;
+      line-height: 1.125rem;
     }
   }
 

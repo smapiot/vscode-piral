@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Uri } from 'vscode';
-import { VSCodeButton, VSCodeTextField, VSCodeRadio, VSCodeRadioGroup } from '@vscode/webview-ui-toolkit/react';
+import { VSCodeButton, VSCodeTextField, VSCodeRadio, VSCodeRadioGroup, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
 import { useStore } from './store';
 import folderImage from '../../resources/folders-icon.png';
 import selectedItemIcon from '../../resources/selected-item.png';
@@ -78,8 +78,12 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                         <img className="selectedCardTag" src={selectedItemIcon} />
                         <div className="cardTitle">
                           <p className="cardTitleTxt">{template.name}</p>
+                          {template.name !== template.packageName && <p className="cardTitleTxt packageName">{template.packageName}</p>}
                         </div>
-                        <p className="cardDescription">{template.description}</p>
+                        <p className={`cardDescription ${template.name === template.packageName ? 'spaceTop' : ''}`}>{template.description}</p>
+                        <div className="cardFooter">
+                          <p>{template.author}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -103,7 +107,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   const options = state.options;
   const [valid, setValid] = React.useState(true);
 
-  const { repoType, template, name, bundler, targetFolder, version, piralPackage, npmRegistry } = options;
+  const { repoType, template, name, bundler, targetFolder, version, piralPackage, npmRegistry, nodeModules } = options;
   const canScaffold = repoType !== '' && template !== '' && name !== '' && bundler !== '' && targetFolder !== '';
 
   const openLocalPathModal = () => {
@@ -124,6 +128,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   React.useEffect(() => {
     actions.updateOptions({ ...state.options, targetFolder: state.localPath });
   }, [state.localPath]);
+
+  console.log(nodeModules)
 
   return (
     <>
@@ -184,7 +190,9 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
               </div>
               <div className={`extraItem`}>
                 <VSCodeRadioGroup className="extraItemInput radioGroup">
-                  <label slot="label">Install Node Modules</label>
+                  <label slot="label">Install dependencies</label>
+                  {/* <VSCodeCheckbox checked={true} onChange={() => actions.updateOptions({ ...state.options, nodeModules: true })}>Yes</VSCodeCheckbox>
+                  <VSCodeCheckbox checked={true} onChange={() => actions.updateOptions({ ...state.options, nodeModules: false })}>No</VSCodeCheckbox> */}
                   <VSCodeRadio onChange={() => actions.updateOptions({ ...state.options, nodeModules: true })}>
                     Yes
                   </VSCodeRadio>
@@ -193,7 +201,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
               </div>
-            </div>
+            </div>   
             <div className="sideBorder"></div>
             <div className="bundlers">
               <p className="columnTitle">Select bundler</p>
@@ -231,7 +239,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
 const pages = [FirstPage, SecondPage];
 
 const ScaffoldView: React.FC = () => {
-  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageIndex, setPageIndex] = React.useState(1);
   const state = React.useRef<ScaffoldState>({ repoType: '', template: '' });
 
   const Page = pages[pageIndex];
