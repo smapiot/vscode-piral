@@ -108,7 +108,7 @@ export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
     const name = shortName ? shortName[1] : packageName;
     return {
       name,
-      author: author.name,
+      author,
       packageName,
       description,
     };

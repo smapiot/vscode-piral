@@ -92,7 +92,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                           {template.description}
                         </p>
                         <div className="cardFooter">
-                          <p>{template.author}</p>
+                          <p>{template.author.name}</p>
                         </div>
                       </div>
                     ))}
