@@ -97,6 +97,16 @@ export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources:
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
 }
 
+export function stringifyAuthor(author: string | { name: string }) {
+  if (typeof author === 'string') {
+    return author;
+  } else if (typeof author === 'object' && author) {
+    return author.name;
+  } else {
+    return '';
+  }
+}
+
 export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
   const baseUrl = `https://registry.npmjs.org/-/v1/search?text=keywords:${type}+template&size=${size}`;
   const result = await axios.get(baseUrl);
@@ -104,16 +114,6 @@ export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
 
   const templates = await result.data.objects.map((elm: any) => {
     const { author, description, name: packageName } = elm.package;
-
-    function stringifyAuthor(author: string | { name: string }) {
-      if (typeof author === 'string') {
-        return author;
-      } else if (typeof author === 'object' && author) {
-        return author.name;
-      } else {
-        return '';
-      }
-    }
 
     const shortName = test.exec(packageName);
     const name = shortName ? shortName[1] : packageName;
