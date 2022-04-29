@@ -124,33 +124,33 @@ export const globalStyle = css`
     min-width: 10rem;
     margin: 0 1rem 1rem 0;
     background-image: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgba(63, 61, 61, 1) 78.9%);
-    height: 10.25rem;
-    padding: 14px;
+    height: 15.25rem;
+    padding: 0.875rem;
     justify-content: space-between;
 
     & .cardTitle {
-      margin-top: 16px;
+      margin-top: 1rem;
       display: flex;
       flex-direction: column;
     }
 
     & .cardDescription {
       position: relative;
-      bottom: 10px;
+      bottom: 2.75rem;
     }
 
     & .cardTitle .packageName {
-      font-size: 11px;
+      font-size: 0.688rem;
     }
 
     & .spaceTop {
       position: relative;
-      bottom: 1px;
+      bottom: 2.25rem;
     }
 
     & .cardFooter {
-      border-top: 1px solid;
-      padding-top: 1px;
+      border-top: 0.063rem solid;
+      padding-top: 0.063rem;
       font-size: 0.75rem;
       color: #979797;
       line-height: 1.125rem;
@@ -277,7 +277,7 @@ export const globalStyle = css`
     text-align: right;
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 0.75rem;
     margin-bottom: 2rem;
   }
 
@@ -298,6 +298,6 @@ export const globalStyle = css`
 
   .radioGroup {
     display: flex;
-    gap: 6px;
+    gap: 0.375rem;
   }
 `;

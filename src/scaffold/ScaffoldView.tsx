@@ -247,7 +247,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
 const pages = [FirstPage, SecondPage];
 
 const ScaffoldView: React.FC = () => {
-  const [pageIndex, setPageIndex] = React.useState(1);
+  const [pageIndex, setPageIndex] = React.useState(0);
   const state = React.useRef<ScaffoldState>({ repoType: '', template: '' });
 
   const Page = pages[pageIndex];
