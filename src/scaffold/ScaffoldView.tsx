@@ -139,8 +139,6 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ ...state.options, targetFolder: state.localPath });
   }, [state.localPath]);
 
-  console.log(nodeModules);
-
   return (
     <>
       <div className="container">
