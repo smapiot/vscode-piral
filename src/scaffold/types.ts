@@ -53,7 +53,7 @@ export interface StoreActions {
   initialize(): void;
   loadTemplates(repoType: string): void;
   selectLocalPath(): void;
-  updateOptions(options: Options): void;
+  updateOptions(newOptions: any): void;
   scaffold(): void;
 }
 

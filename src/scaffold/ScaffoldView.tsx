@@ -3,8 +3,6 @@ import type { Uri } from 'vscode';
 import {
   VSCodeButton,
   VSCodeTextField,
-  VSCodeRadio,
-  VSCodeRadioGroup,
   VSCodeCheckbox,
 } from '@vscode/webview-ui-toolkit/react';
 import { useStore } from './store';
@@ -52,7 +50,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                 {state.repoTypes.map((repoType) => (
                   <div
                     key={repoType.type}
-                    onClick={() => actions.updateOptions({ ...state.options, repoType: repoType.type, template: '' })}
+                    onClick={() => actions.updateOptions({ repoType: repoType.type, template: '' })}
                     className={options.repoType === repoType.type ? 'card project selectedCard' : 'card project'}>
                     <img className="selectedCardTag" src={selectedItemIcon} />
                     <div className="cardTitle">
@@ -77,7 +75,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                     {availableTemplates.map((template) => (
                       <div
                         key={template.packageName}
-                        onClick={() => actions.updateOptions({ ...state.options, template: template.packageName })}
+                        onClick={() => actions.updateOptions({ template: template.packageName })}
                         className={
                           options.template === template.packageName ? 'card template selectedCard' : 'card template'
                         }>
@@ -92,7 +90,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                           {template.description}
                         </p>
                         <div className="cardFooter">
-                          <p>{template.author.name}</p>
+                          <p>{template.author}</p>
                         </div>
                       </div>
                     ))}
@@ -136,7 +134,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   };
 
   React.useEffect(() => {
-    actions.updateOptions({ ...state.options, targetFolder: state.localPath });
+    actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
   return (
@@ -152,14 +150,14 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   className="extraItemInput"
                   stateName="name"
                   value={name}
-                  onChange={(ev: any) => actions.updateOptions({ ...state.options, name: ev.target.value })}
+                  onChange={(ev: any) => actions.updateOptions({ name: ev.target.value })}
                 />
               </div>
               <div className="extraItem">
                 <VSCodeTextField
                   className="extraItemInput"
                   value={targetFolder}
-                  onChange={(ev: any) => actions.updateOptions({ ...state.options, targetFolder: ev.target.value })}>
+                  onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
                   <p className="extraItemLabel">
                     Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
                   </p>
@@ -174,7 +172,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   className="extraItemInput"
                   placeholder="1.0.0"
                   value={version}
-                  onChange={(ev: any) => actions.updateOptions({ ...state.options, version: ev.target.value })}>
+                  onChange={(ev: any) => actions.updateOptions({ version: ev.target.value })}>
                   <p className="extraItemLabel">Version</p>
                 </VSCodeTextField>
               </div>
@@ -183,7 +181,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   className="extraItemInput"
                   placeholder="sample-piral"
                   value={piralPackage}
-                  onChange={(ev: any) => actions.updateOptions({ ...state.options, piralPackage: ev.target.value })}>
+                  onChange={(ev: any) => actions.updateOptions({ piralPackage: ev.target.value })}>
                   <p className="extraItemLabel">Piral Package</p>
                 </VSCodeTextField>
               </div>
@@ -192,13 +190,13 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   className="extraItemInput"
                   placeholder="https://registry.npmjs.org/"
                   value={npmRegistry}
-                  onChange={(ev: any) => actions.updateOptions({ ...state.options, npmRegistry: ev.target.value })}>
+                  onChange={(ev: any) => actions.updateOptions({ npmRegistry: ev.target.value })}>
                   <p className="extraItemLabel">NPM Registry</p>
                 </VSCodeTextField>
               </div>
               <div
                 className={`extraItem`}
-                onClick={() => actions.updateOptions({ ...state.options, nodeModules: !nodeModules })}>
+                onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
                 <VSCodeCheckbox checked={nodeModules} required>
                   Install dependencies
                 </VSCodeCheckbox>
@@ -211,7 +209,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                 {state.bundlers.map((bundler) => (
                   <div
                     key={bundler.type}
-                    onClick={() => actions.updateOptions({ ...state.options, bundler: bundler.type })}
+                    onClick={() => actions.updateOptions({ bundler: bundler.type })}
                     className={options.bundler === bundler.type ? 'card bundler selectedCard' : 'card bundler'}>
                     <img className="selectedCardTag" src={selectedItemIcon} />
                     <div className="cardTitle">

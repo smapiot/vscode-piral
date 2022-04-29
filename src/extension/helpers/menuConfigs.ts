@@ -103,7 +103,17 @@ export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
   const test = /@smapiot\/.*-template-(.*)/;
 
   const templates = await result.data.objects.map((elm: any) => {
-    const { author, description, name: packageName } = elm.package;
+    let { author } = elm.package
+    const { description, name: packageName } = elm.package;
+    
+    if (typeof author === 'string') {
+      author = author;
+    } else if (typeof author === 'object' && author) {
+      author = author.name;
+    } else {
+      author = ''
+    }
+
     const shortName = test.exec(packageName);
     const name = shortName ? shortName[1] : packageName;
     return {

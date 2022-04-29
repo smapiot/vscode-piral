@@ -80,10 +80,14 @@ export const useStore = create<Store>((set) => {
           command: 'getLocalPath',
         });
       },
-      updateOptions(options) {
+      updateOptions(newOptions) {
+        const currentOptions = useStore.getState().state.options;
         dispatch(set, (state) => ({
           ...state,
-          options,
+          options: {
+            ...currentOptions,
+            ...newOptions
+          },
         }));
       },
       scaffold() {
