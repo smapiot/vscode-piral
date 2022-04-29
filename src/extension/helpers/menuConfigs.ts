@@ -97,7 +97,7 @@ export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources:
   return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
 }
 
-export function stringifyAuthor(author: string | { name: string }) {
+function stringifyAuthor(author: string | { name: string }) {
   if (typeof author === 'string') {
     return author;
   } else if (typeof author === 'object' && author) {
