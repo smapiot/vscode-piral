@@ -1,10 +1,6 @@
 import * as React from 'react';
 import type { Uri } from 'vscode';
-import {
-  VSCodeButton,
-  VSCodeTextField,
-  VSCodeCheckbox,
-} from '@vscode/webview-ui-toolkit/react';
+import { VSCodeButton, VSCodeTextField, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
 import { useStore } from './store';
 import folderImage from '../../resources/folders-icon.png';
 import selectedItemIcon from '../../resources/selected-item.png';
@@ -194,9 +190,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   <p className="extraItemLabel">NPM Registry</p>
                 </VSCodeTextField>
               </div>
-              <div
-                className={`extraItem`}
-                onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
+              <div className={`extraItem`} onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
                 <VSCodeCheckbox checked={nodeModules} required>
                   Install dependencies
                 </VSCodeCheckbox>

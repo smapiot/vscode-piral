@@ -13,7 +13,7 @@ export interface StoreState {
     [repoType: string]: Array<TemplateInfo>;
   };
   localPath: string;
-  options: Options
+  options: Options;
 }
 
 export interface TemplateInfo {
@@ -46,14 +46,14 @@ export interface Options {
   targetFolder: string;
   piralPackage: string;
   npmRegistry: string;
-  nodeModules: boolean,
+  nodeModules: boolean;
 }
 
 export interface StoreActions {
   initialize(): void;
   loadTemplates(repoType: string): void;
   selectLocalPath(): void;
-  updateOptions(newOptions: any): void;
+  updateOptions(newOptions: Partial<Options>): void;
   scaffold(): void;
 }
 

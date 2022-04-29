@@ -81,12 +81,11 @@ export const useStore = create<Store>((set) => {
         });
       },
       updateOptions(newOptions) {
-        const currentOptions = useStore.getState().state.options;
         dispatch(set, (state) => ({
           ...state,
           options: {
-            ...currentOptions,
-            ...newOptions
+            ...state.options,
+            ...newOptions,
           },
         }));
       },
