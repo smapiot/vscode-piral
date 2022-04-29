@@ -196,16 +196,12 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   <p className="extraItemLabel">NPM Registry</p>
                 </VSCodeTextField>
               </div>
-              <div className={`extraItem`}>
-                <VSCodeRadioGroup className="extraItemInput radioGroup">
-                  <label slot="label">Install dependencies</label>
-                  <VSCodeRadio onChange={() => actions.updateOptions({ ...state.options, nodeModules: true })}>
-                    Yes
-                  </VSCodeRadio>
-                  <VSCodeRadio onChange={() => actions.updateOptions({ ...state.options, nodeModules: false })}>
-                    No
-                  </VSCodeRadio>
-                </VSCodeRadioGroup>
+              <div
+                className={`extraItem`}
+                onClick={() => actions.updateOptions({ ...state.options, nodeModules: !nodeModules })}>
+                <VSCodeCheckbox checked={nodeModules} required>
+                  Install dependencies
+                </VSCodeCheckbox>
               </div>
             </div>
             <div className="sideBorder"></div>
