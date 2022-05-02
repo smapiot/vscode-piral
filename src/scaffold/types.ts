@@ -52,6 +52,7 @@ export interface Options {
 export interface StoreActions {
   initialize(): void;
   loadTemplates(repoType: string): void;
+  updateTemplateOptions(templateOptions: any): void;
   selectLocalPath(): void;
   updateOptions(newOptions: Partial<Options>): void;
   scaffold(): void;

@@ -22,20 +22,6 @@ export const globalStyle = css`
     }
   }
 
-  .title {
-    font-weight: 600;
-    margin: 1rem 0;
-    font-size: 1.5rem;
-    margin-bottom: 0.625rem;
-    color: #fff;
-  }
-
-  .subTitle {
-    font-size: 0.75rem;
-    color: #fff;
-    font-weight: lighter;
-  }
-
   .columnTitle {
     position: relative;
     width: 100%;
@@ -46,19 +32,132 @@ export const globalStyle = css`
     margin-bottom: 1.563rem;
   }
 
+  .containerWrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .templatesWrapper {
+    flex: 1;
+  }
+
+  .spinnerWrapper {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bundlersWrapper {
+    flex: 1;
+  }
+
+  .sideBorder {
+    position: relative;
+    bottom: 0.375rem;
+    width: 0.063rem;
+    background: #434557;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+  }
+
+  .btnContainer {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .hide {
+    display: none !important;
+  }
+
+  .errorMessage {
+    font-size: 0.875rem;
+    color: #ff1010;
+    margin-bottom: 0.625rem;
+  }
+
+  span {
+    margin-bottom: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+`;
+
+export const header = css`
+  .title {
+    font-weight: 600;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .subTitle {
+    font-size: 0.75rem;
+    color: #fff;
+    font-weight: lighter;
+  }
+`;
+
+export const container = css`
   .container {
     display: flex;
     flex-direction: row;
+    flex: 1;
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    height: 95%;
 
-    & .firstContainer {
-      overflow: scroll;
-      flex: 1;
+  .containerInfos {
+    display: flex;
+    flex: 1;
+    height: 100%;
+
+    .information {
+      margin-right: 1.5rem;
     }
   }
+`;
 
+export const templates = css`
+  .templates {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: scroll;
+
+    & .templatesNames,
+    & spinnerContainer {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .template .cardTitle,
+    & .template .cardTitle {
+      margin: 0;
+    }
+  }
+`;
+
+export const bundlers = css`
+  .bundlers {
+    flex: 1;
+    overflow: scroll;
+
+    & .bundlersCards {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .bundler {
+      width: 13.75rem;
+      margin: 0 1rem 1rem 0;
+      height: 8rem;
+    }
+  }
+`;
+
+export const cards = css`
   .selectedCardTag {
     display: none;
     position: absolute;
@@ -78,25 +177,6 @@ export const globalStyle = css`
 
     & .selectedCardTag {
       display: block;
-    }
-  }
-
-  .sideBorder {
-    position: relative;
-    bottom: 0.375rem;
-    width: 0.063rem;
-    background: #434557;
-    margin-right: 2.5rem;
-    margin-left: 2.5rem;
-  }
-
-  .containerInfos {
-    display: flex;
-    flex: 1;
-    height: 100%;
-
-    .information {
-      margin-right: 1.5rem;
     }
   }
 
@@ -180,58 +260,9 @@ export const globalStyle = css`
     color: #979797;
     line-height: 1.125rem;
   }
+`;
 
-  .templates {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    & .templatesNames,
-    & spinnerContainer {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    & .template .cardTitle,
-    & .template .cardTitle {
-      margin: 0;
-    }
-  }
-
-  .spinnerContainer {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 5rem;
-    height: 5rem;
-
-    &::after {
-      content: ' ';
-      display: block;
-      width: 4rem;
-      height: 4rem;
-      margin: 0.5rem;
-      border-radius: 50%;
-      border: 0.375rem solid #0e639c;
-      border-color: #0e639c transparent #0e639c transparent;
-      animation: spinner 1.2s linear infinite;
-    }
-  }
-
-  @keyframes spinner {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
+export const infosInputs = css`
   .extraItem {
     position: relative;
     bottom: 0.313rem;
@@ -257,47 +288,37 @@ export const globalStyle = css`
     }
   }
 
-  .bundlers {
-    flex: 1;
-    overflow: scroll;
-
-    & .bundlersCards {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    & .bundler {
-      width: 13.75rem;
-      margin: 0 1rem 1rem 0;
-      height: 8rem;
-    }
-  }
-
-  .btnContainer {
-    text-align: right;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-  }
-
-  .hide {
-    display: none !important;
-  }
-
-  .errorMessage {
-    font-size: 0.875rem;
-    color: #ff1010;
-    margin-bottom: 0.625rem;
-  }
-
-  span {
-    margin-bottom: 0.625rem;
-    padding-bottom: 0.625rem;
-  }
-
   .radioGroup {
     display: flex;
     gap: 0.375rem;
+  }
+`
+
+export const spinner = css`
+  .spinner {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+
+    &::after {
+      content: ' ';
+      display: block;
+      width: 4rem;
+      height: 4rem;
+      margin: 0.5rem;
+      border-radius: 50%;
+      border: 0.375rem solid #0e639c;
+      border-color: #0e639c transparent #0e639c transparent;
+      animation: spinner 1.2s linear infinite;
+    }
+  }
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `;

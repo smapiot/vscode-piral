@@ -50,6 +50,7 @@ export const useStore = create<Store>((set) => {
       bundlers: [],
       repoTypes: [],
       templates: {},
+      templateOptions: {},
       localPath: '',
       options: {
         repoType: '',
@@ -74,6 +75,14 @@ export const useStore = create<Store>((set) => {
           command: 'getTemplatesNames',
           type: repoType,
         });
+      },
+      updateTemplateOptions(templateOptions) {
+        dispatch(set, (state) => ({
+          ...state,
+          templateOptions: {
+            ...templateOptions
+          },
+        }));
       },
       selectLocalPath() {
         vscode.postMessage({
