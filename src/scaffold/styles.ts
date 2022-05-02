@@ -219,7 +219,7 @@ export const cards = css`
       bottom: 2.75rem;
     }
 
-    & .cardTitle .packageName {
+    & .onlyForTemplate {
       font-size: 0.688rem;
     }
 
