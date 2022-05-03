@@ -118,6 +118,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
+  console.log(options.dynamicOptionValues)
+
   return (
     <React.Fragment>
       <div className="containerWrapper" css={container}>
@@ -199,14 +201,13 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
               </div>
             </div>
             <div className="template-specific information" css={infosInputs}>
-              {templateOptions[0] !== 'no options available' &&
-              templateOptions[0] !== 'spinner' &&
+              {templateOptions[0] !== 'spinner' &&
               templateOptions[0] ? (
                 <React.Fragment>
                   <p className="columnTitle">Provide Template Options</p>
                   <div className="inputsWrapper">
                     {state.templateOptions.map((option) => (
-                      <div className="extraItem capitalize" key={option[0]}>
+                      <div className="extraItem capitalize" key={option[1].default}>
                         <VSCodeTextField
                           className="extraItemInput"
                           placeholder={option[1].default}

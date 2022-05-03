@@ -12,7 +12,7 @@ export interface StoreState {
   templates: {
     [repoType: string]: Array<TemplateInfo>;
   };
-  templateOptions: any[];
+  templateOptions: Array<Array<string | any>> | string[];
   localPath: string;
   options: Options;
 }
@@ -21,7 +21,7 @@ export interface TemplateInfo {
   name: string;
   description: string;
   packageName: string;
-  author: any;
+  author: string;
 }
 
 export interface RepoType {
@@ -48,7 +48,7 @@ export interface Options {
   piralPackage: string;
   npmRegistry: string;
   nodeModules: boolean;
-  dynamicOptionValues: any[];
+  dynamicOptionValues: (string | string[] | string[][] | any)[];
 }
 
 export interface StoreActions {

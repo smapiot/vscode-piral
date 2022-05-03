@@ -131,9 +131,9 @@ export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
 export async function getTemplatesOptions(packageName: string) {
   const baseUrl = `https://registry.npmjs.org/${packageName}`;
   const result = await axios.get(baseUrl);
-  const metaData = result.data
+  const metaData = result.data;
   const latestVersion = await metaData['dist-tags'].latest;
-  const templateOptions = await metaData.versions[latestVersion].templateOptions;
+  const { templateOptions } = await metaData.versions[latestVersion];
   return templateOptions;
 }
 

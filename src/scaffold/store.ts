@@ -48,7 +48,7 @@ export const useStore = create<Store>((set) => {
         if (!templatesOptions) {
           dispatch(set, (state) => ({
             ...state,
-            templateOptions: ['no options available'],
+            templateOptions: [],
           }));
           return;
         }
@@ -65,7 +65,7 @@ export const useStore = create<Store>((set) => {
       bundlers: [],
       repoTypes: [],
       templates: {},
-      templateOptions: ['no options available'],
+      templateOptions: [],
       localPath: '',
       options: {
         repoType: '',
@@ -117,16 +117,15 @@ export const useStore = create<Store>((set) => {
               dynamicOptionValues: [...state.options.dynamicOptionValues, newOptions.dynamicOptionValues],
             },
           }));
-          return;
+        } else {
+          dispatch(set, (state) => ({
+            ...state,
+            options: {
+              ...state.options,
+              ...newOptions,
+            },
+          }));
         }
-
-        dispatch(set, (state) => ({
-          ...state,
-          options: {
-            ...state.options,
-            ...newOptions,
-          },
-        }));
       },
       scaffold() {
         const options = useStore.getState().state.options;
