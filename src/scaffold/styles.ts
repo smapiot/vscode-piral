@@ -10,6 +10,11 @@ export const globalStyle = css`
     background-color: #242423;
   }
 
+  span {
+    margin-bottom: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
   .page {
     padding: 1rem;
     position: relative;
@@ -22,20 +27,6 @@ export const globalStyle = css`
     }
   }
 
-  .title {
-    font-weight: 600;
-    margin: 1rem 0;
-    font-size: 1.5rem;
-    margin-bottom: 0.625rem;
-    color: #fff;
-  }
-
-  .subTitle {
-    font-size: 0.75rem;
-    color: #fff;
-    font-weight: lighter;
-  }
-
   .columnTitle {
     position: relative;
     width: 100%;
@@ -46,19 +37,141 @@ export const globalStyle = css`
     margin-bottom: 1.563rem;
   }
 
+  .containerWrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .templatesWrapper {
+    flex: 1;
+  }
+
+  .bundlersWrapper {
+    margin: 1.25rem 0rem 0.75rem;
+  }
+
+  .spinnerWrapper {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sideBorder {
+    position: relative;
+    bottom: 0.375rem;
+    width: 0.063rem;
+    background: #434557;
+    margin-right: 2.5rem;
+    margin-left: 2.5rem;
+  }
+
+  .btnContainer {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .hide {
+    display: none !important;
+  }
+
+  .errorMessage {
+    font-size: 0.875rem;
+    color: #ff1010;
+    margin-bottom: 0.625rem;
+  }
+
+  .scroll {
+    overflow: scroll;
+  }
+
+  .scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .capitalize {
+    text-transform: capitalize;
+  }
+`;
+
+export const header = css`
+  .title {
+    font-weight: 600;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .subTitle {
+    font-size: 0.75rem;
+    color: #fff;
+    font-weight: lighter;
+  }
+`;
+
+export const container = css`
   .container {
     display: flex;
     flex-direction: row;
+    flex: 1;
     width: 100%;
     height: 100%;
-    overflow: hidden;
 
-    & .firstContainer {
-      overflow: scroll;
+    .containerInfos {
+      display: flex;
       flex: 1;
+      height: 100%;
+    }
+
+    .secondPage {
+      flex-direction: column;
+      overflow: scroll;
+    }
+
+    .information {
+      margin-right: 1.5rem;
     }
   }
+`;
 
+export const templates = css`
+  .templates {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    & .templatesNames,
+    & spinnerContainer {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .template .cardTitle,
+    & .template .cardTitle {
+      margin: 0;
+    }
+  }
+`;
+
+export const bundlers = css`
+  .bundlers {
+    & .bundlersCards {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .bundler {
+      width: 13.75rem;
+      margin: 0 1rem 1rem 0;
+      height: 8rem;
+    }
+  }
+`;
+
+export const cards = css`
   .selectedCardTag {
     display: none;
     position: absolute;
@@ -78,25 +191,6 @@ export const globalStyle = css`
 
     & .selectedCardTag {
       display: block;
-    }
-  }
-
-  .sideBorder {
-    position: relative;
-    bottom: 0.375rem;
-    width: 0.063rem;
-    background: #434557;
-    margin-right: 2.5rem;
-    margin-left: 2.5rem;
-  }
-
-  .containerInfos {
-    display: flex;
-    flex: 1;
-    height: 100%;
-
-    .information {
-      margin-right: 1.5rem;
     }
   }
 
@@ -139,7 +233,7 @@ export const globalStyle = css`
       bottom: 2.75rem;
     }
 
-    & .cardTitle .packageName {
+    & .onlyForTemplate {
       font-size: 0.688rem;
     }
 
@@ -180,31 +274,49 @@ export const globalStyle = css`
     color: #979797;
     line-height: 1.125rem;
   }
+`;
 
-  .templates {
+export const infosInputs = css`
+  .inputsWrapper {
     display: flex;
-    flex: 1;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 
-    & .templatesNames,
-    & spinnerContainer {
-      display: flex;
-      flex-wrap: wrap;
+  .extraItem {
+    position: relative;
+    bottom: 0.313rem;
+    margin-bottom: 1rem;
+    margin: 0 1rem 1rem 0;
+    max-width: 28.688rem;
+    min-width: 13.75rem;
+
+    & .extraItemLabel {
+      margin-bottom: 0.125rem;
     }
 
-    & .template .cardTitle,
-    & .template .cardTitle {
-      margin: 0;
+    & .foldersImg {
+      margin: 0.313rem;
+      margin-bottom: 0.25rem;
+    }
+
+    & vscode-text-field.extraItemInput {
+      width: 100%;
+    }
+
+    & vscode-text-field span {
+      height: 2rem;
+      cursor: pointer;
     }
   }
 
-  .spinnerContainer {
+  .radioGroup {
     display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
+    gap: 0.375rem;
   }
+`;
 
+export const spinner = css`
   .spinner {
     display: inline-block;
     width: 5rem;
@@ -230,74 +342,5 @@ export const globalStyle = css`
     100% {
       transform: rotate(360deg);
     }
-  }
-
-  .extraItem {
-    position: relative;
-    bottom: 0.313rem;
-    margin-bottom: 1rem;
-    width: 120%;
-
-    & .extraItemLabel {
-      margin-bottom: 0.125rem;
-    }
-
-    & .foldersImg {
-      margin: 0.313rem;
-      margin-bottom: 0.25rem;
-    }
-
-    & vscode-text-field.extraItemInput {
-      width: 100%;
-    }
-
-    & vscode-text-field span {
-      height: 2rem;
-      cursor: pointer;
-    }
-  }
-
-  .bundlers {
-    flex: 1;
-    overflow: scroll;
-
-    & .bundlersCards {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    & .bundler {
-      width: 13.75rem;
-      margin: 0 1rem 1rem 0;
-      height: 8rem;
-    }
-  }
-
-  .btnContainer {
-    text-align: right;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-  }
-
-  .hide {
-    display: none !important;
-  }
-
-  .errorMessage {
-    font-size: 0.875rem;
-    color: #ff1010;
-    margin-bottom: 0.625rem;
-  }
-
-  span {
-    margin-bottom: 0.625rem;
-    padding-bottom: 0.625rem;
-  }
-
-  .radioGroup {
-    display: flex;
-    gap: 0.375rem;
   }
 `;

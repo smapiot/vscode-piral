@@ -42,6 +42,21 @@ export const useStore = create<Store>((set) => {
           bundlers,
         }));
         break;
+
+      case 'sendTemplatesOptions':
+        const templatesOptions = message.templatesOptions;
+        if (!templatesOptions) {
+          dispatch(set, (state) => ({
+            ...state,
+            templateOptions: [],
+          }));
+          return;
+        }
+        const options = Object.keys(templatesOptions).map((key) => [key, templatesOptions[key]]);
+        dispatch(set, (state) => ({
+          ...state,
+          templateOptions: options,
+        }));
     }
   });
 
@@ -50,6 +65,7 @@ export const useStore = create<Store>((set) => {
       bundlers: [],
       repoTypes: [],
       templates: {},
+      templateOptions: [],
       localPath: '',
       options: {
         repoType: '',
@@ -61,6 +77,7 @@ export const useStore = create<Store>((set) => {
         piralPackage: '',
         npmRegistry: '',
         nodeModules: true,
+        dynamicOptionValues: [],
       },
     },
     actions: {
@@ -75,19 +92,40 @@ export const useStore = create<Store>((set) => {
           type: repoType,
         });
       },
+      updateTemplateOptions() {
+        dispatch(set, (state) => ({
+          ...state,
+          templateOptions: ['spinner'],
+        }));
+        const packageName = useStore.getState().state.options.template;
+        vscode.postMessage({
+          command: 'getTemplatesOptions',
+          packageName,
+        });
+      },
       selectLocalPath() {
         vscode.postMessage({
           command: 'getLocalPath',
         });
       },
       updateOptions(newOptions) {
-        dispatch(set, (state) => ({
-          ...state,
-          options: {
-            ...state.options,
-            ...newOptions,
-          },
-        }));
+        if (newOptions.dynamicOptionValues) {
+          dispatch(set, (state) => ({
+            ...state,
+            options: {
+              ...state.options,
+              dynamicOptionValues: [...state.options.dynamicOptionValues, newOptions.dynamicOptionValues],
+            },
+          }));
+        } else {
+          dispatch(set, (state) => ({
+            ...state,
+            options: {
+              ...state.options,
+              ...newOptions,
+            },
+          }));
+        }
       },
       scaffold() {
         const options = useStore.getState().state.options;

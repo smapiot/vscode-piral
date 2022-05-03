@@ -1,10 +1,11 @@
+/** @jsx jsx */
 import * as React from 'react';
-import type { Uri } from 'vscode';
-import { VSCodeButton, VSCodeTextField, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
+import { jsx } from '@emotion/react';
 import { useStore } from './store';
+import Card from './components/Card';
+import { VSCodeButton, VSCodeTextField, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
+import { bundlers, cards, container, infosInputs, spinner, templates } from './styles';
 import folderImage from '../../resources/folders-icon.png';
-import selectedItemIcon from '../../resources/selected-item.png';
-
 interface ScaffoldState {
   repoType: string;
   template: string;
@@ -14,11 +15,6 @@ interface PageProps {
   onNext(newState: ScaffoldState): void;
   onPrevious(): void;
   state: ScaffoldState;
-}
-
-function getRef(uri: Uri) {
-  const { scheme, authority, path } = uri;
-  return `${scheme}://${authority}${path}`;
 }
 
 const FirstPage: React.FC<PageProps> = ({ onNext }) => {
@@ -36,78 +32,67 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
   }, [repoType]);
 
   return (
-    <>
-      <div className="container">
-        <div className="firstContainer">
+    <React.Fragment>
+      <div className="containerWrapper" css={container}>
+        <div className="container">
           <div className="containerInfos">
-            <div className="container-type">
-              <div className="cards containerColumn">
+            <div className="container-type scroll">
+              <div className="containerColumn" css={cards}>
                 <p className="columnTitle">Select Type</p>
                 {state.repoTypes.map((repoType) => (
-                  <div
-                    key={repoType.type}
-                    onClick={() => actions.updateOptions({ repoType: repoType.type, template: '' })}
-                    className={options.repoType === repoType.type ? 'card project selectedCard' : 'card project'}>
-                    <img className="selectedCardTag" src={selectedItemIcon} />
-                    <div className="cardTitle">
-                      <img className="cardTitleIcon" src={getRef(repoType.icon)} />
-                      <p className="cardTitleTxt">{repoType.title}</p>
-                    </div>
-                    <p className="cardDescription">{repoType.description}</p>
-                  </div>
+                  <Card
+                    type="type"
+                    key={repoType.title}
+                    iconUri={repoType.icon}
+                    title={repoType.title}
+                    description={repoType.description}
+                    handleOnClick={() => actions.updateOptions({ repoType: repoType.title, template: '' })}
+                  />
                 ))}
               </div>
             </div>
             <div className="sideBorder" />
-            <div className="templates containerInfos">
-              {repoType === '' ? undefined : loading ? (
-                <div className="spinnerContainer">
-                  <div className="spinner" />
-                </div>
-              ) : (
-                <>
-                  <p className="columnTitle">Select templates</p>
-                  <div className="templatesNames">
-                    {availableTemplates.map((template) => (
-                      <div
-                        key={template.packageName}
-                        onClick={() => actions.updateOptions({ template: template.packageName })}
-                        className={
-                          options.template === template.packageName ? 'card template selectedCard' : 'card template'
-                        }>
-                        <img className="selectedCardTag" src={selectedItemIcon} />
-                        <div className="cardTitle">
-                          <p className="cardTitleTxt">{template.name}</p>
-                          {template.name !== template.packageName && (
-                            <p className="cardTitleTxt packageName">{template.packageName}</p>
-                          )}
-                        </div>
-                        <p className={`cardDescription ${template.name === template.packageName ? 'spaceTop' : ''}`}>
-                          {template.description}
-                        </p>
-                        <div className="cardFooter">
-                          <p>{template.author}</p>
-                        </div>
-                      </div>
-                    ))}
+            <div className="templatesWrapper" css={templates}>
+              <div className="templates containerInfos scroll">
+                {repoType === '' ? undefined : loading ? (
+                  <div className="spinnerWrapper" css={spinner}>
+                    <div className="spinner" />
                   </div>
-                </>
-              )}
+                ) : (
+                  <React.Fragment>
+                    <p className="columnTitle">Select templates</p>
+                    <div className="templatesNames" css={cards}>
+                      {availableTemplates.map((template) => (
+                        <Card
+                          type="template"
+                          key={template.packageName}
+                          shortName={template.name}
+                          title={template.packageName}
+                          description={template.description}
+                          author={template.author}
+                          handleOnClick={() => actions.updateOptions({ template: template.packageName })}
+                        />
+                      ))}
+                    </div>
+                  </React.Fragment>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div className="btnContainer">
-        <VSCodeButton className="navigation-btn" href="#" disabled={!canGoNext} onClick={onNext}>
+        <VSCodeButton href="#" disabled={!canGoNext} onClick={onNext}>
           Next
         </VSCodeButton>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
 const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   const { state, actions } = useStore();
+  const { templateOptions } = state;
   const options = state.options;
   const [valid, setValid] = React.useState(true);
 
@@ -133,87 +118,117 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
-  return (
-    <>
-      <div className="container">
-        <div className="secondContainer">
-          <div className="containerInfos">
-            <div className="information">
-              <p className="columnTitle">Provide Information</p>
-              <div className="extraItem">
-                <p className="extraItemLabel">Name</p>
-                <VSCodeTextField
-                  className="extraItemInput"
-                  stateName="name"
-                  value={name}
-                  onChange={(ev: any) => actions.updateOptions({ name: ev.target.value })}
-                />
-              </div>
-              <div className="extraItem">
-                <VSCodeTextField
-                  className="extraItemInput"
-                  value={targetFolder}
-                  onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
-                  <p className="extraItemLabel">
-                    Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
-                  </p>
-                  <span slot="end" id="local-path" onClick={openLocalPathModal}>
-                    <img className="foldersImg" src={folderImage} />
-                  </span>
-                </VSCodeTextField>
-              </div>
+  console.log(options.dynamicOptionValues)
 
-              <div className="extraItem">
-                <VSCodeTextField
-                  className="extraItemInput"
-                  placeholder="1.0.0"
-                  value={version}
-                  onChange={(ev: any) => actions.updateOptions({ version: ev.target.value })}>
-                  <p className="extraItemLabel">Version</p>
-                </VSCodeTextField>
-              </div>
-              <div className={`extraItem onlyForPilet ${options.repoType === 'piral' && 'hide'}`}>
-                <VSCodeTextField
-                  className="extraItemInput"
-                  placeholder="sample-piral"
-                  value={piralPackage}
-                  onChange={(ev: any) => actions.updateOptions({ piralPackage: ev.target.value })}>
-                  <p className="extraItemLabel">Piral Package</p>
-                </VSCodeTextField>
-              </div>
-              <div className={`extraItem onlyForPilet ${options.repoType === 'piral' && 'hide'}`}>
-                <VSCodeTextField
-                  className="extraItemInput"
-                  placeholder="https://registry.npmjs.org/"
-                  value={npmRegistry}
-                  onChange={(ev: any) => actions.updateOptions({ npmRegistry: ev.target.value })}>
-                  <p className="extraItemLabel">NPM Registry</p>
-                </VSCodeTextField>
-              </div>
-              <div className={`extraItem`} onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
-                <VSCodeCheckbox checked={nodeModules} required>
-                  Install dependencies
-                </VSCodeCheckbox>
+  return (
+    <React.Fragment>
+      <div className="containerWrapper" css={container}>
+        <div className="container">
+          <div className="containerInfos secondPage">
+            <div className="information" css={infosInputs}>
+              <p className="columnTitle">Provide Information</p>
+              <div className="inputsWrapper">
+                <div className="extraItem">
+                  <p className="extraItemLabel">Name</p>
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    value={name}
+                    onChange={(ev: any) => actions.updateOptions({ name: ev.target.value })}
+                  />
+                </div>
+                <div className="extraItem">
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    value={targetFolder}
+                    onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
+                    <p className="extraItemLabel">
+                      Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
+                    </p>
+                    <span slot="end" id="local-path" onClick={openLocalPathModal}>
+                      <img className="foldersImg" src={folderImage} />
+                    </span>
+                  </VSCodeTextField>
+                </div>
+                <div className="extraItem">
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    placeholder="1.0.0"
+                    value={version}
+                    onChange={(ev: any) => actions.updateOptions({ version: ev.target.value })}>
+                    <p className="extraItemLabel">Version</p>
+                  </VSCodeTextField>
+                </div>
+                <div className={`extraItem ${options.repoType === 'Piral' ? 'hide' : ''}`}>
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    placeholder="sample-piral"
+                    value={piralPackage}
+                    onChange={(ev: any) => actions.updateOptions({ piralPackage: ev.target.value })}>
+                    <p className="extraItemLabel">Piral Package</p>
+                  </VSCodeTextField>
+                </div>
+                <div className={`extraItem ${options.repoType === 'Piral' ? 'hide' : ''}`}>
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    placeholder="https://registry.npmjs.org/"
+                    value={npmRegistry}
+                    onChange={(ev: any) => actions.updateOptions({ npmRegistry: ev.target.value })}>
+                    <p className="extraItemLabel">NPM Registry</p>
+                  </VSCodeTextField>
+                </div>
               </div>
             </div>
-            <div className="sideBorder"></div>
-            <div className="bundlers">
-              <p className="columnTitle">Select bundler</p>
-              <div className="bundlersCards">
-                {state.bundlers.map((bundler) => (
-                  <div
-                    key={bundler.type}
-                    onClick={() => actions.updateOptions({ bundler: bundler.type })}
-                    className={options.bundler === bundler.type ? 'card bundler selectedCard' : 'card bundler'}>
-                    <img className="selectedCardTag" src={selectedItemIcon} />
-                    <div className="cardTitle">
-                      <img className="cardTitleIcon" src={getRef(bundler.icon)} />
-                      <p className="cardTitleTxt">{bundler.title}</p>
-                    </div>
-                    <div className="cardDescription">{bundler.description}</div>
-                  </div>
-                ))}
+            <div className={`extraItem`} onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
+              <VSCodeCheckbox checked={nodeModules} required>
+                Install dependencies
+              </VSCodeCheckbox>
+            </div>
+            <div className="bundlersWrapper" css={bundlers}>
+              <div className="bundlers">
+                <p className="columnTitle">Select bundler</p>
+                <div className="bundlersCards" css={cards}>
+                  {state.bundlers.map((bundler) => (
+                    <Card
+                      type="bundler"
+                      key={bundler.title}
+                      iconUri={bundler.icon}
+                      title={bundler.title}
+                      description={bundler.description}
+                      handleOnClick={() => actions.updateOptions({ bundler: bundler.title })}
+                    />
+                  ))}
+                </div>
               </div>
+            </div>
+            <div className="template-specific information" css={infosInputs}>
+              {templateOptions[0] !== 'spinner' &&
+              templateOptions[0] ? (
+                <React.Fragment>
+                  <p className="columnTitle">Provide Template Options</p>
+                  <div className="inputsWrapper">
+                    {state.templateOptions.map((option) => (
+                      <div className="extraItem capitalize" key={option[1].default}>
+                        <VSCodeTextField
+                          className="extraItemInput"
+                          placeholder={option[1].default}
+                          value={option[1].default}
+                          key={option[0]}
+                          onChange={(ev: any) =>
+                            actions.updateOptions({ dynamicOptionValues: [option[0], ev.target.value] })
+                          }>
+                          <p className="extraItemLabel">{option[0]}</p>
+                        </VSCodeTextField>
+                      </div>
+                    ))}
+                  </div>
+                </React.Fragment>
+              ) : templateOptions[0] === 'spinner' ? (
+                <div className="spinnerWrapper" css={spinner}>
+                  <div className="spinner" />
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>
@@ -226,13 +241,14 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
           Scaffold Project
         </VSCodeButton>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
 const pages = [FirstPage, SecondPage];
 
 const ScaffoldView: React.FC = () => {
+  const { actions } = useStore();
   const [pageIndex, setPageIndex] = React.useState(0);
   const state = React.useRef<ScaffoldState>({ repoType: '', template: '' });
 
@@ -243,6 +259,7 @@ const ScaffoldView: React.FC = () => {
       state={state.current}
       onNext={() => {
         setPageIndex((p) => p + 1);
+        actions.updateTemplateOptions();
       }}
       onPrevious={() => {
         setPageIndex((p) => p - 1);

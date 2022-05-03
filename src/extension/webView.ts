@@ -7,6 +7,7 @@ import {
   getBundlerOptions,
   getResourcePath,
   getTemplatesNames,
+  getTemplatesOptions,
 } from './helpers';
 
 let webviewPanel: vscode.WebviewPanel;
@@ -146,6 +147,15 @@ export async function createRepository(context: vscode.ExtensionContext) {
             command: 'sendTemplatesNames',
             type: message.type,
             templates,
+          });
+
+          break;
+
+        case 'getTemplatesOptions':
+          const templatesOptions = await getTemplatesOptions(message.packageName);
+          webviewPanel.webview.postMessage({
+            command: 'sendTemplatesOptions',
+            templatesOptions,
           });
 
           break;
