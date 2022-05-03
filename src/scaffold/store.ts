@@ -92,12 +92,6 @@ export const useStore = create<Store>((set) => {
           type: repoType,
         });
       },
-      removeTemplatesOptions() {
-        dispatch(set, (state) => ({
-          ...state,
-          templateOptions: [],
-        }));
-      },
       updateTemplateOptions() {
         dispatch(set, (state) => ({
           ...state,
@@ -123,15 +117,16 @@ export const useStore = create<Store>((set) => {
               dynamicOptionValues: [...state.options.dynamicOptionValues, newOptions.dynamicOptionValues],
             },
           }));
-        } else {
-          dispatch(set, (state) => ({
-            ...state,
-            options: {
-              ...state.options,
-              ...newOptions,
-            },
-          }));
+          return;
         }
+
+        dispatch(set, (state) => ({
+          ...state,
+          options: {
+            ...state.options,
+            ...newOptions,
+          },
+        }));
       },
       scaffold() {
         const options = useStore.getState().state.options;

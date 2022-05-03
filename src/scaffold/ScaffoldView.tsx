@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import * as React from 'react';
 import { jsx } from '@emotion/react';
-import axios from 'axios';
 import { useStore } from './store';
 import Card from './components/Card';
 import { VSCodeButton, VSCodeTextField, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
@@ -83,7 +82,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
         </div>
       </div>
       <div className="btnContainer">
-        <VSCodeButton className="navigation-btn" href="#" disabled={!canGoNext} onClick={onNext}>
+        <VSCodeButton href="#" disabled={!canGoNext} onClick={onNext}>
           Next
         </VSCodeButton>
       </div>
@@ -131,7 +130,6 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   <p className="extraItemLabel">Name</p>
                   <VSCodeTextField
                     className="extraItemInput"
-                    stateName="name"
                     value={name}
                     onChange={(ev: any) => actions.updateOptions({ name: ev.target.value })}
                   />
@@ -264,7 +262,6 @@ const ScaffoldView: React.FC = () => {
       }}
       onPrevious={() => {
         setPageIndex((p) => p - 1);
-        actions.removeTemplatesOptions();
       }}
     />
   );

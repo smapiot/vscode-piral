@@ -57,7 +57,6 @@ export interface StoreActions {
   updateTemplateOptions(): void;
   selectLocalPath(): void;
   updateOptions(newOptions: Partial<Options>): void;
-  removeTemplatesOptions(): void;
   scaffold(): void;
 }
 
