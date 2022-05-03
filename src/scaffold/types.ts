@@ -12,6 +12,7 @@ export interface StoreState {
   templates: {
     [repoType: string]: Array<TemplateInfo>;
   };
+  templateOptions: any[];
   localPath: string;
   options: Options;
 }
@@ -47,14 +48,16 @@ export interface Options {
   piralPackage: string;
   npmRegistry: string;
   nodeModules: boolean;
+  dynamicOptionValues: any[];
 }
 
 export interface StoreActions {
   initialize(): void;
   loadTemplates(repoType: string): void;
-  updateTemplateOptions(templateOptions: any): void;
+  updateTemplateOptions(): void;
   selectLocalPath(): void;
   updateOptions(newOptions: Partial<Options>): void;
+  removeTemplatesOptions(): void;
   scaffold(): void;
 }
 

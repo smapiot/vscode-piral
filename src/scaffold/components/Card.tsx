@@ -14,23 +14,15 @@ interface CardProps {
   handleOnClick: () => void;
 }
 
-const Card: React.FC<CardProps> = ({
-  iconUri,
-  title,
-  description,
-  type,
-  shortName,
-  author,
-  handleOnClick,
-}) => {
+function getRef(iconUri: Uri) {
+  const { scheme, authority, path } = iconUri;
+  return `${scheme}://${authority}${path}`;
+}
+
+const Card: React.FC<CardProps> = ({ iconUri, title, description, type, shortName, author, handleOnClick }) => {
   const { state } = useStore();
   const options = state.options;
   const [allClasses, setAllClasses] = React.useState(`card ${type}`);
-
-  function getRef(iconUri: Uri) {
-    const { scheme, authority, path } = iconUri;
-    return `${scheme}://${authority}${path}`;
-  }
 
   React.useEffect(() => {
     switch (type) {
@@ -46,7 +38,7 @@ const Card: React.FC<CardProps> = ({
         options.template === title ? setAllClasses(`card ${type} selectedCard`) : setAllClasses(`card ${type}`);
         break;
     }
-  }, [state.options]);
+  }, [options.repoType, options.bundler, options.template]);
 
   return (
     <div key={title} onClick={() => handleOnClick()} className={allClasses}>

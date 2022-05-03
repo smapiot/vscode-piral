@@ -2,14 +2,11 @@
 import * as React from 'react';
 import { jsx } from '@emotion/react';
 import axios from 'axios';
-import type { Uri } from 'vscode';
 import { useStore } from './store';
 import Card from './components/Card';
 import { VSCodeButton, VSCodeTextField, VSCodeCheckbox } from '@vscode/webview-ui-toolkit/react';
 import { bundlers, cards, container, infosInputs, spinner, templates } from './styles';
 import folderImage from '../../resources/folders-icon.png';
-import selectedItemIcon from '../../resources/selected-item.png';
-
 interface ScaffoldState {
   repoType: string;
   template: string;
@@ -21,11 +18,6 @@ interface PageProps {
   state: ScaffoldState;
 }
 
-function getRef(uri: Uri) {
-  const { scheme, authority, path } = uri;
-  return `${scheme}://${authority}${path}`;
-}
-
 const FirstPage: React.FC<PageProps> = ({ onNext }) => {
   const { state, actions } = useStore();
   const options = state.options;
@@ -33,18 +25,6 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
   const availableTemplates = repoType ? state.templates[repoType] : undefined;
   const canGoNext = options.template !== '';
   const loading = availableTemplates === undefined;
-
-  const handleClickTemplate = async (packageName: string) => {
-    actions.updateOptions({ template: packageName });
-
-    // Get the template options and save them in the store 👇
-    const baseUrl = `https://registry.npmjs.org/${packageName}`;
-    const result = await axios.get(baseUrl);
-    const packageMetaData = await JSON.parse(result.request.response);
-    const latestVersion = await packageMetaData['dist-tags'].latest;
-    const templateOptions = await packageMetaData.versions[latestVersion].templateOptions;
-    actions.updateTemplateOptions(templateOptions);
-  };
 
   React.useEffect(() => {
     if (repoType) {
@@ -57,7 +37,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
       <div className="containerWrapper" css={container}>
         <div className="container">
           <div className="containerInfos">
-            <div className="container-type">
+            <div className="container-type scroll">
               <div className="containerColumn" css={cards}>
                 <p className="columnTitle">Select Type</p>
                 {state.repoTypes.map((repoType) => (
@@ -74,7 +54,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
             </div>
             <div className="sideBorder" />
             <div className="templatesWrapper" css={templates}>
-              <div className="templates containerInfos">
+              <div className="templates containerInfos scroll">
                 {repoType === '' ? undefined : loading ? (
                   <div className="spinnerWrapper" css={spinner}>
                     <div className="spinner" />
@@ -91,7 +71,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                           title={template.packageName}
                           description={template.description}
                           author={template.author}
-                          handleOnClick={() => handleClickTemplate(template.packageName)}
+                          handleOnClick={() => actions.updateOptions({ template: template.packageName })}
                         />
                       ))}
                     </div>
@@ -113,6 +93,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
 
 const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   const { state, actions } = useStore();
+  const { templateOptions } = state;
   const options = state.options;
   const [valid, setValid] = React.useState(true);
 
@@ -142,66 +123,66 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     <React.Fragment>
       <div className="containerWrapper" css={container}>
         <div className="container">
-          <div className="containerInfos">
+          <div className="containerInfos secondPage">
             <div className="information" css={infosInputs}>
               <p className="columnTitle">Provide Information</p>
-              <div className="extraItem">
-                <p className="extraItemLabel">Name</p>
-                <VSCodeTextField
-                  className="extraItemInput"
-                  stateName="name"
-                  value={name}
-                  onChange={(ev: any) => actions.updateOptions({ name: ev.target.value })}
-                />
-              </div>
-              <div className="extraItem">
-                <VSCodeTextField
-                  className="extraItemInput"
-                  value={targetFolder}
-                  onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
-                  <p className="extraItemLabel">
-                    Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
-                  </p>
-                  <span slot="end" id="local-path" onClick={openLocalPathModal}>
-                    <img className="foldersImg" src={folderImage} />
-                  </span>
-                </VSCodeTextField>
-              </div>
-
-              <div className="extraItem">
-                <VSCodeTextField
-                  className="extraItemInput"
-                  placeholder="1.0.0"
-                  value={version}
-                  onChange={(ev: any) => actions.updateOptions({ version: ev.target.value })}>
-                  <p className="extraItemLabel">Version</p>
-                </VSCodeTextField>
-              </div>
-              <div className={`extraItem onlyForPilet ${options.repoType === 'piral' && 'hide'}`}>
-                <VSCodeTextField
-                  className="extraItemInput"
-                  placeholder="sample-piral"
-                  value={piralPackage}
-                  onChange={(ev: any) => actions.updateOptions({ piralPackage: ev.target.value })}>
-                  <p className="extraItemLabel">Piral Package</p>
-                </VSCodeTextField>
-              </div>
-              <div className={`extraItem onlyForPilet ${options.repoType === 'piral' && 'hide'}`}>
-                <VSCodeTextField
-                  className="extraItemInput"
-                  placeholder="https://registry.npmjs.org/"
-                  value={npmRegistry}
-                  onChange={(ev: any) => actions.updateOptions({ npmRegistry: ev.target.value })}>
-                  <p className="extraItemLabel">NPM Registry</p>
-                </VSCodeTextField>
-              </div>
-              <div className={`extraItem`} onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
-                <VSCodeCheckbox checked={nodeModules} required>
-                  Install dependencies
-                </VSCodeCheckbox>
+              <div className="inputsWrapper">
+                <div className="extraItem">
+                  <p className="extraItemLabel">Name</p>
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    stateName="name"
+                    value={name}
+                    onChange={(ev: any) => actions.updateOptions({ name: ev.target.value })}
+                  />
+                </div>
+                <div className="extraItem">
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    value={targetFolder}
+                    onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
+                    <p className="extraItemLabel">
+                      Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
+                    </p>
+                    <span slot="end" id="local-path" onClick={openLocalPathModal}>
+                      <img className="foldersImg" src={folderImage} />
+                    </span>
+                  </VSCodeTextField>
+                </div>
+                <div className="extraItem">
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    placeholder="1.0.0"
+                    value={version}
+                    onChange={(ev: any) => actions.updateOptions({ version: ev.target.value })}>
+                    <p className="extraItemLabel">Version</p>
+                  </VSCodeTextField>
+                </div>
+                <div className={`extraItem ${options.repoType === 'Piral' ? 'hide' : ''}`}>
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    placeholder="sample-piral"
+                    value={piralPackage}
+                    onChange={(ev: any) => actions.updateOptions({ piralPackage: ev.target.value })}>
+                    <p className="extraItemLabel">Piral Package</p>
+                  </VSCodeTextField>
+                </div>
+                <div className={`extraItem ${options.repoType === 'Piral' ? 'hide' : ''}`}>
+                  <VSCodeTextField
+                    className="extraItemInput"
+                    placeholder="https://registry.npmjs.org/"
+                    value={npmRegistry}
+                    onChange={(ev: any) => actions.updateOptions({ npmRegistry: ev.target.value })}>
+                    <p className="extraItemLabel">NPM Registry</p>
+                  </VSCodeTextField>
+                </div>
               </div>
             </div>
-            <div className="sideBorder"></div>
+            <div className={`extraItem`} onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
+              <VSCodeCheckbox checked={nodeModules} required>
+                Install dependencies
+              </VSCodeCheckbox>
+            </div>
             <div className="bundlersWrapper" css={bundlers}>
               <div className="bundlers">
                 <p className="columnTitle">Select bundler</p>
@@ -218,6 +199,37 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="template-specific information" css={infosInputs}>
+              {templateOptions[0] !== 'no options available' &&
+              templateOptions[0] !== 'spinner' &&
+              templateOptions[0] ? (
+                <React.Fragment>
+                  <p className="columnTitle">Provide Template Options</p>
+                  <div className="inputsWrapper">
+                    {state.templateOptions.map((option) => (
+                      <div className="extraItem capitalize" key={option[0]}>
+                        <VSCodeTextField
+                          className="extraItemInput"
+                          placeholder={option[1].default}
+                          value={option[1].default}
+                          key={option[0]}
+                          onChange={(ev: any) =>
+                            actions.updateOptions({ dynamicOptionValues: [option[0], ev.target.value] })
+                          }>
+                          <p className="extraItemLabel">{option[0]}</p>
+                        </VSCodeTextField>
+                      </div>
+                    ))}
+                  </div>
+                </React.Fragment>
+              ) : templateOptions[0] === 'spinner' ? (
+                <div className="spinnerWrapper" css={spinner}>
+                  <div className="spinner" />
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>
@@ -237,6 +249,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
 const pages = [FirstPage, SecondPage];
 
 const ScaffoldView: React.FC = () => {
+  const { actions } = useStore();
   const [pageIndex, setPageIndex] = React.useState(0);
   const state = React.useRef<ScaffoldState>({ repoType: '', template: '' });
 
@@ -247,9 +260,11 @@ const ScaffoldView: React.FC = () => {
       state={state.current}
       onNext={() => {
         setPageIndex((p) => p + 1);
+        actions.updateTemplateOptions();
       }}
       onPrevious={() => {
         setPageIndex((p) => p - 1);
+        actions.removeTemplatesOptions();
       }}
     />
   );

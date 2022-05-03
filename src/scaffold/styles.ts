@@ -10,6 +10,11 @@ export const globalStyle = css`
     background-color: #242423;
   }
 
+  span {
+    margin-bottom: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
   .page {
     padding: 1rem;
     position: relative;
@@ -41,15 +46,15 @@ export const globalStyle = css`
     flex: 1;
   }
 
+  .bundlersWrapper {
+    margin: 1.25rem 0rem 0.75rem;
+  }
+
   .spinnerWrapper {
     display: flex;
     flex: 1;
     align-items: center;
     justify-content: center;
-  }
-
-  .bundlersWrapper {
-    flex: 1;
   }
 
   .sideBorder {
@@ -79,9 +84,16 @@ export const globalStyle = css`
     margin-bottom: 0.625rem;
   }
 
-  span {
-    margin-bottom: 0.625rem;
-    padding-bottom: 0.625rem;
+  .scroll {
+    overflow: scroll;
+  }
+
+  .scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .capitalize {
+    text-transform: capitalize;
   }
 `;
 
@@ -106,12 +118,18 @@ export const container = css`
     flex-direction: row;
     flex: 1;
     width: 100%;
-    height: 95%;
-
-  .containerInfos {
-    display: flex;
-    flex: 1;
     height: 100%;
+
+    .containerInfos {
+      display: flex;
+      flex: 1;
+      height: 100%;
+    }
+
+    .secondPage {
+      flex-direction: column;
+      overflow: scroll;
+    }
 
     .information {
       margin-right: 1.5rem;
@@ -124,7 +142,6 @@ export const templates = css`
     display: flex;
     flex: 1;
     flex-direction: column;
-    overflow: scroll;
 
     & .templatesNames,
     & spinnerContainer {
@@ -141,9 +158,6 @@ export const templates = css`
 
 export const bundlers = css`
   .bundlers {
-    flex: 1;
-    overflow: scroll;
-
     & .bundlersCards {
       display: flex;
       flex-wrap: wrap;
@@ -263,11 +277,19 @@ export const cards = css`
 `;
 
 export const infosInputs = css`
+  .inputsWrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .extraItem {
     position: relative;
     bottom: 0.313rem;
     margin-bottom: 1rem;
-    width: 120%;
+    margin: 0 1rem 1rem 0;
+    max-width: 28.688rem;
+    min-width: 13.75rem;
 
     & .extraItemLabel {
       margin-bottom: 0.125rem;
@@ -292,7 +314,7 @@ export const infosInputs = css`
     display: flex;
     gap: 0.375rem;
   }
-`
+`;
 
 export const spinner = css`
   .spinner {
