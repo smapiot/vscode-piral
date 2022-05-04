@@ -134,6 +134,7 @@ export async function getTemplatesOptions(packageName: string) {
   const metaData = result.data;
   const latestVersion = await metaData['dist-tags'].latest;
   const { templateOptions } = await metaData.versions[latestVersion];
+
   return templateOptions;
 }
 

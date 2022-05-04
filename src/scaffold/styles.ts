@@ -288,7 +288,7 @@ export const infosInputs = css`
     bottom: 0.313rem;
     margin-bottom: 1rem;
     margin: 0 1rem 1rem 0;
-    max-width: 28.688rem;
+    width: 28.688rem;
     min-width: 13.75rem;
 
     & .extraItemLabel {

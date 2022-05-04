@@ -6,15 +6,22 @@ declare global {
   }
 }
 
+interface TemplateOptionsParams {
+  description: string;
+  default: string;
+  type: 'string' | 'boolean' | 'number';
+}
+
 export interface StoreState {
   repoTypes: Array<RepoType>;
   bundlers: Array<Bundler>;
   templates: {
     [repoType: string]: Array<TemplateInfo>;
   };
-  templateOptions: Array<Array<string | any>> | string[];
+  templateOptions: Record<string, TemplateOptionsParams>;
   localPath: string;
   options: Options;
+  isLoading: boolean;
 }
 
 export interface TemplateInfo {
@@ -48,7 +55,7 @@ export interface Options {
   piralPackage: string;
   npmRegistry: string;
   nodeModules: boolean;
-  dynamicOptionValues: (string | string[] | string[][] | any)[];
+  templateOptionsValues: Record<string, string>;
 }
 
 export interface StoreActions {
