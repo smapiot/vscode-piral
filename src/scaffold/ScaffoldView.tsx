@@ -118,8 +118,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
-  console.log(state.options);
 
+  console.log(options)
   return (
     <React.Fragment>
       <div className="containerWrapper" css={container}>
@@ -216,7 +216,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                             <VSCodeTextField
                               className="extraItemInput"
                               placeholder={templateOptions[option].default}
-                              value={options.templateOptionsValues[option] || templateOptions[option].default}
+                              value={options.templateOptionsValues[option]}
                               key={Object.keys(option)[0]}
                               onChange={(ev: any) =>
                                 actions.updateOptions({
