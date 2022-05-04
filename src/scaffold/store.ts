@@ -44,20 +44,18 @@ export const useStore = create<Store>((set) => {
         break;
 
       case 'sendTemplatesOptions':
-        const templatesOptions = message.templatesOptions;
+        const { templatesOptions = {}} = message;
         const values: Record<string, string> = {};
-        if (templatesOptions) {
           Object.keys(templatesOptions).forEach((option) => {
             values[option] = templatesOptions[option].default;
           });
-        }
         dispatch(set, (state) => ({
           ...state,
           isLoading: false,
           templateOptions: templatesOptions ?? {},
           options: {
             ...state.options,
-            templateOptionsValues: values ?? {},
+            templateOptionsValues: values,
           },
         }));
     }
@@ -106,10 +104,6 @@ export const useStore = create<Store>((set) => {
           command: 'getTemplatesOptions',
           packageName,
         });
-        dispatch(set, (state) => ({
-          ...state,
-          isLoading: true,
-        }));
       },
       selectLocalPath() {
         vscode.postMessage({

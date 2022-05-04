@@ -118,8 +118,6 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
-
-  console.log(options)
   return (
     <React.Fragment>
       <div className="containerWrapper" css={container}>
