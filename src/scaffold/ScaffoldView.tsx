@@ -118,6 +118,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
+  console.log(state.options);
+
   return (
     <React.Fragment>
       <div className="containerWrapper" css={container}>
@@ -205,7 +207,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                   </div>
                 </div>
                 <div className="template-specific information" css={infosInputs}>
-                  {Object.keys(templateOptions).length > 0 ? (
+                  {Object.keys(templateOptions).length > 0 && (
                     <React.Fragment>
                       <p className="columnTitle">Provide Template Options</p>
                       <div className="inputsWrapper">
@@ -227,8 +229,6 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                         ))}
                       </div>
                     </React.Fragment>
-                  ) : (
-                    ''
                   )}
                 </div>
               </div>

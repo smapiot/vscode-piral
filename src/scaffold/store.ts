@@ -48,7 +48,7 @@ export const useStore = create<Store>((set) => {
         dispatch(set, (state) => ({
           ...state,
           isLoading: false,
-          templateOptions: templatesOptions ? templatesOptions : {},
+          templateOptions: templatesOptions ?? {},
         }));
     }
   });
@@ -103,24 +103,32 @@ export const useStore = create<Store>((set) => {
         });
       },
       updateOptions(newOptions) {
-        if (newOptions.templateOptionsValues) {
-          dispatch(set, (state) => ({
-            ...state,
-            options: {
-              ...state.options,
-              templateOptionsValues: { ...state.options.templateOptionsValues, ...newOptions.templateOptionsValues },
-            },
-          }));
-          return;
-        } else {
-          dispatch(set, (state) => ({
-            ...state,
-            options: {
-              ...state.options,
-              ...newOptions,
-            },
-          }));
-        }
+        // if (newOptions.templateOptionsValues) {
+        //   dispatch(set, (state) => ({
+        //     ...state,
+        //     options: {
+        //       ...state.options,
+        //       templateOptionsValues: { ...state.options.templateOptionsValues, ...newOptions.templateOptionsValues },
+        //     },
+        //   }));
+        //   return;
+        // } else {
+        //   dispatch(set, (state) => ({
+        //     ...state,
+        //     options: {
+        //       ...state.options,
+        //       ...newOptions,
+        //     },
+        //   }));
+        // }
+        dispatch(set, (state) => ({
+          ...state,
+          options: {
+            ...state.options,
+            ...newOptions,
+            templateOptionsValues: { ...state.options.templateOptionsValues, ...newOptions.templateOptionsValues },
+          },
+        }));
       },
       scaffold() {
         const options = useStore.getState().state.options;
