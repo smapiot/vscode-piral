@@ -41,7 +41,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                 <p className="columnTitle">Select Type</p>
                 {state.repoTypes.map((repoType) => (
                   <Card
-                    type="type"
+                    type="repoType"
                     key={repoType.title}
                     iconUri={repoType.icon}
                     title={repoType.title}
