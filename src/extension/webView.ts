@@ -71,6 +71,27 @@ function validateParameters(options: Options): string[] {
   return validationErrors;
 }
 
+async function getNpmVersion() {
+  return new Promise((resolve, reject) => {
+    exec('npm --version', (error, stdout) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      const matches = stdout.split('.')[0].match(/\d+/g);
+      if (matches) {
+        const nodeVersion = parseInt(matches[0]);
+        resolve(nodeVersion);
+      }
+    });
+  });
+}
+
+async function isLegacyNpmVersion(): Promise<boolean> {
+  const nodeVersion = await getNpmVersion();
+  return nodeVersion >= 7;
+}
+
 export async function createRepository(context: vscode.ExtensionContext) {
   const { extensionPath } = context;
   const { window, ViewColumn } = vscode;
@@ -107,35 +128,26 @@ export async function createRepository(context: vscode.ExtensionContext) {
           }
 
           // Go to target folder & create app folder
-          exec('npm --version', (error, stdout) => {
-            if (error) {
-              console.error(`exec error: ${error}`);
-              return;
-            }
+          const createAppFolder = `mkdir -p '${options.targetFolder}${options.name}' && cd '${options.targetFolder}${options.name}'`;
+          const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
+          const installDependencies = options.nodeModules ? '--install' : '--no-install';
+          const sep = (await isLegacyNpmVersion()) ? '--' : '';
+          
+          if (options.repoType === 'piral') {
+            // Handle Piral Instance
+            const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
+            runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
-            const createAppFolder = `mkdir -p '${options.targetFolder}${options.name}' && cd '${options.targetFolder}${options.name}'`;
-            const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
-            const installDependencies = options.nodeModules ? '--install' : '--no-install';
-            const npmVersion = parseInt(stdout.split('.')[0]);
-            const isLegacyNpm = npmVersion >= 7;
-            const sep = isLegacyNpm ? '' : '--';
+            // Dispose Webview
+            disposeWebview();
+          } else if (options.repoType === 'pilet') {
+            // Handle Pilet Instance
+            const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
+            runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
-            if (options.repoType === 'piral') {
-              // Handle Piral Instance
-              const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
-              runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
-
-              // Dispose Webview
-              disposeWebview();
-            } else if (options.repoType === 'pilet') {
-              // Handle Pilet Instance
-              const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
-              runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
-
-              // Dispose Webview
-              disposeWebview();
-            }
-          });
+            // Dispose Webview
+            disposeWebview();
+          }
           break;
 
         case 'getLocalPath':
@@ -153,6 +165,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           break;
 
         case 'getTemplatesNames':
+          isLegacyNpmVersion();
           const templates = await getTemplatesNames(message.type);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
