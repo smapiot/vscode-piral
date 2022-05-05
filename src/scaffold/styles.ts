@@ -317,30 +317,8 @@ export const infosInputs = css`
 `;
 
 export const spinner = css`
-  .spinner {
-    display: inline-block;
-    width: 5rem;
-    height: 5rem;
-
-    &::after {
-      content: ' ';
-      display: block;
-      width: 4rem;
-      height: 4rem;
-      margin: 0.5rem;
-      border-radius: 50%;
-      border: 0.375rem solid #0e639c;
-      border-color: #0e639c transparent #0e639c transparent;
-      animation: spinner 1.2s linear infinite;
-    }
-  }
-
-  @keyframes spinner {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+  vscode-progress-ring {
+    width: 200px;
+    height: 100px;
   }
 `;

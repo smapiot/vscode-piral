@@ -106,20 +106,24 @@ export async function createRepository(context: vscode.ExtensionContext) {
           }
 
           // Go to target folder & create app folder
-          const createAppFolder = `cd '${options.targetFolder}' && mkdir '${options.name}' && cd '${options.name}'`;
+          const createAppFolder = `mkdir '${options.targetFolder}${options.name}' -p && cd '${options.targetFolder}${options.name}'`;
           const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
+          const legacyNodeVersions = ['12', '14'];
+          const [nodeVersion] = process.version.substring(1).split('.');
+          const isLegacyNpm = legacyNodeVersions.includes(nodeVersion);
+          const sep = isLegacyNpm ? '' : '--';
 
-          if (options.repoType === 'piral') {
+          if (options.repoType === 'Piral') {
             // Handle Piral Instance
-            const scaffoldPiral = `npm init piral-instance --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
+            const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
             runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
             // Dispose Webview
             disposeWebview();
-          } else if (options.repoType === 'pilet') {
+          } else if (options.repoType === 'Pilet') {
             // Handle Pilet Instance
-            const scaffoldPilet = `npm init pilet --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
+            const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
             runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
             // Dispose Webview
@@ -152,10 +156,10 @@ export async function createRepository(context: vscode.ExtensionContext) {
           break;
 
         case 'getTemplatesOptions':
-          const templatesOptions = await getTemplatesOptions(message.packageName);
+          const templateOptions = await getTemplatesOptions(message.packageName);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesOptions',
-            templatesOptions,
+            templateOptions,
           });
 
           break;
