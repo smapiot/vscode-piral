@@ -44,15 +44,15 @@ export const useStore = create<Store>((set) => {
         break;
 
       case 'sendTemplatesOptions':
-        const { templatesOptions = {} } = message;
+        const { templateOptions = {} } = message;
         const values: Record<string, string> = {};
-        Object.keys(templatesOptions).forEach((option) => {
-          values[option] = templatesOptions[option].default;
+        Object.keys(templateOptions).forEach((option) => {
+          values[option] = templateOptions[option].default;
         });
         dispatch(set, (state) => ({
           ...state,
           isLoading: false,
-          templateOptions: templatesOptions,
+          templateOptions,
           options: {
             ...state.options,
             templateOptionsValues: values,
