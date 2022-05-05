@@ -9,7 +9,7 @@ import {
   getTemplatesNames,
   getTemplatesOptions,
 } from './helpers';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -107,28 +107,35 @@ export async function createRepository(context: vscode.ExtensionContext) {
           }
 
           // Go to target folder & create app folder
-          const createAppFolder = `mkdir -p '${options.targetFolder}${options.name}' && cd '${options.targetFolder}${options.name}'`;
-          const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
-          const installDependencies = options.nodeModules ? '--install' : '--no-install';
-          const npmVersion = parseInt(execSync('npm --version').toString('utf8').split('')[0]);
-          const isLegacyNpm = npmVersion >= 7;
-          const sep = isLegacyNpm ? '' : '--';
+          exec('npm --version', (error, stdout) => {
+            if (error) {
+              console.error(`exec error: ${error}`);
+              return;
+            }
 
-          if (options.repoType === 'piral') {
-            // Handle Piral Instance
-            const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
-            runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
+            const createAppFolder = `mkdir -p '${options.targetFolder}${options.name}' && cd '${options.targetFolder}${options.name}'`;
+            const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
+            const installDependencies = options.nodeModules ? '--install' : '--no-install';
+            const npmVersion = parseInt(stdout.split('.')[0]);
+            const isLegacyNpm = npmVersion >= 7;
+            const sep = isLegacyNpm ? '' : '--';
 
-            // Dispose Webview
-            disposeWebview();
-          } else if (options.repoType === 'pilet') {
-            // Handle Pilet Instance
-            const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
-            runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
+            if (options.repoType === 'piral') {
+              // Handle Piral Instance
+              const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
+              runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
-            // Dispose Webview
-            disposeWebview();
-          }
+              // Dispose Webview
+              disposeWebview();
+            } else if (options.repoType === 'pilet') {
+              // Handle Pilet Instance
+              const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
+              runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
+
+              // Dispose Webview
+              disposeWebview();
+            }
+          });
           break;
 
         case 'getLocalPath':
