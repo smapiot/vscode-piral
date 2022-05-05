@@ -9,6 +9,7 @@ import {
   getTemplatesNames,
   getTemplatesOptions,
 } from './helpers';
+import { execSync } from 'child_process';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -106,22 +107,21 @@ export async function createRepository(context: vscode.ExtensionContext) {
           }
 
           // Go to target folder & create app folder
-          const createAppFolder = `mkdir '${options.targetFolder}${options.name}' -p && cd '${options.targetFolder}${options.name}'`;
+          const createAppFolder = `mkdir -p '${options.targetFolder}${options.name}' && cd '${options.targetFolder}${options.name}'`;
           const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
-          const legacyNodeVersions = ['12', '14'];
-          const [nodeVersion] = process.version.substring(1).split('.');
-          const isLegacyNpm = legacyNodeVersions.includes(nodeVersion);
+          const npmVersion = parseInt(execSync('npm --version').toString('utf8').split('')[0]);
+          const isLegacyNpm = npmVersion >= 7;
           const sep = isLegacyNpm ? '' : '--';
 
-          if (options.repoType === 'Piral') {
+          if (options.repoType === 'piral') {
             // Handle Piral Instance
             const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
             runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
             // Dispose Webview
             disposeWebview();
-          } else if (options.repoType === 'Pilet') {
+          } else if (options.repoType === 'pilet') {
             // Handle Pilet Instance
             const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
             runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);

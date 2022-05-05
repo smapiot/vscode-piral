@@ -46,7 +46,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                     iconUri={repoType.icon}
                     title={repoType.title}
                     description={repoType.description}
-                    handleOnClick={() => actions.updateOptions({ repoType: repoType.title, template: '' })}
+                    handleOnClick={() => actions.updateOptions({ repoType: repoType.title.toLocaleLowerCase(), template: '' })}
                   />
                 ))}
               </div>
@@ -56,7 +56,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
               <div className="templates containerInfos scroll">
                 {repoType === '' ? undefined : loading ? (
                   <div className="spinnerWrapper" css={spinner}>
-                    <VSCodeProgressRing></VSCodeProgressRing>
+                    <VSCodeProgressRing />
                   </div>
                 ) : (
                   <React.Fragment>
@@ -124,7 +124,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
         <div className="container">
           {isLoading ? (
             <div className="spinnerWrapper" css={spinner}>
-              <VSCodeProgressRing></VSCodeProgressRing>
+              <VSCodeProgressRing />
             </div>
           ) : (
             <React.Fragment>
@@ -162,7 +162,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                         <p className="extraItemLabel">Version</p>
                       </VSCodeTextField>
                     </div>
-                    <div className={`extraItem ${repoType === 'Piral' ? 'hide' : ''}`}>
+                    <div className={`extraItem ${repoType === 'piral' ? 'hide' : ''}`}>
                       <VSCodeTextField
                         className="extraItemInput"
                         placeholder="sample-piral"
@@ -171,7 +171,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                         <p className="extraItemLabel">Piral Package</p>
                       </VSCodeTextField>
                     </div>
-                    <div className={`extraItem ${repoType === 'Piral' ? 'hide' : ''}`}>
+                    <div className={`extraItem ${repoType === 'piral' ? 'hide' : ''}`}>
                       <VSCodeTextField
                         className="extraItemInput"
                         placeholder="https://registry.npmjs.org/"
