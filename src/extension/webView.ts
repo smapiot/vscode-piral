@@ -86,10 +86,10 @@ async function getNpmVersion(): Promise<string> {
 
 async function isLegacyNpmVersion(): Promise<boolean> {
   const npmVersion = await getNpmVersion();
-  const matches = npmVersion.split('.')[0].match(/\d+/g);
+  const matches = npmVersion.match(/\d+\.\d+\.\d+/g);
   if (matches) {
-    const intNpmVersion = parseInt(matches[0]);
-    return intNpmVersion < 7;
+    const intNpmVersion = matches[0].split('.');
+    return +intNpmVersion < 7;
   }
   return false;
 }
