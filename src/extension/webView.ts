@@ -71,25 +71,27 @@ function validateParameters(options: Options): string[] {
   return validationErrors;
 }
 
-async function getNpmVersion() {
+async function getNpmVersion(): Promise<string> {
   return new Promise((resolve, reject) => {
     exec('npm --version', (error, stdout) => {
       if (error) {
         reject(error);
         return;
-      }
-      const matches = stdout.split('.')[0].match(/\d+/g);
-      if (matches) {
-        const nodeVersion = parseInt(matches[0]);
-        resolve(nodeVersion);
+      } else {
+        resolve(stdout);
       }
     });
   });
 }
 
 async function isLegacyNpmVersion(): Promise<boolean> {
-  const nodeVersion = await getNpmVersion();
-  return nodeVersion >= 7;
+  const npmVersion = await getNpmVersion();
+  const matches = npmVersion.split('.')[0].match(/\d+/g);
+  if (matches) {
+    const intNpmVersion = parseInt(matches[0]);
+    return intNpmVersion < 7;
+  }
+  return false;
 }
 
 export async function createRepository(context: vscode.ExtensionContext) {
@@ -132,7 +134,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           const openProject = `npm --no-git-tag-version version '${options.version}' && code .`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
           const sep = (await isLegacyNpmVersion()) ? '--' : '';
-          
+
           if (options.repoType === 'piral') {
             // Handle Piral Instance
             const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
@@ -165,7 +167,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
           break;
 
         case 'getTemplatesNames':
-          isLegacyNpmVersion();
           const templates = await getTemplatesNames(message.type);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
