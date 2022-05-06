@@ -76,22 +76,17 @@ async function getNpmVersion(): Promise<string> {
     exec('npm --version', (error, stdout) => {
       if (error) {
         reject(error);
-        return;
       } else {
-        resolve(stdout);
+        const npmVersion = stdout.match(/\d+\.\d+\.\d+/g);
+        npmVersion ? resolve(npmVersion[0]) : reject(error);
       }
     });
   });
 }
 
 async function isLegacyNpmVersion(): Promise<boolean> {
-  const npmVersion = await getNpmVersion();
-  const matches = npmVersion.match(/\d+\.\d+\.\d+/g);
-  if (matches) {
-    const intNpmVersion = matches[0].split('.');
-    return +intNpmVersion < 7;
-  }
-  return false;
+  const [majorVersion] = (await getNpmVersion()).split('.');
+  return +majorVersion < 7;
 }
 
 export async function createRepository(context: vscode.ExtensionContext) {
