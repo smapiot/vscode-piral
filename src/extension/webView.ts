@@ -78,7 +78,11 @@ async function getNpmVersion(): Promise<string> {
         reject(error);
       } else {
         const npmVersion = stdout.match(/\d+\.\d+\.\d+/g);
-        npmVersion ? resolve(npmVersion[0]) : reject(error);
+        if (npmVersion) {
+          resolve(npmVersion[0]);
+        } else {
+          reject(new Error('Could not find a version string in the output'));
+        }
       }
     });
   });
