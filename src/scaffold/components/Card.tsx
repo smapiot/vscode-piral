@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({ iconUri, title, description, type, shortNam
   React.useEffect(() => {
     switch (type) {
       case 'repoType':
-        options.repoType === title ? setAllClasses(`card ${type} selectedCard`) : setAllClasses(`card ${type}`);
+        options.repoType === title.toLowerCase() ? setAllClasses(`card ${type} selectedCard`) : setAllClasses(`card ${type}`);
         break;
 
       case 'bundler':
