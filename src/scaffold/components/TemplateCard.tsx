@@ -1,32 +1,33 @@
 import { FC } from 'react';
 import { jsx } from '@emotion/react';
-import { Uri } from 'vscode';
 import { useStore } from '../store';
-import { getRef } from './utils';
 import selectedItemIcon from '../../../resources/selected-item.png';
 
-interface CardProps {
-  type: 'repoType' | 'bundler' | 'client' | 'language';
-  iconUri: Uri;
+interface TemplateCardProps {
   id: string;
   title: string;
   description: string;
+  shortName: string;
+  author: string;
   onClick: () => void;
 }
 
-export const Card: FC<CardProps> = ({ iconUri, id, title, description, type, onClick }) => {
+export const TemplateCard: FC<TemplateCardProps> = ({ id, title, description, shortName, author, onClick }) => {
   const { state } = useStore();
   const options = state.options;
-  const cls = options[type] === id ? `card selectedCard` : `card`;
+  const cls = options.template === id ? `card template selectedCard` : `card template`;
 
   return (
     <div onClick={onClick} className={cls}>
       <img className="selectedCardTag" src={selectedItemIcon} />
       <div className="cardTitle">
-        <img className="cardTitleIcon" src={getRef(iconUri)} />
-        <p className="cardTitleTxt">{title}</p>
+        {shortName !== title && <p className="cardTitleTxt packageName">{shortName}</p>}
+        <p className="cardTitleTxt onlyForTemplate">{title}</p>
       </div>
       <p className="cardDescription">{description}</p>
+      <div className="cardFooter">
+        <p>{author}</p>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,13 @@
-/** @jsx jsx */
-import * as React from 'react';
+import { FC, Fragment, useEffect, useRef, useState } from 'react';
 import { jsx } from '@emotion/react';
-import { useStore } from './store';
-import Card from './components/Card';
 import { VSCodeButton, VSCodeTextField, VSCodeCheckbox, VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react';
-import { bundlers, cards, container, infosInputs, spinner, templates } from './styles';
+import { useStore } from './store';
+import { Card } from './components/Card';
+import { TemplateCard } from './components/TemplateCard';
+import { CardSelector } from './components/CardSelector';
+import { cards, container, infosInputs, spinner, templates } from './styles';
 import folderImage from '../../resources/folders-icon.png';
+
 interface ScaffoldState {
   repoType: string;
   template: string;
@@ -17,7 +19,7 @@ interface PageProps {
   state: ScaffoldState;
 }
 
-const FirstPage: React.FC<PageProps> = ({ onNext }) => {
+const FirstPage: FC<PageProps> = ({ onNext }) => {
   const { state, actions } = useStore();
   const options = state.options;
   const { repoType } = options;
@@ -25,14 +27,14 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
   const canGoNext = options.template !== '';
   const loading = availableTemplates === undefined;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (repoType) {
       actions.loadTemplates(repoType);
     }
   }, [repoType]);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <div className="containerWrapper" css={container}>
         <div className="container">
           <div className="containerInfos">
@@ -42,11 +44,14 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                 {state.repoTypes.map((repoType) => (
                   <Card
                     type="repoType"
+                    id={repoType.title}
                     key={repoType.title}
                     iconUri={repoType.icon}
                     title={repoType.title}
                     description={repoType.description}
-                    handleOnClick={() => actions.updateOptions({ repoType: repoType.title.toLocaleLowerCase(), template: '' })}
+                    onClick={() =>
+                      actions.updateOptions({ repoType: repoType.title.toLocaleLowerCase(), template: '' })
+                    }
                   />
                 ))}
               </div>
@@ -59,22 +64,22 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
                     <VSCodeProgressRing />
                   </div>
                 ) : (
-                  <React.Fragment>
+                  <Fragment>
                     <p className="columnTitle">Select templates</p>
                     <div className="templatesNames" css={cards}>
                       {availableTemplates.map((template) => (
-                        <Card
-                          type="template"
+                        <TemplateCard
                           key={template.packageName}
+                          id={template.packageName}
                           shortName={template.name}
                           title={template.packageName}
                           description={template.description}
                           author={template.author}
-                          handleOnClick={() => actions.updateOptions({ template: template.packageName })}
+                          onClick={() => actions.updateOptions({ template: template.packageName })}
                         />
                       ))}
                     </div>
-                  </React.Fragment>
+                  </Fragment>
                 )}
               </div>
             </div>
@@ -86,7 +91,7 @@ const FirstPage: React.FC<PageProps> = ({ onNext }) => {
           Next
         </VSCodeButton>
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
@@ -94,7 +99,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   const { state, actions } = useStore();
   const { templateOptions, isLoading } = state;
   const options = state.options;
-  const [valid, setValid] = React.useState(true);
+  const [valid, setValid] = useState(true);
 
   const { repoType, template, name, bundler, targetFolder, version, piralPackage, npmRegistry, nodeModules } = options;
   const canScaffold = repoType !== '' && template !== '' && name !== '' && bundler !== '' && targetFolder !== '';
@@ -114,12 +119,12 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
     actions.scaffold();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     actions.updateOptions({ targetFolder: state.localPath });
   }, [state.localPath]);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <div className="containerWrapper" css={container}>
         <div className="container">
           {isLoading ? (
@@ -127,7 +132,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
               <VSCodeProgressRing />
             </div>
           ) : (
-            <React.Fragment>
+            <Fragment>
               <div className="containerInfos secondPage">
                 <div className="information" css={infosInputs}>
                   <p className="columnTitle">Provide Information</p>
@@ -182,31 +187,53 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                     </div>
                   </div>
                 </div>
-                <div className={`extraItem`} onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
+                <div className="extraItem" onClick={() => actions.updateOptions({ nodeModules: !nodeModules })}>
                   <VSCodeCheckbox checked={nodeModules} required>
                     Install dependencies
                   </VSCodeCheckbox>
                 </div>
-                <div className="bundlersWrapper" css={bundlers}>
-                  <div className="bundlers">
-                    <p className="columnTitle">Select bundler</p>
-                    <div className="bundlersCards" css={cards}>
-                      {state.bundlers.map((bundler) => (
-                        <Card
-                          type="bundler"
-                          key={bundler.title}
-                          iconUri={bundler.icon}
-                          title={bundler.title}
-                          description={bundler.description}
-                          handleOnClick={() => actions.updateOptions({ bundler: bundler.title })}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="template-specific information" css={infosInputs}>
+                <CardSelector title="Select bundler">
+                  {state.bundlers.map((bundler) => (
+                    <Card
+                      type="bundler"
+                      key={bundler.type}
+                      iconUri={bundler.icon}
+                      id={bundler.type}
+                      title={bundler.title}
+                      description={bundler.description}
+                      onClick={() => actions.updateOptions({ bundler: bundler.title })}
+                    />
+                  ))}
+                </CardSelector>
+                <CardSelector title="Select client">
+                  {state.clients.map((client) => (
+                    <Card
+                      type="client"
+                      key={client.type}
+                      id={client.type}
+                      iconUri={client.icon}
+                      title={client.title}
+                      description={client.description}
+                      onClick={() => actions.updateOptions({ client: client.title })}
+                    />
+                  ))}
+                </CardSelector>
+                <CardSelector title="Select language">
+                  {state.languages.map((lang) => (
+                    <Card
+                      type="language"
+                      key={lang.type}
+                      id={lang.type}
+                      iconUri={lang.icon}
+                      title={lang.title}
+                      description={lang.description}
+                      onClick={() => actions.updateOptions({ language: lang.title })}
+                    />
+                  ))}
+                </CardSelector>
+                <div className="information" css={infosInputs}>
                   {Object.keys(templateOptions).length > 0 && (
-                    <React.Fragment>
+                    <Fragment>
                       <p className="columnTitle">Provide Template Options</p>
                       <div className="inputsWrapper">
                         {Object.keys(templateOptions).map((option) => (
@@ -226,11 +253,11 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                           </div>
                         ))}
                       </div>
-                    </React.Fragment>
+                    </Fragment>
                   )}
                 </div>
               </div>
-            </React.Fragment>
+            </Fragment>
           )}
         </div>
       </div>
@@ -242,16 +269,16 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
           Scaffold Project
         </VSCodeButton>
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 };
 
 const pages = [FirstPage, SecondPage];
 
-const ScaffoldView: React.FC = () => {
+export const ScaffoldView: FC = () => {
   const { actions } = useStore();
-  const [pageIndex, setPageIndex] = React.useState(0);
-  const state = React.useRef<ScaffoldState>({ repoType: '', template: '' });
+  const [pageIndex, setPageIndex] = useState(0);
+  const state = useRef<ScaffoldState>({ repoType: '', template: '' });
 
   const Page = pages[pageIndex];
 
@@ -268,5 +295,3 @@ const ScaffoldView: React.FC = () => {
     />
   );
 };
-
-export default ScaffoldView;

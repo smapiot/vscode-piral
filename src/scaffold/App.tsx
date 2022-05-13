@@ -1,19 +1,18 @@
-/** @jsx jsx */
-import * as React from 'react';
+import { Fragment, useEffect } from 'react';
 import { Global, jsx } from '@emotion/react';
-import ScaffoldView from './ScaffoldView';
+import { ScaffoldView } from './ScaffoldView';
 import { globalStyle, header } from './styles';
 import { useStore } from './store';
 
 const App: React.FC = () => {
   const store = useStore();
 
-  React.useEffect(() => {
+  useEffect(() => {
     store.actions.initialize();
   }, []);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Global styles={globalStyle} />
 
       <div className="page">
@@ -24,7 +23,7 @@ const App: React.FC = () => {
 
         <ScaffoldView />
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

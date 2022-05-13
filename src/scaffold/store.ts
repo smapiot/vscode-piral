@@ -19,10 +19,9 @@ export const useStore = create<Store>((set) => {
 
     switch (message.command) {
       case 'sendLocalPath':
-        const localPath = message.data[0].path;
         dispatch(set, (state) => ({
           ...state,
-          localPath: localPath,
+          localPath: message.data[0].path,
         }));
         break;
 
@@ -36,10 +35,8 @@ export const useStore = create<Store>((set) => {
         break;
 
       case 'sendInitialState':
-        const { repoTypes, bundlers } = message.data;
         dispatch(set, () => ({
-          repoTypes,
-          bundlers,
+          ...message.data,
         }));
         break;
 
@@ -65,6 +62,8 @@ export const useStore = create<Store>((set) => {
     state: {
       bundlers: [],
       repoTypes: [],
+      clients: [],
+      languages: [],
       templates: {},
       templateOptions: {},
       localPath: '',
@@ -73,11 +72,13 @@ export const useStore = create<Store>((set) => {
         repoType: '',
         template: '',
         name: '',
-        version: '',
+        client: 'npm',
+        language: 'ts',
+        version: '1.0.0',
         bundler: '',
         targetFolder: '',
-        piralPackage: '',
-        npmRegistry: '',
+        piralPackage: 'sample-piral',
+        npmRegistry: 'https://registry.npmjs.org/',
         nodeModules: true,
         templateOptionsValues: {},
       },

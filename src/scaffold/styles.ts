@@ -163,7 +163,7 @@ export const bundlers = css`
       flex-wrap: wrap;
     }
 
-    & .bundler {
+    & .card {
       width: 13.75rem;
       margin: 0 1rem 1rem 0;
       height: 8rem;

@@ -11,8 +11,8 @@
     "skipLibCheck": true,
     "strict": true,
     "rootDir": "src",
-    "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react"
+    "jsx": "react",
+    "jsxFactory": "jsx"
   },
   "exclude": [
     "node_modules",

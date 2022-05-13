@@ -5,19 +5,26 @@ import axios from 'axios';
 const repoTypeOptions = [
   {
     type: 'piral',
-    icon: 'resources/piral.png',
+    icon: 'resources/types/piral.png',
     title: 'Piral',
     description: 'Create a new Piral instance project.',
   },
   {
     type: 'pilet',
-    icon: 'resources/piral.png',
+    icon: 'resources/types/pilet.png',
     title: 'Pilet',
     description: 'Create a new pilet project.',
   },
 ];
 
 const bundlerOptions = [
+  {
+    type: '',
+    icon: 'resources/bundlers/none.png',
+    title: '(none)',
+    package: '',
+    description: 'Choose no bundler for the moment.',
+  },
   {
     type: 'parcel',
     icon: 'resources/bundlers/parcel.png',
@@ -76,6 +83,54 @@ const bundlerOptions = [
   },
 ];
 
+const languageOptions = [
+  {
+    type: 'ts',
+    icon: 'resources/languages/ts.png',
+    title: 'TypeScript',
+    description: 'Use TypeScript to write your code.',
+  },
+  {
+    type: 'js',
+    icon: 'resources/languages/js.png',
+    title: 'JavaScript',
+    description: 'Use JavaScript to write your code.',
+  },
+];
+
+const npmClientOptions = [
+  {
+    type: 'npm',
+    icon: 'resources/clients/npm.png',
+    title: 'npm',
+    description: 'Use npm as your package manager.',
+  },
+  {
+    type: 'Yarn',
+    icon: 'resources/clients/yarn.png',
+    title: 'Yarn@1',
+    description: 'Use Yarn v1 as your package manager.',
+  },
+  {
+    type: 'pnpm',
+    icon: 'resources/clients/pnpm.png',
+    title: 'pnpm',
+    description: 'Use pnpm as your package manager.',
+  },
+  {
+    type: 'lerna',
+    icon: 'resources/clients/lerna.png',
+    title: 'Lerna',
+    description: 'Use Lerna as your package manager (works only in monorepos).',
+  },
+  {
+    type: 'rush',
+    icon: 'resources/clients/rush.png',
+    title: 'Rush',
+    description: 'Use Rush as your package manager (works only in monorepos).',
+  },
+];
+
 function mapToLocalIcon<T extends { icon: string }>(
   items: Array<T>,
   panel: vscode.WebviewPanel,
@@ -87,16 +142,6 @@ function mapToLocalIcon<T extends { icon: string }>(
   }));
 }
 
-export const bundlerPackages = bundlerOptions.map((b) => b.package);
-
-export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: string, fileName: string) {
-  return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
-}
-
-export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
-  return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
-}
-
 function stringifyAuthor(author: string | { name: string }) {
   if (typeof author === 'string') {
     return author;
@@ -105,6 +150,12 @@ function stringifyAuthor(author: string | { name: string }) {
   } else {
     return '';
   }
+}
+
+export const bundlerPackages = bundlerOptions.map((b) => b.package);
+
+export function getResourcePath(panel: vscode.WebviewPanel, baseUriResources: string, fileName: string) {
+  return panel.webview.asWebviewUri(vscode.Uri.file(join(baseUriResources, fileName)));
 }
 
 export async function getTemplatesNames(type: 'piral' | 'pilet', size = 50) {
@@ -142,6 +193,18 @@ export function getBundlerInfos(packageName: string) {
   return bundlerOptions.find((b) => b.package === packageName);
 }
 
+export function getRepoTypeOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
+  return mapToLocalIcon(repoTypeOptions, panel, baseUriResources);
+}
+
 export function getBundlerOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
   return mapToLocalIcon(bundlerOptions, panel, baseUriResources);
+}
+
+export function getNpmClientOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
+  return mapToLocalIcon(npmClientOptions, panel, baseUriResources);
+}
+
+export function getLanguageOptions(panel: vscode.WebviewPanel, baseUriResources: string) {
+  return mapToLocalIcon(languageOptions, panel, baseUriResources);
 }

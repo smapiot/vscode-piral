@@ -14,6 +14,8 @@ interface TemplateOptionsParams {
 
 export interface StoreState {
   repoTypes: Array<RepoType>;
+  clients: Array<NpmClient>;
+  languages: Array<Language>;
   bundlers: Array<Bundler>;
   templates: {
     [repoType: string]: Array<TemplateInfo>;
@@ -38,6 +40,20 @@ export interface RepoType {
   description: string;
 }
 
+export interface Language {
+  type: string;
+  title: string;
+  icon: Uri;
+  description: string;
+}
+
+export interface NpmClient {
+  type: string;
+  title: string;
+  icon: Uri;
+  description: string;
+}
+
 export interface Bundler {
   type: string;
   title: string;
@@ -49,6 +65,8 @@ export interface Options {
   repoType: string;
   template: string;
   name: string;
+  client: string;
+  language: string;
   version: string;
   bundler: string;
   targetFolder: string;

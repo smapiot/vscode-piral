@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
+import { exec } from 'child_process';
 import {
   getTemplateCode,
   runCommand,
@@ -8,9 +9,9 @@ import {
   getResourcePath,
   getTemplatesNames,
   getTemplatesOptions,
+  getNpmClientOptions,
+  getLanguageOptions,
 } from './helpers';
-import { exec } from 'child_process';
-import { access } from 'fs';
 
 let webviewPanel: vscode.WebviewPanel;
 
@@ -29,6 +30,9 @@ interface Options {
   piralPackage: string;
   npmRegistry: string;
   template: string;
+  language: string;
+  client: string;
+  nodeModules: boolean;
 }
 
 function validateParameters(options: Options): string[] {
@@ -46,27 +50,12 @@ function validateParameters(options: Options): string[] {
     validationErrors.push('Template');
   }
 
-  if (!options.version.trim()) {
-    options.version = '1.0.0';
-  }
-
   if (!options.bundler.trim()) {
     validationErrors.push('Bundler');
   }
 
   if (!options.name.trim()) {
     validationErrors.push('Name');
-  }
-
-  if (options.repoType === 'pilet') {
-    // nothing for now ...
-    if (!options.piralPackage.trim()) {
-      options.piralPackage = 'sample-piral';
-    }
-
-    if (!options.npmRegistry.trim()) {
-      options.npmRegistry = 'https://registry.npmjs.org/';
-    }
   }
 
   return validationErrors;
@@ -79,6 +68,7 @@ async function getNpmVersion(): Promise<string> {
         reject(error);
       } else {
         const npmVersion = stdout.match(/\d+\.\d+\.\d+/g);
+
         if (npmVersion) {
           resolve(npmVersion[0]);
         } else {
@@ -117,11 +107,13 @@ export async function createRepository(context: vscode.ExtensionContext) {
             data: {
               repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
               bundlers: getBundlerOptions(webviewPanel, extensionPath),
+              clients: getNpmClientOptions(webviewPanel, extensionPath),
+              languages: getLanguageOptions(webviewPanel, extensionPath),
             },
           });
           break;
         case 'createPiralPilet':
-          const options = message.options;
+          const options: Options = message.options;
 
           const validationErrors = validateParameters(options);
 
@@ -131,32 +123,53 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
           // Go to target folder & create app folder
           const isWin = process.platform === 'win32';
-          let targetFolder = options.targetFolder.slice(1);
-          if (isWin) {
-            targetFolder = await targetFolder.split('/').join('\\');
-          }
+          const targetFolder = options.targetFolder
+            .slice(1)
+            .split('/')
+            .join(isWin ? '\\' : '/');
+
           const createAppFolder = isWin
             ? `if not exist ${targetFolder}\\${options.name} md ${targetFolder}\\${options.name}`
             : `mkdir -p ${targetFolder}/${options.name} && cd ${targetFolder}/${options.name}`;
-          const openProject = `npm --no-git-tag-version' ${options.version}' && code .`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
           const sep = (await isLegacyNpmVersion()) ? '--' : '';
+          const command = [createAppFolder];
 
           if (options.repoType === 'piral') {
-            // Handle Piral Instance
-            const scaffoldPiral = `npm init piral-instance ${sep} --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
-            runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
-
-            // Dispose Webview
-            disposeWebview();
+            // Handle Piral instance
+            command.push(
+              [
+                `npm init piral-instance`,
+                sep,
+                `--registry '${options.npmRegistry}'`,
+                `--bundler '${options.bundler}'`,
+                `--npm-client '${options.client}'`,
+                `--language '${options.language}'`,
+                installDependencies,
+                '--defaults',
+              ].join(' '),
+            );
           } else if (options.repoType === 'pilet') {
-            // Handle Pilet Instance
-            const scaffoldPilet = `npm init pilet ${sep} --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
-            runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
-
-            // Dispose Webview
-            disposeWebview();
+            // Handle pilet
+            command.push(
+              [
+                `npm init pilet`,
+                sep,
+                `--source '${options.piralPackage}'`,
+                `--registry '${options.npmRegistry}'`,
+                `--bundler '${options.bundler}'`,
+                `--npm-client '${options.client}'`,
+                `--language '${options.language}'`,
+                installDependencies,
+                '--defaults',
+              ].join(' '),
+            );
           }
+
+          runCommand([...command, `npm --no-git-tag-version' ${options.version}'`, 'code .'].join(' && '));
+
+          // Dispose Webview
+          disposeWebview();
           break;
 
         case 'getLocalPath':
