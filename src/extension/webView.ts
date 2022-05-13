@@ -131,33 +131,28 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
           // Go to target folder & create app folder
           const isWin = process.platform === 'win32';
-          const newCommandSymbol = isWin ? ';' : '&&';
-          const targetFolder = options.targetFolder.slice(1);
-          let createAppFolder = `mkdir -p ${targetFolder}/${options.name} ${newCommandSymbol} cd ${targetFolder}/${options.name}`;
+          let targetFolder = options.targetFolder.slice(1);
           if (isWin) {
-            access(options.targetFolder, function (error) {
-              if (error) {
-                createAppFolder = `mkdir ${targetFolder}/${options.name} ${newCommandSymbol} cd ${targetFolder}/${options.name}`;
-              } else {
-                createAppFolder = `cd '${targetFolder}/${options.name}'`;
-              }
-            });
+            targetFolder = await targetFolder.split('/').join('\\');
           }
-          const openProject = `npm --no-git-tag-version' ${options.version}' ${newCommandSymbol} code .`;
+          const createAppFolder = isWin
+            ? `if not exist ${targetFolder}\\${options.name} md ${targetFolder}\\${options.name}`
+            : `mkdir -p ${targetFolder}/${options.name} && cd ${targetFolder}/${options.name}`;
+          const openProject = `npm --no-git-tag-version' ${options.version}' && code .`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
           const sep = (await isLegacyNpmVersion()) ? '--' : '';
 
           if (options.repoType === 'piral') {
             // Handle Piral Instance
-            const scaffoldPiral = `npm init piral-instance ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
-            runCommand(`${createAppFolder} ${newCommandSymbol} ${scaffoldPiral} ${newCommandSymbol} ${openProject}`);
+            const scaffoldPiral = `npm init piral-instance ${sep} --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
+            runCommand(`${createAppFolder} && ${scaffoldPiral} && ${openProject}`);
 
             // Dispose Webview
             disposeWebview();
           } else if (options.repoType === 'pilet') {
             // Handle Pilet Instance
-            const scaffoldPilet = `npm init pilet ${sep}source '${options.piralPackage}' ${sep}registry '${options.npmRegistry}' ${sep}bundler '${options.bundler}' ${sep}defaults ${installDependencies}`;
-            runCommand(`${createAppFolder} ${newCommandSymbol} ${scaffoldPilet} ${newCommandSymbol} ${openProject}`);
+            const scaffoldPilet = `npm init pilet ${sep} --source '${options.piralPackage}' --registry '${options.npmRegistry}' --bundler '${options.bundler}' --defaults ${installDependencies}`;
+            runCommand(`${createAppFolder} && ${scaffoldPilet} && ${openProject}`);
 
             // Dispose Webview
             disposeWebview();
@@ -179,8 +174,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
           break;
 
         case 'getTemplatesNames':
-          console.log(process.env);
-          console.log(process.platform);
           const templates = await getTemplatesNames(message.type);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
