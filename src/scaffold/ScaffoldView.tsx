@@ -44,13 +44,13 @@ const FirstPage: FC<PageProps> = ({ onNext }) => {
                 {state.repoTypes.map((repoType) => (
                   <Card
                     type="repoType"
-                    id={repoType.title}
-                    key={repoType.title}
+                    id={repoType.type}
+                    key={repoType.type}
                     iconUri={repoType.icon}
                     title={repoType.title}
                     description={repoType.description}
                     onClick={() =>
-                      actions.updateOptions({ repoType: repoType.title.toLocaleLowerCase(), template: '' })
+                      actions.updateOptions({ repoType: repoType.type, template: '' })
                     }
                   />
                 ))}
@@ -201,7 +201,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                       id={bundler.type}
                       title={bundler.title}
                       description={bundler.description}
-                      onClick={() => actions.updateOptions({ bundler: bundler.title })}
+                      onClick={() => actions.updateOptions({ bundler: bundler.type })}
                     />
                   ))}
                 </CardSelector>
@@ -214,7 +214,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                       iconUri={client.icon}
                       title={client.title}
                       description={client.description}
-                      onClick={() => actions.updateOptions({ client: client.title })}
+                      onClick={() => actions.updateOptions({ client: client.type })}
                     />
                   ))}
                 </CardSelector>
@@ -227,7 +227,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                       iconUri={lang.icon}
                       title={lang.title}
                       description={lang.description}
-                      onClick={() => actions.updateOptions({ language: lang.title })}
+                      onClick={() => actions.updateOptions({ language: lang.type })}
                     />
                   ))}
                 </CardSelector>

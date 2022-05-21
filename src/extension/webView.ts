@@ -23,16 +23,17 @@ function disposeWebview() {
 
 interface Options {
   repoType: string;
+  template: string;
   name: string;
+  client: string;
+  language: string;
   version: string;
   bundler: string;
   targetFolder: string;
   piralPackage: string;
   npmRegistry: string;
-  template: string;
-  language: string;
-  client: string;
   nodeModules: boolean;
+  templateOptionsValues: Record<string, string>;
 }
 
 function validateParameters(options: Options): string[] {
@@ -101,7 +102,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
   webviewPanel.webview.onDidReceiveMessage(
     async (message) => {
       switch (message.command) {
-        case 'initialize':
+        case 'initialize': {
           webviewPanel.webview.postMessage({
             command: 'sendInitialState',
             data: {
@@ -112,40 +113,37 @@ export async function createRepository(context: vscode.ExtensionContext) {
             },
           });
           break;
-        case 'createPiralPilet':
+        }
+        case 'createPiralPilet': {
           const options: Options = message.options;
-
           const validationErrors = validateParameters(options);
 
           if (validationErrors.length > 0) {
             return;
           }
 
-          // Go to target folder & create app folder
-          const isWin = process.platform === 'win32';
-          const targetFolder = options.targetFolder
-            .slice(1)
-            .split('/')
-            .join(isWin ? '\\' : '/');
-
-          const createAppFolder = isWin
-            ? `if not exist ${targetFolder}\\${options.name} md ${targetFolder}\\${options.name}`
-            : `mkdir -p ${targetFolder}/${options.name} && cd ${targetFolder}/${options.name}`;
+          const target = `${options.targetFolder}/${options.name}`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
+          const templateOptions = Object.keys(options.templateOptionsValues).map(
+            (key) => `--vars.${key}="${options.templateOptionsValues[key]}"`,
+          );
           const sep = (await isLegacyNpmVersion()) ? '--' : '';
-          const command = [createAppFolder];
+          const command = [];
 
           if (options.repoType === 'piral') {
             // Handle Piral instance
             command.push(
               [
                 `npm init piral-instance`,
-                sep,
-                `--registry '${options.npmRegistry}'`,
-                `--bundler '${options.bundler}'`,
-                `--npm-client '${options.client}'`,
-                `--language '${options.language}'`,
+                // sep,
+                `--registry ${options.npmRegistry}`,
+                `--bundler ${options.bundler}`,
+                `--template ${options.template}`,
+                `--npm-client ${options.client}`,
+                `--target "${target}"`,
+                `--language ${options.language}`,
                 installDependencies,
+                ...templateOptions,
                 '--defaults',
               ].join(' '),
             );
@@ -154,25 +152,35 @@ export async function createRepository(context: vscode.ExtensionContext) {
             command.push(
               [
                 `npm init pilet`,
-                sep,
-                `--source '${options.piralPackage}'`,
-                `--registry '${options.npmRegistry}'`,
-                `--bundler '${options.bundler}'`,
-                `--npm-client '${options.client}'`,
-                `--language '${options.language}'`,
+                // sep,
+                `--source ${options.piralPackage}`,
+                `--registry ${options.npmRegistry}`,
+                `--bundler ${options.bundler}`,
+                `--template ${options.template}`,
+                `--npm-client ${options.client}`,
+                `--target "${target}"`,
+                `--language ${options.language}`,
                 installDependencies,
+                ...templateOptions,
                 '--defaults',
               ].join(' '),
             );
           }
 
-          runCommand([...command, `npm --no-git-tag-version' ${options.version}'`, 'code .'].join(' && '));
+          runCommand(
+            [
+              ...command,
+              `cd ${target}`,
+              `npm version ${options.version} --no-git-tag --allow-same-version`,
+              'code .',
+            ].join(' && '),
+          );
 
           // Dispose Webview
           disposeWebview();
           break;
-
-        case 'getLocalPath':
+        }
+        case 'getLocalPath': {
           const localPath = await window.showOpenDialog({
             canSelectFolders: true,
             canSelectFiles: false,
@@ -185,8 +193,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
           }
 
           break;
-
-        case 'getTemplatesNames':
+        }
+        case 'getTemplatesNames': {
           const templates = await getTemplatesNames(message.type);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesNames',
@@ -195,8 +203,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
 
           break;
-
-        case 'getTemplatesOptions':
+        }
+        case 'getTemplatesOptions': {
           const templateOptions = await getTemplatesOptions(message.packageName);
           webviewPanel.webview.postMessage({
             command: 'sendTemplatesOptions',
@@ -204,6 +212,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
 
           break;
+        }
       }
     },
     undefined,

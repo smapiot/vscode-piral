@@ -34,7 +34,7 @@ const bundlerOptions = [
   },
   {
     type: 'webpack',
-    icon: 'resources/bundlers/webpack.svg',
+    icon: 'resources/bundlers/webpack.png',
     title: 'Webpack v4',
     package: 'piral-cli-webpack',
     description: 'Use Webpack v4 as bundler for the project.',
@@ -48,7 +48,7 @@ const bundlerOptions = [
   },
   {
     type: 'Webpack5',
-    icon: 'resources/bundlers/webpack.svg',
+    icon: 'resources/bundlers/webpack.png',
     title: 'Webpack v5',
     package: 'piral-cli-webpack5',
     description: 'Use Webpack v5 as bundler for the project.',
@@ -106,7 +106,7 @@ const npmClientOptions = [
     description: 'Use npm as your package manager.',
   },
   {
-    type: 'Yarn',
+    type: 'yarn',
     icon: 'resources/clients/yarn.png',
     title: 'Yarn@1',
     description: 'Use Yarn v1 as your package manager.',
