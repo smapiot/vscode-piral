@@ -128,6 +128,11 @@ export const useStore = create<Store>((set) => {
           options,
         });
       },
+      close() {
+        vscode.postMessage({
+          command: 'close',
+        });
+      },
     },
   };
 });

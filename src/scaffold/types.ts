@@ -83,6 +83,7 @@ export interface StoreActions {
   selectLocalPath(): void;
   updateOptions(newOptions: Partial<Options>): void;
   scaffold(): void;
+  close(): void;
 }
 
 export interface Store {

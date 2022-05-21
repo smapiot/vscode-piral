@@ -95,6 +95,94 @@ export const globalStyle = css`
   .capitalize {
     text-transform: capitalize;
   }
+
+  .fullPage {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    row-gap: 1.5rem;
+  }
+
+  .success {
+    width: 9rem;
+    height: 9rem;
+
+    .animation_container {
+      border-radius: 100%;
+      background-color: #fff;
+      box-shadow: 0 0 0 1px #e7e6e3;
+      width: 100%;
+      height: 100%;
+      position: relative;
+
+      animation: grow_background .5s ease-in forwards;
+
+      .tick {
+        height: 2.5rem;
+        left: calc(50% - 2.5rem);
+        position: absolute;
+        top: 2.5rem;
+        transform: rotate(-45deg);
+        width: 5rem;
+
+        &::before {
+          animation: animate_tick_first .5s .5s ease-in forwards;
+          background-color: #88ba14;
+          border-radius: 6px / 2 6px / 2 0 0;
+          content: "";
+          height: 0;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 6px;
+        }
+
+        &::after {
+          animation: animate_tick_second .5s 1s ease-out forwards;
+          background-color: #88ba14;
+          border-radius: 0 6px / 2 6px / 2 0;
+          content: "";
+          height: 6px;
+          left: 0;
+          position: absolute;
+          top: calc(100% - 1px);
+          width: 0;
+        }
+      }
+    }
+  }
+
+  @keyframes grow_background {
+    0% {
+      transform: scale(0);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes animate_tick_first {
+    0% {
+      height: 0;
+    }
+
+    100% {
+      height: 2.5rem;
+    }
+  }
+
+  @keyframes animate_tick_second {
+    0% {
+      width: 0;
+    }
+
+    100% {
+      width: 5rem;
+    }
+  }
 `;
 
 export const header = css`
@@ -318,7 +406,7 @@ export const infosInputs = css`
 
 export const spinner = css`
   vscode-progress-ring {
-    width: 200px;
-    height: 100px;
+    width: 100px;
+    height: 50px;
   }
 `;

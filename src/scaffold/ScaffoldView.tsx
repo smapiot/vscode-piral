@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { FC, Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { jsx } from '@emotion/react';
 import { VSCodeButton, VSCodeTextField, VSCodeCheckbox, VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react';
 import { useStore } from './store';
@@ -49,9 +49,7 @@ const FirstPage: FC<PageProps> = ({ onNext }) => {
                     iconUri={repoType.icon}
                     title={repoType.title}
                     description={repoType.description}
-                    onClick={() =>
-                      actions.updateOptions({ repoType: repoType.type, template: '' })
-                    }
+                    onClick={() => actions.updateOptions({ repoType: repoType.type, template: '' })}
                   />
                 ))}
               </div>
@@ -95,29 +93,16 @@ const FirstPage: FC<PageProps> = ({ onNext }) => {
   );
 };
 
-const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
+const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
   const { state, actions } = useStore();
   const { templateOptions, isLoading } = state;
   const options = state.options;
-  const [valid, setValid] = useState(true);
 
-  const { repoType, template, name, bundler, targetFolder, version, piralPackage, npmRegistry, nodeModules } = options;
-  const canScaffold = repoType !== '' && template !== '' && name !== '' && bundler !== '' && targetFolder !== '';
+  const { repoType, template, name, targetFolder, version, piralPackage, npmRegistry, nodeModules } = options;
+  const valid = useMemo(() => /(\/[A-Za-z_\/-\s0-9\.]+)+$/.exec(targetFolder), [targetFolder]);
+  const canScaffold = valid && repoType !== '' && template !== '' && name !== '';
 
-  const openLocalPathModal = () => {
-    actions.selectLocalPath();
-  };
-
-  const createPiralPilet = () => {
-    const test = /(\/[A-Za-z_\/-\s0-9\.]+)+$/;
-    const isValid = test.exec(options.targetFolder);
-    if (!isValid) {
-      setValid(false);
-      return;
-    }
-
-    actions.scaffold();
-  };
+  const openLocalPathModal = () => actions.selectLocalPath();
 
   useEffect(() => {
     actions.updateOptions({ targetFolder: state.localPath });
@@ -151,7 +136,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
                         value={targetFolder}
                         onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
                         <p className="extraItemLabel">
-                          Local Path <span className={`errorMessage ${valid ? 'hide' : ''}`}>[invalid path]</span>
+                          Local Path{' '}
+                          <span className={`errorMessage ${valid || !targetFolder ? 'hide' : ''}`}>[invalid path]</span>
                         </p>
                         <span slot="end" id="local-path" onClick={openLocalPathModal}>
                           <img className="foldersImg" src={folderImage} />
@@ -265,7 +251,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
         <VSCodeButton className="navigation-btn" href="#" onClick={onPrevious}>
           Previous
         </VSCodeButton>
-        <VSCodeButton title="Start Scaffolding" href="#" onClick={createPiralPilet} disabled={!canScaffold}>
+        <VSCodeButton title="Start Scaffolding" href="#" onClick={onNext} disabled={!canScaffold}>
           Scaffold Project
         </VSCodeButton>
       </div>
@@ -273,7 +259,29 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious }) => {
   );
 };
 
-const pages = [FirstPage, SecondPage];
+const FinalPage: React.FC<PageProps> = () => {
+  const { actions } = useStore();
+
+  useEffect(() => {
+    actions.scaffold();
+    const tid = setTimeout(() => actions.close(), 4000);
+    return () => clearTimeout(tid);
+  }, []);
+
+  return (
+    <div className="fullPage">
+      <div className="success">
+        <div className="animation_container">
+          <div className="tick" />
+        </div>
+      </div>
+      <h1>Scaffolding started!</h1>
+      <p>You can observe the progress in the opened terminal.</p>
+      <p>This window is automatically closed.</p>
+    </div>);
+};
+
+const pages = [FirstPage, SecondPage, FinalPage];
 
 export const ScaffoldView: FC = () => {
   const { actions } = useStore();

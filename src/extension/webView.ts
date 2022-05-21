@@ -13,11 +13,12 @@ import {
   getLanguageOptions,
 } from './helpers';
 
-let webviewPanel: vscode.WebviewPanel;
+let webviewPanel: vscode.WebviewPanel | undefined;
 
 function disposeWebview() {
   if (webviewPanel) {
     webviewPanel.dispose();
+    webviewPanel = undefined;
   }
 }
 
@@ -91,27 +92,31 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   disposeWebview();
 
-  webviewPanel = window.createWebviewPanel('piral.createProject', 'Piral - Create Project', ViewColumn.One, {
+  const wv = window.createWebviewPanel('piral.createProject', 'Piral - Create Project', ViewColumn.One, {
     enableScripts: true,
   });
 
-  webviewPanel.webview.html = getTemplateCode(getResourcePath(webviewPanel, extensionPath, 'dist/scaffold.js'));
+  wv.webview.html = getTemplateCode(getResourcePath(wv, extensionPath, 'dist/scaffold.js'));
 
-  webviewPanel.iconPath = vscode.Uri.file(join(extensionPath, 'resources/piral.png'));
+  wv.iconPath = vscode.Uri.file(join(extensionPath, 'resources/piral.png'));
 
-  webviewPanel.webview.onDidReceiveMessage(
+  wv.webview.onDidReceiveMessage(
     async (message) => {
       switch (message.command) {
         case 'initialize': {
-          webviewPanel.webview.postMessage({
+          wv.webview.postMessage({
             command: 'sendInitialState',
             data: {
-              repoTypes: getRepoTypeOptions(webviewPanel, extensionPath),
-              bundlers: getBundlerOptions(webviewPanel, extensionPath),
-              clients: getNpmClientOptions(webviewPanel, extensionPath),
-              languages: getLanguageOptions(webviewPanel, extensionPath),
+              repoTypes: getRepoTypeOptions(wv, extensionPath),
+              bundlers: getBundlerOptions(wv, extensionPath),
+              clients: getNpmClientOptions(wv, extensionPath),
+              languages: getLanguageOptions(wv, extensionPath),
             },
           });
+          break;
+        }
+        case 'close': {
+          disposeWebview();
           break;
         }
         case 'createPiralPilet': {
@@ -175,9 +180,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
               'code .',
             ].join(' && '),
           );
-
-          // Dispose Webview
-          disposeWebview();
           break;
         }
         case 'getLocalPath': {
@@ -189,14 +191,14 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
 
           if (localPath) {
-            webviewPanel.webview.postMessage({ command: 'sendLocalPath', data: localPath });
+            wv.webview.postMessage({ command: 'sendLocalPath', data: localPath });
           }
 
           break;
         }
         case 'getTemplatesNames': {
           const templates = await getTemplatesNames(message.type);
-          webviewPanel.webview.postMessage({
+          wv.webview.postMessage({
             command: 'sendTemplatesNames',
             type: message.type,
             templates,
@@ -206,7 +208,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
         }
         case 'getTemplatesOptions': {
           const templateOptions = await getTemplatesOptions(message.packageName);
-          webviewPanel.webview.postMessage({
+          wv.webview.postMessage({
             command: 'sendTemplatesOptions',
             templateOptions,
           });
@@ -218,4 +220,6 @@ export async function createRepository(context: vscode.ExtensionContext) {
     undefined,
     context.subscriptions,
   );
+
+  webviewPanel = wv;
 }
