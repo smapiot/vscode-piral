@@ -103,7 +103,10 @@ export async function createRepository(context: vscode.ExtensionContext) {
             return;
           }
 
-          const target = `${options.targetFolder}/${options.name}`;
+          const isWindows = process.platform === 'win32' && !vscode.env.remoteName;
+          const pathSep = isWindows ? '\\' : '/';
+          const cmdSep = isWindows ? ' ; ' : ' && ';
+          const target = `${options.targetFolder}${pathSep}${options.name}`;
           const installDependencies = options.nodeModules ? '--install' : '--no-install';
           const templateOptions = Object.keys(options.templateOptionsValues).map(
             (key) => `--vars.${key}="${options.templateOptionsValues[key]}"`,
@@ -153,7 +156,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
               `cd ${target}`,
               `npm version ${options.version} --no-git-tag --allow-same-version`,
               'code .',
-            ].join(' && '),
+            ].join(cmdSep),
           );
           break;
         }
@@ -166,7 +169,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
           });
 
           if (localPath) {
-            wv.webview.postMessage({ command: 'sendLocalPath', data: localPath });
+            const path = localPath[0].fsPath;
+            wv.webview.postMessage({ command: 'sendLocalPath', path });
           }
 
           break;

@@ -21,7 +21,7 @@ export const useStore = create<Store>((set) => {
       case 'sendLocalPath':
         dispatch(set, (state) => ({
           ...state,
-          localPath: message.data[0].path,
+          localPath: message.path,
         }));
         break;
 
