@@ -99,7 +99,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
   const options = state.options;
 
   const { repoType, template, name, targetFolder, version, piralPackage, npmRegistry, nodeModules } = options;
-  const valid = useMemo(() => /(\/[A-Za-z_\/-\s0-9\.]+)+$/.exec(targetFolder), [targetFolder]);
+  const valid = useMemo(() => /^[^<>"|?*]+$/.exec(targetFolder), [targetFolder]);
   const canScaffold = valid && repoType !== '' && template !== '' && name !== '';
 
   const openLocalPathModal = () => actions.selectLocalPath();
