@@ -51,6 +51,16 @@
         ]
       }
     ],
+    "debuggers": [
+      {
+        "type": "piral",
+        "label": "Piral Debug"
+      },
+      {
+        "type": "pilet",
+        "label": "Pilet Debug"
+      }
+    ],
     "viewsWelcome": [
       {
         "view": "piral-available-commands",
@@ -194,6 +204,31 @@
         }
       ]
     },
+    "problemMatchers": [
+      {
+        "name": "piral",
+        "owner": "webpack",
+        "severity": "error",
+        "fileLocation": "absolute",
+        "pattern": [
+          {
+            "regexp": "ERROR in (.*)",
+            "file": 1
+          },
+          {
+            "regexp": "\\((\\d+),(\\d+)\\):(.*)",
+            "line": 1,
+            "column": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Running",
+          "endsPattern": "compiled successfully"
+        }
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -217,32 +252,16 @@
     },
     "taskDefinitions": [
       {
-        "type": "piral-build",
+        "type": "piral",
         "required": [
           "task"
         ],
-        "properties": {}
-      },
-      {
-        "type": "piral-debug",
-        "required": [
-          "task"
-        ],
-        "properties": {}
-      },
-      {
-        "type": "pilet-build",
-        "required": [
-          "task"
-        ],
-        "properties": {}
-      },
-      {
-        "type": "pilet-debug",
-        "required": [
-          "task"
-        ],
-        "properties": {}
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "The Piral task to run"
+          }
+        }
       }
     ]
   },
