@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
-import { exec } from 'child_process';
 import {
   getTemplateCode,
   runCommand,
@@ -63,29 +62,6 @@ function validateParameters(options: Options): string[] {
   return validationErrors;
 }
 
-async function getNpmVersion(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    exec('npm --version', (error, stdout) => {
-      if (error) {
-        reject(error);
-      } else {
-        const npmVersion = stdout.match(/\d+\.\d+\.\d+/g);
-
-        if (npmVersion) {
-          resolve(npmVersion[0]);
-        } else {
-          reject(new Error('Could not find a version string in the output'));
-        }
-      }
-    });
-  });
-}
-
-async function isLegacyNpmVersion(): Promise<boolean> {
-  const [majorVersion] = (await getNpmVersion()).split('.');
-  return +majorVersion < 7;
-}
-
 export async function createRepository(context: vscode.ExtensionContext) {
   const { extensionPath } = context;
   const { window, ViewColumn } = vscode;
@@ -132,15 +108,14 @@ export async function createRepository(context: vscode.ExtensionContext) {
           const templateOptions = Object.keys(options.templateOptionsValues).map(
             (key) => `--vars.${key}="${options.templateOptionsValues[key]}"`,
           );
-          const sep = (await isLegacyNpmVersion()) ? '--' : '';
           const command = [];
 
           if (options.repoType === 'piral') {
             // Handle Piral instance
             command.push(
               [
-                `npm init piral-instance`,
-                // sep,
+                `npx create-piral-instance`,
+                `-y --`,
                 `--registry ${options.npmRegistry}`,
                 `--bundler ${options.bundler}`,
                 `--template ${options.template}`,
@@ -156,8 +131,8 @@ export async function createRepository(context: vscode.ExtensionContext) {
             // Handle pilet
             command.push(
               [
-                `npm init pilet`,
-                // sep,
+                `npx create-pilet`,
+                `-y --`,
                 `--source ${options.piralPackage}`,
                 `--registry ${options.npmRegistry}`,
                 `--bundler ${options.bundler}`,
