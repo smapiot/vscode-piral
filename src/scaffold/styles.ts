@@ -27,16 +27,6 @@ export const globalStyle = css`
     }
   }
 
-  .columnTitle {
-    position: relative;
-    width: 100%;
-    height: 1.25rem;
-    font-size: 0.875rem;
-    color: #fff;
-    font-weight: 600;
-    margin-bottom: 1.563rem;
-  }
-
   .containerWrapper {
     flex: 1;
     overflow: hidden;
@@ -44,10 +34,6 @@ export const globalStyle = css`
 
   .templatesWrapper {
     flex: 1;
-  }
-
-  .bundlersWrapper {
-    margin: 1.25rem 0rem 0.75rem;
   }
 
   .spinnerWrapper {
@@ -245,8 +231,10 @@ export const templates = css`
 `;
 
 export const bundlers = css`
-  .bundlers {
-    & .bundlersCards {
+  margin: 1.25rem 0rem 0.75rem;
+
+  > div {
+    > div {
       display: flex;
       flex-wrap: wrap;
     }
@@ -257,6 +245,16 @@ export const bundlers = css`
       height: 8rem;
     }
   }
+`;
+
+export const columnTitle = css`
+  position: relative;
+  width: 100%;
+  height: 1.25rem;
+  font-size: 0.875rem;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 1.563rem;
 `;
 
 export const cards = css`
@@ -364,13 +362,13 @@ export const cards = css`
   }
 `;
 
-export const infosInputs = css`
-  .inputsWrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+export const inputsWrapper = css`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
 
+export const infosInputs = css`
   .extraItem {
     position: relative;
     bottom: 0.313rem;

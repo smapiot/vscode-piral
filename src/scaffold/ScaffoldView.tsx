@@ -5,7 +5,7 @@ import { useStore } from './store';
 import { Card } from './components/Card';
 import { TemplateCard } from './components/TemplateCard';
 import { CardSelector } from './components/CardSelector';
-import { cards, container, infosInputs, spinner, templates } from './styles';
+import { cards, container, infosInputs, spinner, templates, columnTitle, inputsWrapper } from './styles';
 import folderImage from '../../resources/folders-icon.png';
 
 interface ScaffoldState {
@@ -39,8 +39,8 @@ const FirstPage: FC<PageProps> = ({ onNext }) => {
         <div className="container">
           <div className="containerInfos">
             <div className="container-type scroll">
-              <div className="containerColumn" css={cards}>
-                <p className="columnTitle">Select Type</p>
+              <div css={cards}>
+                <p css={columnTitle}>Select Type</p>
                 {state.repoTypes.map((repoType) => (
                   <Card
                     type="repoType"
@@ -63,7 +63,7 @@ const FirstPage: FC<PageProps> = ({ onNext }) => {
                   </div>
                 ) : (
                   <Fragment>
-                    <p className="columnTitle">Select templates</p>
+                    <p css={columnTitle}>Select Templates</p>
                     <div className="templatesNames" css={cards}>
                       {availableTemplates.map((template) => (
                         <TemplateCard
@@ -101,6 +101,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
   const { repoType, template, name, targetFolder, version, piralPackage, npmRegistry, nodeModules } = options;
   const valid = useMemo(() => /^[^<>"|?*]+$/.exec(targetFolder), [targetFolder]);
   const canScaffold = valid && repoType !== '' && template !== '' && name !== '';
+  const projectType = repoType === 'piral' ? 'Piral Instance' : 'Pilet';
 
   const openLocalPathModal = () => actions.selectLocalPath();
 
@@ -120,8 +121,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
             <Fragment>
               <div className="containerInfos secondPage">
                 <div className="information" css={infosInputs}>
-                  <p className="columnTitle">Provide Information</p>
-                  <div className="inputsWrapper">
+                  <p css={columnTitle}>Provide Information for Your {projectType}</p>
+                  <div css={inputsWrapper}>
                     <div className="extraItem">
                       <p className="extraItemLabel">Name</p>
                       <VSCodeTextField
@@ -136,7 +137,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                         value={targetFolder}
                         onChange={(ev: any) => actions.updateOptions({ targetFolder: ev.target.value })}>
                         <p className="extraItemLabel">
-                          Local Path{' '}
+                          Parent directory{' '}
                           <span className={`errorMessage ${valid || !targetFolder ? 'hide' : ''}`}>[invalid path]</span>
                         </p>
                         <span slot="end" id="local-path" onClick={openLocalPathModal}>
@@ -159,7 +160,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                         placeholder="sample-piral"
                         value={piralPackage}
                         onChange={(ev: any) => actions.updateOptions({ piralPackage: ev.target.value })}>
-                        <p className="extraItemLabel">Piral Package</p>
+                        <p className="extraItemLabel">Piral package</p>
                       </VSCodeTextField>
                     </div>
                     <div className={`extraItem ${repoType === 'piral' ? 'hide' : ''}`}>
@@ -168,7 +169,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                         placeholder="https://registry.npmjs.org/"
                         value={npmRegistry}
                         onChange={(ev: any) => actions.updateOptions({ npmRegistry: ev.target.value })}>
-                        <p className="extraItemLabel">NPM Registry</p>
+                        <p className="extraItemLabel">npm registry</p>
                       </VSCodeTextField>
                     </div>
                   </div>
@@ -178,7 +179,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                     Install dependencies
                   </VSCodeCheckbox>
                 </div>
-                <CardSelector title="Select bundler">
+                <CardSelector title="Choose a Bundler">
                   {state.bundlers.map((bundler) => (
                     <Card
                       type="bundler"
@@ -191,7 +192,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                     />
                   ))}
                 </CardSelector>
-                <CardSelector title="Select client">
+                <CardSelector title="Select a Package Manager">
                   {state.clients.map((client) => (
                     <Card
                       type="client"
@@ -204,7 +205,7 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                     />
                   ))}
                 </CardSelector>
-                <CardSelector title="Select language">
+                <CardSelector title="Select a Programming Language">
                   {state.languages.map((lang) => (
                     <Card
                       type="language"
@@ -220,8 +221,8 @@ const SecondPage: React.FC<PageProps> = ({ onPrevious, onNext }) => {
                 <div className="information" css={infosInputs}>
                   {Object.keys(templateOptions).length > 0 && (
                     <Fragment>
-                      <p className="columnTitle">Provide Template Options</p>
-                      <div className="inputsWrapper">
+                      <p css={columnTitle}>Configure Template Options</p>
+                      <div css={inputsWrapper}>
                         {Object.keys(templateOptions).map((option) => (
                           <div className="extraItem capitalize" key={templateOptions[option].default}>
                             <VSCodeTextField
@@ -278,7 +279,8 @@ const FinalPage: React.FC<PageProps> = () => {
       <h1>Scaffolding started!</h1>
       <p>You can observe the progress in the opened terminal.</p>
       <p>This window is automatically closed.</p>
-    </div>);
+    </div>
+  );
 };
 
 const pages = [FirstPage, SecondPage, FinalPage];

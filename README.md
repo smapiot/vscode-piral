@@ -17,7 +17,7 @@ This extension is a useful companion when developing Piral based app shells, or 
 
 It can be regarded as a visualizer for the `piral-cli` command line utility. However, our plan is to extend it with more functionality, usually tied very closely to the VS Code editing experience.
 
-### Features
+## Features
 
 Right now the following features are part of this extension:
 
@@ -27,6 +27,42 @@ Right now the following features are part of this extension:
 - A wizard for scaffolding new projects (Piral instances or pilets)
 - Additional debugging utilities and tools
 - Start, build, validate, ... run all commands without a command line
+
+### Workspace
+
+When the extension detects a Piral instance or pilet folder opened it automatically fills some workspace information. The workspace info also contains links to documentation and helpful resources.
+
+![Scaffold Pilet](./docs/workspace.png)
+
+### Command Palette
+
+All commands that are relevant to Piral can be run from the command palette.
+
+![Scaffold Pilet](./docs/command-palette.png)
+
+### Scaffold Project Wizard
+
+A new project can be scaffolded directly from VS Code. Right now two project types are supported.
+
+![Scaffold Project](./docs/scaffold-project.png)
+
+### Scaffold Piral Instance Wizard
+
+When a Piral instance should be scaffolded additional information is requested. All options can be selected graphically.
+
+![Scaffold Pilet](./docs/scaffold-piral.png)
+
+### Scaffold Pilet Wizard
+
+When a pilet should be scaffolded additional information is requested. All options can be selected graphically.
+
+![Scaffold Pilet](./docs/scaffold-pilet.png)
+
+### Codegen Support
+
+With this extension you'll get support for `*.codegen` files. This boils down to getting JS support associated with such files.
+
+![Scaffold Pilet](./docs/codegen.png)
 
 ## Development
 

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { jsx } from '@emotion/react';
-import { bundlers, cards } from '../styles';
+import { bundlers, cards, columnTitle } from '../styles';
 
 interface CardSelectorProps {
   title: string;
@@ -8,10 +8,10 @@ interface CardSelectorProps {
 
 export const CardSelector: FC<CardSelectorProps> = ({ title, children }) => {
   return (
-    <div className="bundlersWrapper" css={bundlers}>
-      <div className="bundlers">
-        <p className="columnTitle">{title}</p>
-        <div className="bundlersCards" css={cards}>
+    <div css={bundlers}>
+      <div>
+        <p css={columnTitle}>{title}</p>
+        <div css={cards}>
           {children}
         </div>
       </div>
