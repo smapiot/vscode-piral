@@ -6,25 +6,26 @@ import {
   RepoType,
   getWorkspaceRoot,
   getVersionOfDependency,
-  readPackageJson,
+  readJson,
   piralFramework,
   getBundler,
 } from '../helpers';
 
-function getWorkspacePackageJson(repoType: RepoType) {
+function getWorkspaceRootDir(repoType: RepoType) {
   if (repoType === RepoType.Pilet || repoType === RepoType.Piral) {
     const workspaceFolder = getWorkspaceRoot();
 
     if (workspaceFolder !== undefined) {
-      const filePath = resolve(workspaceFolder.uri.fsPath, 'package.json');
-      return readPackageJson(filePath);
+      return workspaceFolder.uri.fsPath;
     }
   }
 
   return '';
 }
 
-function getPiralInfos(packageJson: any) {
+function getPiralInfos(rootDir: string) {
+  const packageJson = readJson(resolve(rootDir, 'package.json'));
+  // const piralJson = readJson(resolve(rootDir, 'piral.json'));
   const piralName = packageJson.name;
   const piralVersion = packageJson.version;
   const cliVersion = getVersionOfDependency('piral-cli');
@@ -57,10 +58,12 @@ function getPiralInfos(packageJson: any) {
   ];
 }
 
-function getPiletInfos(packageJson: any) {
+function getPiletInfos(rootDir: string) {
+  const packageJson = readJson(resolve(rootDir, 'package.json'));
+  const piletJson = readJson(resolve(rootDir, 'pilet.json'));
   const piletName = packageJson.name;
   const piletVersion = packageJson.version;
-  const appName = packageJson.piral.name;
+  const appName = Object.keys(piletJson?.piralInstances || {}).shift() || packageJson.piral?.name || '';
   const appVersion = getVersionOfDependency(appName);
   const cliVersion = getVersionOfDependency('piral-cli');
   const bundler = getBundler(packageJson);
@@ -80,7 +83,7 @@ function getPiletInfos(packageJson: any) {
     ]),
     new CommandTreeItem(
       'Dependencies', '',
-      Object.keys(packageJson.dependencies).map((key) => {
+      Object.keys(packageJson.dependencies || {}).map((key) => {
         const version = getVersionOfDependency(key);
         return new CommandTreeItem(`${key} (${version})`, '', undefined);
       }),
@@ -117,15 +120,15 @@ export class WorkspaceInfoDataProvider implements vscode.TreeDataProvider<Comman
 
   private getAvailableCommands() {
     const repoType = getRepoType();
-    const packageJson = getWorkspacePackageJson(repoType);
+    const rootDir = getWorkspaceRootDir(repoType);
 
     switch (repoType) {
       case RepoType.Piral:
-        this.data = getPiralInfos(packageJson);
+        this.data = getPiralInfos(rootDir);
         vscode.window.showInformationMessage('Piral instance workspace found.');
         break;
       case RepoType.Pilet:
-        this.data = getPiletInfos(packageJson);
+        this.data = getPiletInfos(rootDir);
         vscode.window.showInformationMessage('Pilet workspace found.');
         break;
       case RepoType.Undefined:

@@ -27,7 +27,7 @@
             "background": {
               "activeOnStart": true,
               "beginsPattern": "[watch]",
-              "endsPattern": "build finished"
+              "endsPattern": "rebuild successful"
             }
           },
           "options": {

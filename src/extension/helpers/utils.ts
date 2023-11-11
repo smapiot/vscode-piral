@@ -12,7 +12,7 @@ export enum RepoType {
 
 export const piralFramework = ['piral-base', 'piral-core', 'piral'];
 
-export function readPackageJson(filePath: string) {
+export function readJson(filePath: string) {
   try {
     const packageFile = readFileSync(filePath, 'utf8');
     return JSON.parse(packageFile);
@@ -25,15 +25,16 @@ export function getRepoType(): RepoType {
   const workspaceFolder = getWorkspaceRoot();
 
   if (workspaceFolder !== undefined) {
-    const filePath = resolve(workspaceFolder.uri.fsPath, 'package.json');
-    const packageJson = readPackageJson(filePath);
+    const packageJson = readJson(resolve(workspaceFolder.uri.fsPath, 'package.json'));
+    const piralJson = readJson(resolve(workspaceFolder.uri.fsPath, 'piral.json'));
+    const piletJson = readJson(resolve(workspaceFolder.uri.fsPath, 'pilet.json'));
 
     if (packageJson) {
       const { pilets, piral, dependencies = {} } = packageJson;
 
-      if (pilets !== undefined || Object.keys(dependencies).some((m) => piralFramework.includes(m))) {
+      if (piralJson || pilets !== undefined || Object.keys(dependencies).some((m) => piralFramework.includes(m))) {
         return RepoType.Piral;
-      } else if (piral !== undefined) {
+      } else if (piletJson || piral !== undefined) {
         return RepoType.Pilet;
       }
     }
@@ -49,9 +50,9 @@ export function getWorkspaceRoot() {
 export function getVersionOfDependency(dependency: string) {
   const workspaceFolder = getWorkspaceRoot();
 
-  if (workspaceFolder != undefined) {
+  if (dependency && workspaceFolder !== undefined) {
     const filePath = resolve(workspaceFolder.uri.fsPath, 'node_modules', dependency, 'package.json');
-    const packageJson = readPackageJson(filePath);
+    const packageJson = readJson(filePath);
 
     if (packageJson && packageJson.version !== undefined) {
       return packageJson.version;
@@ -76,6 +77,10 @@ export function getBundler(packageJson: any) {
   return undefined;
 }
 
+function detectBun(root: string) {
+  return !!existsSync(`${root}/bun.lockb`);
+}
+
 function detectYarn(root: string) {
   return !!existsSync(`${root}/yarn.lock`);
 }
@@ -97,7 +102,12 @@ function detectLerna(root: string) {
 }
 
 async function installDependencies(root: string) {
-  const [hasYarn, hasPnpm, hasLerna] = await Promise.all([detectYarn(root), detectPnpm(root), detectLerna(root)]);
+  const [hasYarn, hasPnpm, hasLerna, hasBun] = await Promise.all([
+    detectYarn(root),
+    detectPnpm(root),
+    detectLerna(root),
+    detectBun(root),
+  ]);
 
   if (hasLerna) {
     execCommand('npx lerna bootstrap');
@@ -105,6 +115,8 @@ async function installDependencies(root: string) {
     execCommand('yarn install');
   } else if (hasPnpm) {
     execCommand('pnpm install');
+  } else if (hasBun) {
+    execCommand('bun install');
   } else {
     execCommand('npm install');
   }
