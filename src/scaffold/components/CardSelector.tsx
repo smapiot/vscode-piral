@@ -1,9 +1,10 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { jsx } from '@emotion/react';
 import { bundlers, cards, columnTitle } from '../styles';
 
 interface CardSelectorProps {
   title: string;
+  children: ReactNode;
 }
 
 export const CardSelector: FC<CardSelectorProps> = ({ title, children }) => {
