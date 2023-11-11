@@ -261,7 +261,7 @@
     "@types/node": "^16",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/vscode": "1.84.1",
+    "@types/vscode": "1.63.1",
     "@types/vscode-webview": "1.57.4",
     "@vscode/vsce": "2.22.0",
     "@vscode/webview-ui-toolkit": "1.2.2",

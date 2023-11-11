@@ -1,9 +1,9 @@
 .vscode/**
 .vscode-test/**
-out/test/**
-out/**/*.map
-out/**
-src/**
+out
+src
+tools
+.github
 .gitignore
 .editorconfig
 prettier.config.js
