@@ -1,8 +1,11 @@
-const { resolve } = require('path');
-const { writeFileSync, readFileSync } = require('fs');
+import { resolve } from 'node:path';
+import { writeFile, readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const path = resolve(__dirname, '..', 'package.json');
-const content = JSON.parse(readFileSync(path, 'utf8'));
+const content = JSON.parse(await readFile(path, 'utf8'));
 const { version } = content;
 const [major, minor, _] = version.split('.');
 const newPatch = process.argv.pop();
@@ -13,4 +16,4 @@ if (isNaN(+newPatch)) {
 }
 
 content.version = [major, minor, newPatch].join('.');
-writeFileSync(path, JSON.stringify(content, undefined, 2), 'utf8');
+await writeFile(path, JSON.stringify(content, undefined, 2), 'utf8');

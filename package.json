@@ -249,10 +249,10 @@
   "scripts": {
     "vscode:prepublish": "npm run build",
     "ci:publish": "vsce publish -p $VSCODE_TOKEN",
-    "ci:version": "node tools/version.js",
+    "ci:version": "node tools/version.mjs",
     "check": "tsc --noEmit",
-    "build": "node tools/build.js",
-    "watch": "node tools/watch.js",
+    "build": "node tools/build.mjs",
+    "watch": "node tools/watch.mjs",
     "test": "npm run check && npm run build"
   },
   "devDependencies": {

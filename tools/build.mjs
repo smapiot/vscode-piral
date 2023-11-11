@@ -1,8 +1,11 @@
-const { resolve } = require('path');
-const esbuild = require('esbuild');
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import esbuild from 'esbuild';
 
-esbuild
-  .build({
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+
+try {
+  await esbuild.build({
     bundle: true,
     sourcemap: true,
     platform: 'node',
@@ -18,13 +21,11 @@ esbuild
     },
     outdir: resolve(__dirname, '..', 'dist'),
     external: ['vscode'],
-  })
-  .then(
-    () => {
-      console.log('[build] build finished');
-    },
-    () => {
-      console.log('[build] build failed');
-      process.exit(1);
-    },
-  );
+  });
+
+  console.log('[build] build successful');
+} catch (ex) {
+  console.error(ex);
+  console.log('[build] build failed');
+  process.exit(1);
+}
