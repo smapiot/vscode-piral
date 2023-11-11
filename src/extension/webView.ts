@@ -70,6 +70,7 @@ export async function createRepository(context: vscode.ExtensionContext) {
 
   const wv = window.createWebviewPanel('piral.createProject', 'Piral - Create Project', ViewColumn.One, {
     enableScripts: true,
+    retainContextWhenHidden: true,
   });
 
   wv.webview.html = getTemplateCode(getResourcePath(wv, extensionPath, 'dist/scaffold.js'));

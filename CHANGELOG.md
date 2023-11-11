@@ -6,10 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## 0.3
 
+- Fixed issue if `dependencies` section of *package.json* does not exist
+- Fixed persistence when switching tabs using the scaffold dialog
+- Updated dependencies
 - Added support for `piral.json` and `pilet.json` (#28)
 - Added support for Bun as package manager
-- Fixed issue if `dependencies` section of *package.json* does not exist
-- Updated dependencies
 
 ## 0.2
 
