@@ -47,7 +47,7 @@ const bundlerOptions = [
     description: 'Use Parcel v2 as bundler for the project.',
   },
   {
-    type: 'Webpack5',
+    type: 'webpack5',
     icon: 'resources/bundlers/webpack.png',
     title: 'Webpack v5',
     package: 'piral-cli-webpack5',
