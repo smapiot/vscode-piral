@@ -8,7 +8,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Fixed issue if `dependencies` section of *package.json* does not exist
 - Fixed persistence when switching tabs using the scaffold dialog
+- Fixed scaffolding to always use most recent version of `piral-cli`
 - Updated dependencies
+- Updated minimum supported version of Node.js to 16
 - Added support for `piral.json` and `pilet.json` (#28)
 - Added support for Bun as package manager
 

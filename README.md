@@ -11,6 +11,12 @@ Available in the following marketplaces:
 - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=smapiot.vscode-piral) for VS Code
 - [Open VSX](https://open-vsx.org/extension/smapiot/vscode-piral) for VSCodium, code-server and Eclipse Theia
 
+## Prerequisites
+
+You'll need **Node.js (v16+)** with **npm (v7+)** installed for using the extension.
+
+The extension works on all OS where VS Code is running.
+
 ## Overview
 
 This extension is a useful companion when developing Piral based app shells, or pilets for existing app shells.

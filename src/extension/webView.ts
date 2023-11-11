@@ -118,8 +118,9 @@ export async function createRepository(context: vscode.ExtensionContext) {
             // Handle Piral instance
             command.push(
               [
-                `npx create-piral-instance`,
-                `-y --`,
+                `npx`,
+                `--yes`,
+                `create-piral-instance@^1`,
                 `--registry ${options.npmRegistry}`,
                 `--bundler ${options.bundler}`,
                 `--template ${options.template}`,
@@ -135,8 +136,9 @@ export async function createRepository(context: vscode.ExtensionContext) {
             // Handle pilet
             command.push(
               [
-                `npx create-pilet`,
-                `-y --`,
+                `npx`,
+                `--yes`,
+                `create-pilet@^1`,
                 `--source ${options.piralPackage}`,
                 `--registry ${options.npmRegistry}`,
                 `--bundler ${options.bundler}`,
