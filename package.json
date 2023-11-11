@@ -246,6 +246,10 @@
       }
     ]
   },
+  "pricing": "Free",
+  "sponsor": {
+    "url": "https://github.com/sponsors/smapiot"
+  },
   "scripts": {
     "vscode:prepublish": "npm run build",
     "ci:publish": "vsce publish -p $VSCODE_TOKEN",
