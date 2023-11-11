@@ -75,6 +75,13 @@ const bundlerOptions = [
     description: 'Use Rollup as bundler for the project.',
   },
   {
+    type: 'bun',
+    icon: 'resources/bundlers/bun.png',
+    title: 'Bun',
+    package: 'piral-cli-bun',
+    description: 'Use Bun as bundler for the project.',
+  },
+  {
     type: 'xbuild',
     icon: 'resources/bundlers/xbuild.png',
     title: 'xbuild',
@@ -116,6 +123,12 @@ const npmClientOptions = [
     icon: 'resources/clients/pnpm.png',
     title: 'pnpm',
     description: 'Use pnpm as your package manager.',
+  },
+  {
+    type: 'bun',
+    icon: 'resources/clients/bun.png',
+    title: 'Bun',
+    description: 'Use Bun as your package manager.',
   },
   {
     type: 'lerna',

@@ -2,7 +2,7 @@
   "name": "vscode-piral",
   "publisher": "smapiot",
   "displayName": "Piral",
-  "description": "Makes it easy to create, manage, and debug microfrontends using Pirals.",
+  "description": "Makes it easy to create, manage, and debug microfrontends using the Piral framework.",
   "license": "MIT",
   "icon": "resources/piral.png",
   "version": "0.3.0",

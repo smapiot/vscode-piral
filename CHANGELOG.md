@@ -13,6 +13,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Updated minimum supported version of Node.js to 16
 - Added support for `piral.json` and `pilet.json` (#28)
 - Added support for Bun as package manager
+- Added support for Bun as a bundler
 
 ## 0.2
 
