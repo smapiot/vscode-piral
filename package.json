@@ -5,7 +5,7 @@
   "description": "Makes it easy to create, manage, and debug microfrontends using Pirals.",
   "license": "MIT",
   "icon": "resources/piral.png",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "homepage": "https://github.com/smapiot/vscode-piral/blob/main/README.md",
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
     "workspace"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -256,22 +256,22 @@
     "test": "npm run check && npm run build"
   },
   "devDependencies": {
-    "@emotion/css": "^11.9.0",
-    "@emotion/react": "^11.9.0",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^8.10.61",
-    "@types/react": "^17.0.44",
-    "@types/react-dom": "^17.0.15",
-    "@types/vscode": "1.63.0",
-    "@types/vscode-webview": "^1.57.0",
-    "@vscode/webview-ui-toolkit": "^0.9.3",
+    "@emotion/css": "^11",
+    "@emotion/react": "^11",
+    "@types/node": "^16",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/vscode": "1.84.1",
+    "@types/vscode-webview": "1.57.4",
+    "@vscode/vsce": "2.22.0",
+    "@vscode/webview-ui-toolkit": "1.2.2",
     "axios": "^1.6.0",
-    "esbuild": "^0.14.37",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "typescript": "^4.0.0",
+    "esbuild": "^0.19",
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "^5",
     "vscode-test": "^1.6.1",
-    "zustand": "^4.0.0-rc.0"
+    "zustand": "^4"
   },
   "dependencies": {}
 }

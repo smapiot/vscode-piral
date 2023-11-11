@@ -4,6 +4,11 @@ All notable changes to the "piral-vscode" extension will be documented in this f
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 0.3
+
+- Support for `piral.json` and `pilet.json` (#28)
+- Updated dependencies
+
 ## 0.2
 
 - Linked dependencies to their READMEs (#10)
