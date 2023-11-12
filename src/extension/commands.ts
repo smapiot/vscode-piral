@@ -9,7 +9,7 @@ function debugPilet() {
 }
 
 function buildPilet() {
-  runCommand('npx  pilet build', RepoType.Pilet);
+  runCommand('npx pilet build', RepoType.Pilet);
 }
 
 function publishPilet() {

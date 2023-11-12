@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { RepoType, getRepoTypeOf, getWorkspaceRoot } from '../helpers';
 
 export class PiletTaskProvider implements vscode.TaskProvider {
   static Type = 'pilet';
@@ -14,18 +15,7 @@ export class PiletTaskProvider implements vscode.TaskProvider {
   }
 
   public resolveTask(_task: vscode.Task): vscode.Task | undefined {
-    const flags = _task.definition.flags || [];
-    const command = ['npx', 'pilet', 'debug', ...flags].join(' ');
-    const definition = _task.definition;
-
-    return new vscode.Task(
-      definition,
-      _task.scope ?? vscode.TaskScope.Workspace,
-      'debug',
-      PiletTaskProvider.Type,
-      new vscode.ShellExecution(command),
-      ['$piral-cli-debug'],
-    );
+    return undefined;
   }
 }
 
@@ -36,29 +26,88 @@ interface PiletTaskDefinition extends vscode.TaskDefinition {
   flags?: Array<string>;
 }
 
+function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiletTaskDefinition = {
+    type: PiletTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'pilet', 'debug', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(
+    kind,
+    workspaceFolder,
+    'debug',
+    PiletTaskProvider.Type,
+    new vscode.ShellExecution(command),
+    ['$piral-cli-debug'],
+  );
+  task.isBackground = true;
+  task.group = vscode.TaskGroup.Build;
+  return task;
+}
+
+function createBuildTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiletTaskDefinition = {
+    type: PiletTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'pilet', 'build', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(
+    kind,
+    workspaceFolder,
+    'build',
+    PiletTaskProvider.Type,
+    new vscode.ShellExecution(command),
+  );
+  task.group = vscode.TaskGroup.Build;
+  return task;
+}
+
+function createValidateTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiletTaskDefinition = {
+    type: PiletTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'pilet', 'validate', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(
+    kind,
+    workspaceFolder,
+    'validate',
+    PiletTaskProvider.Type,
+    new vscode.ShellExecution(command),
+  );
+  task.group = vscode.TaskGroup.Test;
+  return task;
+}
+
+function createPackTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiletTaskDefinition = {
+    type: PiletTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'pilet', 'pack', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(
+    kind,
+    workspaceFolder,
+    'pack',
+    PiletTaskProvider.Type,
+    new vscode.ShellExecution(command),
+  );
+  task.group = vscode.TaskGroup.Build;
+  return task;
+}
+
 async function getPiletTasks(): Promise<vscode.Task[]> {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
+  const workspaceFolder = getWorkspaceRoot();
+  const repoType = getRepoTypeOf(workspaceFolder);
   const result: vscode.Task[] = [];
 
-  if (workspaceFolders?.length) {
-    for (const workspaceFolder of workspaceFolders) {
-      const kind: PiletTaskDefinition = {
-        type: PiletTaskProvider.Type,
-        flags: [],
-      };
-      const command = ['npx', 'pilet', 'debug', ...(kind.flags || [])].join(' ');
-      const task = new vscode.Task(
-        kind,
-        workspaceFolder,
-        'debug',
-        PiletTaskProvider.Type,
-        new vscode.ShellExecution(command),
-        ['$piral-cli-debug'],
-      );
-      task.isBackground = true;
-      task.group = vscode.TaskGroup.Build;
-      result.push(task);
-    }
+  if (workspaceFolder && repoType === RepoType.Pilet) {
+    result.push(
+      createDebugTask(workspaceFolder),
+      createBuildTask(workspaceFolder),
+      createValidateTask(workspaceFolder),
+      createPackTask(workspaceFolder),
+    );
   }
 
   return result;

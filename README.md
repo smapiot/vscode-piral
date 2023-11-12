@@ -40,6 +40,41 @@ When the extension detects a Piral instance or pilet folder opened it automatica
 
 ![Scaffold Pilet](./docs/workspace.png)
 
+### Tasks
+
+You can add provided tasks for your Piral instances or pilets.
+
+- `piral: debug` - a build (watch) task to debug the Piral instance
+- `piral: build` - a build task to build the Piral instance
+- `piral: validate` - a test task to validate the Piral instance
+- `piral: declaration` - a build task to generate the declaration for the Piral instance
+- `pilet: debug` - a build (watch) task to debug the pilet
+- `pilet: build` - a build task to build the pilet
+- `pilet: validate` - a test task to validate the pilet
+- `pilet: pack` - a build task to pack the pilet
+
+You can either run these tasks manually or use them, e.g., in a *launch.json*:
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:1234",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "pilet: debug"
+        }
+    ]
+}
+```
+
+### Problem Matcher
+
+If you make your own task using the `piral-cli` you can use the `$piral-cli-debug` problem matcher to monitor the `piral debug` / `pilet debug` commands.
+
 ### Command Palette
 
 All commands that are relevant to Piral can be run from the command palette.

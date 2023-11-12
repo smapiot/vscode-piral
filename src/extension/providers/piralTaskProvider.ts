@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { RepoType, getRepoTypeOf, getWorkspaceRoot } from '../helpers';
 
 export class PiralTaskProvider implements vscode.TaskProvider {
   static Type = 'piral';
@@ -14,18 +15,7 @@ export class PiralTaskProvider implements vscode.TaskProvider {
   }
 
   public resolveTask(_task: vscode.Task): vscode.Task | undefined {
-    const flags = _task.definition.flags || [];
-    const command = ['npx', 'piral', 'debug', ...flags].join(' ');
-    const definition = _task.definition;
-
-    return new vscode.Task(
-      definition,
-      _task.scope ?? vscode.TaskScope.Workspace,
-      'debug',
-      PiralTaskProvider.Type,
-      new vscode.ShellExecution(command),
-      ['$piral-cli-debug'],
-    );
+    return undefined;
   }
 }
 
@@ -36,29 +26,65 @@ interface PiralTaskDefinition extends vscode.TaskDefinition {
   flags?: Array<string>;
 }
 
+function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiralTaskDefinition = {
+    type: PiralTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'piral', 'debug', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(kind, workspaceFolder, 'debug', 'piral', new vscode.ShellExecution(command), [
+    '$piral-cli-debug',
+  ]);
+  task.isBackground = true;
+  task.group = vscode.TaskGroup.Build;
+  return task;
+}
+
+function createBuildTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiralTaskDefinition = {
+    type: PiralTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'piral', 'build', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(kind, workspaceFolder, 'build', 'piral', new vscode.ShellExecution(command));
+  task.group = vscode.TaskGroup.Build;
+  return task;
+}
+
+function createValidateTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiralTaskDefinition = {
+    type: PiralTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'piral', 'validate', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(kind, workspaceFolder, 'validate', 'piral', new vscode.ShellExecution(command));
+  task.group = vscode.TaskGroup.Test;
+  return task;
+}
+
+function createDeclarationTask(workspaceFolder: vscode.WorkspaceFolder) {
+  const kind: PiralTaskDefinition = {
+    type: PiralTaskProvider.Type,
+    flags: [],
+  };
+  const command = ['npx', 'piral', 'declaration', ...(kind.flags || [])].join(' ');
+  const task = new vscode.Task(kind, workspaceFolder, 'declaration', 'piral', new vscode.ShellExecution(command));
+  task.group = vscode.TaskGroup.Build;
+  return task;
+}
+
 async function getPiralTasks(): Promise<vscode.Task[]> {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
+  const workspaceFolder = getWorkspaceRoot();
+  const repoType = getRepoTypeOf(workspaceFolder);
   const result: vscode.Task[] = [];
 
-  if (workspaceFolders?.length) {
-    for (const workspaceFolder of workspaceFolders) {
-      const kind: PiralTaskDefinition = {
-        type: PiralTaskProvider.Type,
-        flags: [],
-      };
-      const command = ['npx', 'piral', 'debug', ...(kind.flags || [])].join(' ');
-      const task = new vscode.Task(
-        kind,
-        workspaceFolder,
-        'debug',
-        'piral',
-        new vscode.ShellExecution(command),
-        ['$piral-cli-debug'],
-      );
-      task.isBackground = true;
-      task.group = vscode.TaskGroup.Build;
-      result.push(task);
-    }
+  if (workspaceFolder && repoType === RepoType.Piral) {
+    result.push(
+      createDebugTask(workspaceFolder),
+      createBuildTask(workspaceFolder),
+      createValidateTask(workspaceFolder),
+      createDeclarationTask(workspaceFolder),
+    );
   }
 
   return result;

@@ -10,7 +10,8 @@ export class CommandTreeItem extends vscode.TreeItem {
       label,
       children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Expanded,
     );
-    this.contextValue = target !== undefined ? target != '' ? 'showFullContextPlugin' : 'showWebLinkContextPlugin' : undefined;
+    this.contextValue =
+      target !== undefined ? (target != '' ? 'showFullContextPlugin' : 'showWebLinkContextPlugin') : undefined;
     this.children = children;
     this.commandName = commandName;
     this.target = target;

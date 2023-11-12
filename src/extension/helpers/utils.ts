@@ -21,9 +21,7 @@ export function readJson(filePath: string) {
   }
 }
 
-export function getRepoType(): RepoType {
-  const workspaceFolder = getWorkspaceRoot();
-
+export function getRepoTypeOf(workspaceFolder: vscode.WorkspaceFolder | undefined) {
   if (workspaceFolder !== undefined) {
     const packageJson = readJson(resolve(workspaceFolder.uri.fsPath, 'package.json'));
     const piralJson = readJson(resolve(workspaceFolder.uri.fsPath, 'piral.json'));
@@ -41,6 +39,11 @@ export function getRepoType(): RepoType {
   }
 
   return RepoType.Undefined;
+}
+
+export function getRepoType(): RepoType {
+  const workspaceFolder = getWorkspaceRoot();
+  return getRepoTypeOf(workspaceFolder);
 }
 
 export function getWorkspaceRoot() {
