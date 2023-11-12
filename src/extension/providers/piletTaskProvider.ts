@@ -21,7 +21,11 @@ export class PiletTaskProvider implements vscode.TaskProvider {
 
 interface PiletTaskDefinition extends vscode.TaskDefinition {
   /**
-   * Additional build flags
+   * The command to use.
+   */
+  command: string;
+  /**
+   * Additional build flags.
    */
   flags?: Array<string>;
 }
@@ -29,6 +33,7 @@ interface PiletTaskDefinition extends vscode.TaskDefinition {
 function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiletTaskDefinition = {
     type: PiletTaskProvider.Type,
+    command: 'debug',
     flags: [],
   };
   const command = ['npx', 'pilet', 'debug', ...(kind.flags || [])].join(' ');
@@ -41,6 +46,8 @@ function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
     ['$piral-cli-debug'],
   );
   task.isBackground = true;
+  task.runOptions.reevaluateOnRerun = true;
+  task.presentationOptions.panel = vscode.TaskPanelKind.New;
   task.group = vscode.TaskGroup.Build;
   return task;
 }
@@ -48,6 +55,7 @@ function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
 function createBuildTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiletTaskDefinition = {
     type: PiletTaskProvider.Type,
+    command: 'build',
     flags: [],
   };
   const command = ['npx', 'pilet', 'build', ...(kind.flags || [])].join(' ');
@@ -59,12 +67,15 @@ function createBuildTask(workspaceFolder: vscode.WorkspaceFolder) {
     new vscode.ShellExecution(command),
   );
   task.group = vscode.TaskGroup.Build;
+  task.runOptions.reevaluateOnRerun = true;
+  task.presentationOptions.panel = vscode.TaskPanelKind.New;
   return task;
 }
 
 function createValidateTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiletTaskDefinition = {
     type: PiletTaskProvider.Type,
+    command: 'validate',
     flags: [],
   };
   const command = ['npx', 'pilet', 'validate', ...(kind.flags || [])].join(' ');
@@ -76,12 +87,15 @@ function createValidateTask(workspaceFolder: vscode.WorkspaceFolder) {
     new vscode.ShellExecution(command),
   );
   task.group = vscode.TaskGroup.Test;
+  task.runOptions.reevaluateOnRerun = true;
+  task.presentationOptions.panel = vscode.TaskPanelKind.New;
   return task;
 }
 
 function createPackTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiletTaskDefinition = {
     type: PiletTaskProvider.Type,
+    command: 'pack',
     flags: [],
   };
   const command = ['npx', 'pilet', 'pack', ...(kind.flags || [])].join(' ');
@@ -93,6 +107,8 @@ function createPackTask(workspaceFolder: vscode.WorkspaceFolder) {
     new vscode.ShellExecution(command),
   );
   task.group = vscode.TaskGroup.Build;
+  task.runOptions.reevaluateOnRerun = true;
+  task.presentationOptions.panel = vscode.TaskPanelKind.New;
   return task;
 }
 

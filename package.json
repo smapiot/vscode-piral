@@ -218,8 +218,12 @@
     "taskDefinitions": [
       {
         "type": "piral",
-        "required": [],
+        "required": ["command"],
         "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to run (debug, build, validate, declaration)."
+          },
           "flags": {
             "type": "array",
             "description": "Additional flags for running piral debug."
@@ -229,8 +233,12 @@
       },
       {
         "type": "pilet",
-        "required": [],
+        "required": ["command"],
         "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to run (debug, build, validate, pack)."
+          },
           "flags": {
             "type": "array",
             "description": "Additional flags for running pilet debug."

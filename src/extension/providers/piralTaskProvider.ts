@@ -21,7 +21,11 @@ export class PiralTaskProvider implements vscode.TaskProvider {
 
 interface PiralTaskDefinition extends vscode.TaskDefinition {
   /**
-   * Additional build flags
+   * The command to use.
+   */
+  command: string;
+  /**
+   * Additional build flags.
    */
   flags?: Array<string>;
 }
@@ -29,6 +33,7 @@ interface PiralTaskDefinition extends vscode.TaskDefinition {
 function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiralTaskDefinition = {
     type: PiralTaskProvider.Type,
+    command: 'debug',
     flags: [],
   };
   const command = ['npx', 'piral', 'debug', ...(kind.flags || [])].join(' ');
@@ -43,6 +48,7 @@ function createDebugTask(workspaceFolder: vscode.WorkspaceFolder) {
 function createBuildTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiralTaskDefinition = {
     type: PiralTaskProvider.Type,
+    command: 'build',
     flags: [],
   };
   const command = ['npx', 'piral', 'build', ...(kind.flags || [])].join(' ');
@@ -54,6 +60,7 @@ function createBuildTask(workspaceFolder: vscode.WorkspaceFolder) {
 function createValidateTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiralTaskDefinition = {
     type: PiralTaskProvider.Type,
+    command: 'validate',
     flags: [],
   };
   const command = ['npx', 'piral', 'validate', ...(kind.flags || [])].join(' ');
@@ -65,6 +72,7 @@ function createValidateTask(workspaceFolder: vscode.WorkspaceFolder) {
 function createDeclarationTask(workspaceFolder: vscode.WorkspaceFolder) {
   const kind: PiralTaskDefinition = {
     type: PiralTaskProvider.Type,
+    command: 'declaration',
     flags: [],
   };
   const command = ['npx', 'piral', 'declaration', ...(kind.flags || [])].join(' ');
