@@ -217,32 +217,51 @@
     },
     "taskDefinitions": [
       {
-        "type": "piral-build",
-        "required": [
-          "task"
-        ],
-        "properties": {}
+        "type": "piral",
+        "required": [],
+        "properties": {
+          "flags": {
+            "type": "array",
+            "description": "Additional flags for running piral debug."
+          }
+        },
+        "when": "shellExecutionSupported"
       },
       {
-        "type": "piral-debug",
-        "required": [
-          "task"
-        ],
-        "properties": {}
-      },
+        "type": "pilet",
+        "required": [],
+        "properties": {
+          "flags": {
+            "type": "array",
+            "description": "Additional flags for running pilet debug."
+          }
+        },
+        "when": "shellExecutionSupported"
+      }
+    ],
+    "problemMatchers": [
       {
-        "type": "pilet-build",
-        "required": [
-          "task"
+        "name": "piral-cli-debug",
+        "owner": "piral-cli",
+        "severity": "error",
+        "fileLocation": "absolute",
+        "pattern": [
+          {
+            "regexp": "ERROR in (.*)",
+            "file": 1
+          },
+          {
+            "regexp": "\\((\\d+),(\\d+)\\):(.*)",
+            "line": 1,
+            "column": 2,
+            "message": 3
+          }
         ],
-        "properties": {}
-      },
-      {
-        "type": "pilet-debug",
-        "required": [
-          "task"
-        ],
-        "properties": {}
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "🚀  Running at",
+          "endsPattern": "✔ Ready!"
+        }
       }
     ]
   },

@@ -14,6 +14,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Added support for `piral.json` and `pilet.json` (#28)
 - Added support for Bun as package manager
 - Added support for Bun as a bundler
+- Added new problem matcher `$piral-cli-debug` for debugging
+- Added task providers (e.g., `piral: debug` or `pilet: debug`) (#5)
 
 ## 0.2
 
